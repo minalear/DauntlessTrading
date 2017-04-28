@@ -1,12 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace SpaceTradingGame
 {
-    public class Class1
+    public class TradingGame : GameWindow
     {
+        public TradingGame() : base(800, 450, GraphicsMode.Default, "Dauntless Trading Company")
+        {
+
+        }
+
+        protected override void OnRenderFrame(FrameEventArgs e)
+        {
+            this.SwapBuffers();
+        }
     }
 }
