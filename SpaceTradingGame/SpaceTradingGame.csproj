@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4FD0292F-6C95-4A02-A303-21EB28B0325E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SpaceTradingGame</RootNamespace>
     <AssemblyName>SpaceTradingGame</AssemblyName>
@@ -50,10 +50,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Material.cs" />
+    <Compile Include="Game\Planetoid.cs" />
+    <Compile Include="Game\Station.cs" />
+    <Compile Include="Game\System.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TradingGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\Factories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

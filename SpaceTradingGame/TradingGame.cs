@@ -2,6 +2,7 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using SpaceTradingGame.Game;
 
 namespace SpaceTradingGame
 {
@@ -9,7 +10,7 @@ namespace SpaceTradingGame
     {
         public TradingGame() : base(800, 450, GraphicsMode.Default, "Dauntless Trading Company")
         {
-
+            Market market = new Game.Market();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
