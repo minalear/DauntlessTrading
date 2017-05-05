@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Console\Charset.cs" />
+    <Compile Include="Engine\Console\DrawingUtilities.cs" />
+    <Compile Include="Engine\Console\GraphicConsole.cs" />
+    <Compile Include="Engine\ContentManager.cs" />
+    <Compile Include="Engine\GameTime.cs" />
+    <Compile Include="Engine\Shaders\Shader.cs" />
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Material.cs" />
     <Compile Include="Game\Planetoid.cs" />
