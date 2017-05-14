@@ -9,7 +9,8 @@ namespace SpaceTradingGame.Engine.UI
     public class Interface
     {
         private InterfaceManager interfaceManager;
-        private List<Control> controls;
+
+        private List<Control> controls, hoveredControls;
 
         public InterfaceManager InterfaceManager { get { return interfaceManager; } }
 
@@ -71,34 +72,20 @@ namespace SpaceTradingGame.Engine.UI
                     control.MouseUp(e);
             }
         }
-        public void Game_MouseEnter(object sender, EventArgs e)
-        {
-            foreach (Control control in controls)
-            {
-                if (!control.Contains(interfaceManager.PreviousCursorPosition) &&
-                    control.Contains(interfaceManager.CurrentCursorPosition))
-                {
-                    control.MouseEnter();
-                }
-            }
-        }
-        public void Game_MouseLeave(object sender, EventArgs e)
-        {
-            foreach (Control control in controls)
-            {
-                if (control.Contains(interfaceManager.CurrentCursorPosition) &&
-                    !control.Contains(interfaceManager.PreviousCursorPosition))
-                {
-                    control.MouseEnter();
-                }
-            }
-        }
+        public void Game_MouseEnter(object sender, EventArgs e) { }
+        public void Game_MouseLeave(object sender, EventArgs e) { }
         public void Game_MouseMove(object sender, MouseMoveEventArgs e)
         {
             foreach (Control control in controls)
             {
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                {
+                    if (!control.Contains(InterfaceManager.PreviousCursorPosition))
+                        control.MouseEnter();
                     control.MouseMove();
+                }
+                else if (control.Contains(InterfaceManager.PreviousCursorPosition))
+                    control.MouseLeave();
             }
         }
         public void Game_MouseWheel(object sender, MouseWheelEventArgs e)
