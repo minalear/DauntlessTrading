@@ -57,29 +57,57 @@ namespace SpaceTradingGame.Engine.UI
         /* INPUT FUNCTIONS */
         public void Game_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Point mousePoint = new Point(
-                interfaceManager.Console.CursorLeft,
-                interfaceManager.Console.CursorTop);
+            foreach (Control control in controls)
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseDown(e);
+            }
         }
         public void Game_MouseUp(object sender, MouseButtonEventArgs e)
         {
-
+            foreach (Control control in controls)
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseUp(e);
+            }
         }
         public void Game_MouseEnter(object sender, EventArgs e)
         {
-
+            foreach (Control control in controls)
+            {
+                if (!control.Contains(interfaceManager.PreviousCursorPosition) &&
+                    control.Contains(interfaceManager.CurrentCursorPosition))
+                {
+                    control.MouseEnter();
+                }
+            }
         }
         public void Game_MouseLeave(object sender, EventArgs e)
         {
-
+            foreach (Control control in controls)
+            {
+                if (control.Contains(interfaceManager.CurrentCursorPosition) &&
+                    !control.Contains(interfaceManager.PreviousCursorPosition))
+                {
+                    control.MouseEnter();
+                }
+            }
         }
         public void Game_MouseMove(object sender, MouseMoveEventArgs e)
         {
-
+            foreach (Control control in controls)
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseMove();
+            }
         }
         public void Game_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-
+            foreach (Control control in controls)
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseWheel(e);
+            }
         }
     }
 }

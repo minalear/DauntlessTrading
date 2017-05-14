@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using SpaceTradingGame.Engine.Shaders;
 
 namespace SpaceTradingGame.Engine.Console
@@ -20,7 +21,7 @@ namespace SpaceTradingGame.Engine.Console
         private float[] vertices;
         private int vao, vbo;
 
-        private Color foregroundColor, backgroundColor;
+        private Color4 foregroundColor, backgroundColor;
 
         private DrawingUtilities drawingUtilities;
 
@@ -122,20 +123,20 @@ namespace SpaceTradingGame.Engine.Console
             this.characterMatrix[x, y].BackgroundColor = this.backgroundColor;
         }
 
-        public void SetColor(Color foreground, Color background)
+        public void SetColor(Color4 foreground, Color4 background)
         {
             this.foregroundColor = foreground;
             this.backgroundColor = background;
         }
         public void SetCursor(Point position)
         {
-            this.cursorLeft = position.X;
-            this.cursorTop = position.Y;
+            this.Left = position.X;
+            this.Top = position.Y;
         }
         public void SetCursor(int left, int top)
         {
-            this.cursorLeft = left;
-            this.cursorTop = top;
+            this.Left = left;
+            this.Top = top;
         }
         public void Clear()
         {
@@ -262,14 +263,14 @@ namespace SpaceTradingGame.Engine.Console
                     vertices[3 + i * 40] = characterMatrix[x, y].TextureCoords.Y;
 
                     //Foreground Color
-                    vertices[4 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.R / 255.0f;
-                    vertices[5 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.G / 255.0f;
-                    vertices[6 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.B / 255.0f;
+                    vertices[4 + i * 40] = characterMatrix[x, y].ForegroundColor.R;
+                    vertices[5 + i * 40] = characterMatrix[x, y].ForegroundColor.G;
+                    vertices[6 + i * 40] = characterMatrix[x, y].ForegroundColor.B;
 
                     //Background Color
-                    vertices[7 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.R / 255.0f;
-                    vertices[8 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.G / 255.0f;
-                    vertices[9 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.B / 255.0f;
+                    vertices[7 + i * 40] = characterMatrix[x, y].BackgroundColor.R;
+                    vertices[8 + i * 40] = characterMatrix[x, y].BackgroundColor.G;
+                    vertices[9 + i * 40] = characterMatrix[x, y].BackgroundColor.B;
 
 
                     //Coord 1
@@ -280,14 +281,14 @@ namespace SpaceTradingGame.Engine.Console
                     vertices[13 + i * 40] = characterMatrix[x, y].TextureCoords.Y + th;
 
                     //Foreground Color
-                    vertices[14 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.R / 255.0f;
-                    vertices[15 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.G / 255.0f;
-                    vertices[16 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.B / 255.0f;
+                    vertices[14 + i * 40] = characterMatrix[x, y].ForegroundColor.R;
+                    vertices[15 + i * 40] = characterMatrix[x, y].ForegroundColor.G;
+                    vertices[16 + i * 40] = characterMatrix[x, y].ForegroundColor.B;
 
                     //Background Color
-                    vertices[17 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.R / 255.0f;
-                    vertices[18 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.G / 255.0f;
-                    vertices[19 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.B / 255.0f;
+                    vertices[17 + i * 40] = characterMatrix[x, y].BackgroundColor.R;
+                    vertices[18 + i * 40] = characterMatrix[x, y].BackgroundColor.G;
+                    vertices[19 + i * 40] = characterMatrix[x, y].BackgroundColor.B;
 
 
                     //Coord 2
@@ -298,14 +299,14 @@ namespace SpaceTradingGame.Engine.Console
                     vertices[23 + i * 40] = characterMatrix[x, y].TextureCoords.Y + th;
 
                     //Foreground Color
-                    vertices[24 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.R / 255.0f;
-                    vertices[25 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.G / 255.0f;
-                    vertices[26 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.B / 255.0f;
+                    vertices[24 + i * 40] = characterMatrix[x, y].ForegroundColor.R;
+                    vertices[25 + i * 40] = characterMatrix[x, y].ForegroundColor.G;
+                    vertices[26 + i * 40] = characterMatrix[x, y].ForegroundColor.B;
 
                     //Background Color
-                    vertices[27 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.R / 255.0f;
-                    vertices[28 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.G / 255.0f;
-                    vertices[29 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.B / 255.0f;
+                    vertices[27 + i * 40] = characterMatrix[x, y].BackgroundColor.R;
+                    vertices[28 + i * 40] = characterMatrix[x, y].BackgroundColor.G;
+                    vertices[29 + i * 40] = characterMatrix[x, y].BackgroundColor.B;
 
 
                     //Coord 3
@@ -316,14 +317,14 @@ namespace SpaceTradingGame.Engine.Console
                     vertices[33 + i * 40] = characterMatrix[x, y].TextureCoords.Y;
 
                     //Foreground Color
-                    vertices[34 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.R / 255.0f;
-                    vertices[35 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.G / 255.0f;
-                    vertices[36 + i * 40] = (float)characterMatrix[x, y].ForegroundColor.B / 255.0f;
+                    vertices[34 + i * 40] = characterMatrix[x, y].ForegroundColor.R;
+                    vertices[35 + i * 40] = characterMatrix[x, y].ForegroundColor.G;
+                    vertices[36 + i * 40] = characterMatrix[x, y].ForegroundColor.B;
 
                     //Background Color
-                    vertices[37 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.R / 255.0f;
-                    vertices[38 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.G / 255.0f;
-                    vertices[39 + i * 40] = (float)characterMatrix[x, y].BackgroundColor.B / 255.0f;
+                    vertices[37 + i * 40] = characterMatrix[x, y].BackgroundColor.R;
+                    vertices[38 + i * 40] = characterMatrix[x, y].BackgroundColor.G;
+                    vertices[39 + i * 40] = characterMatrix[x, y].BackgroundColor.B;
                     #endregion
                 }
             }
@@ -358,12 +359,10 @@ namespace SpaceTradingGame.Engine.Console
                     this.top = this.bufferHeight - 1;
             }
         }
-        public int CursorLeft { get { return this.cursorLeft; } }
-        public int CursorTop { get { return this.cursorTop; } }
         public int BufferWidth { get { return this.bufferWidth; } }
         public int BufferHeight { get { return this.bufferHeight; } }
-        public Color ForegroundColor { get { return this.foregroundColor; } }
-        public Color BackgroundColor { get { return this.backgroundColor; } }
+        public Color4 ForegroundColor { get { return this.foregroundColor; } }
+        public Color4 BackgroundColor { get { return this.backgroundColor; } }
 
         public DrawingUtilities Draw { get { return this.drawingUtilities; } }
     }
@@ -373,7 +372,12 @@ namespace SpaceTradingGame.Engine.Console
         public char Token;
         public Vector2 TextureCoords;
         public int X, Y;
-        public Color ForegroundColor;
-        public Color BackgroundColor;
+        public Color4 ForegroundColor;
+        public Color4 BackgroundColor;
+
+        public override string ToString()
+        {
+            return string.Format("{0} - ({1}, {2})", Token, X, Y);
+        }
     }
 }

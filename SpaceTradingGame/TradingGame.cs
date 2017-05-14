@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using SpaceTradingGame.Game;
 using SpaceTradingGame.Engine;
 using SpaceTradingGame.Engine.UI;
+using SpaceTradingGame.Engine.Console;
 using OpenTK.Input;
 
 namespace SpaceTradingGame

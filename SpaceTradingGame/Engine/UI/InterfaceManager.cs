@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using OpenTK.Input;
 using SpaceTradingGame.Engine.Console;
+using SpaceTradingGame.Engine.UI.Controls;
 
 namespace SpaceTradingGame.Engine.UI
 {
@@ -13,10 +15,16 @@ namespace SpaceTradingGame.Engine.UI
 
         public GraphicConsole Console { get { return console; } }
 
+        public Point CurrentCursorPosition { get; set; }
+        public Point PreviousCursorPosition { get; set; }
+
         public InterfaceManager(TradingGame game)
         {
             this.game = game;
             this.console = new GraphicConsole(game, 100, 37);
+
+            CurrentCursorPosition = Point.Empty;
+            PreviousCursorPosition = Point.Empty;
 
             this.game.MouseDown += Game_MouseDown;
             this.game.MouseUp += Game_MouseUp;
@@ -26,6 +34,11 @@ namespace SpaceTradingGame.Engine.UI
             this.game.MouseWheel += Game_MouseWheel;
 
             activeInterface = new Interface(this);
+            Button button = new Button(null, "Hello", 5, 5);
+            button.FillColor = Color.Blue;
+            activeInterface.RegisterControl(button);
+
+            activeInterface.OnEnable();
         }
 
         public void DrawFrame(GameTime gameTime)
@@ -57,7 +70,8 @@ namespace SpaceTradingGame.Engine.UI
         }
         private void Game_MouseMove(object sender, MouseMoveEventArgs e)
         {
-            console.SetCursor(console.GetTilePosition(e.Position));
+            PreviousCursorPosition = CurrentCursorPosition;
+            CurrentCursorPosition = console.GetTilePosition(e.Position);
             activeInterface.Game_MouseMove(sender, e);
         }
         private void Game_MouseWheel(object sender, MouseWheelEventArgs e)

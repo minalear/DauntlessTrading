@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK.Input;
 using SpaceTradingGame.Engine.Console;
 
 namespace SpaceTradingGame.Engine.UI.Controls
@@ -30,12 +31,20 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public Control(Control parent)
         {
-            this.isAbsolute = false;
+            this.children = new List<Control>();
             this.IsVisible = true;
 
-            this.parent = parent;
-            this.parent.Children.Add(this);
-            this.children = new List<Control>();
+            if (parent != null)
+            {
+                this.parent = parent;
+                this.parent.Children.Add(this);
+
+                this.isAbsolute = false;
+            }
+            else
+            {
+                this.isAbsolute = true;
+            }
         }
 
         public virtual void DrawStep()
@@ -65,28 +74,43 @@ namespace SpaceTradingGame.Engine.UI.Controls
             }
         }
 
-        protected virtual bool isMouseHover()
+        public virtual bool Contains(Point point)
         {
-            Point mouse = GraphicConsole.GetTilePosition(GraphicConsole.CursorLeft, GraphicConsole.CursorTop);
-
-            if (mouse.X >= this.Position.X && mouse.X < this.Position.X + this.Size.X &&
-                mouse.Y >= this.Position.Y && mouse.Y < this.Position.Y + this.Size.Y)
-            {
-                return true;
-            }
-            return false;
+            return (point.X >= position.X && point.Y >= position.Y && 
+                    point.X <= position.X + size.X && point.Y <= position.Y + size.Y);
         }
-        protected virtual bool wasHover()
+
+        public virtual void MouseDown(MouseButtonEventArgs e)
         {
-            Point mouse = GraphicConsole.GetTilePosition(GraphicConsole.CursorLeft, GraphicConsole.CursorTop);
-
-            if (mouse.X >= this.Position.X && mouse.X < this.Position.X + this.Size.X &&
-                mouse.Y >= this.Position.Y && mouse.Y < this.Position.Y + this.Size.Y)
-            {
-                return true;
-            }
-            return false;
+            foreach (Control control in children)
+                control.MouseDown(e);
         }
+        public virtual void MouseUp(MouseButtonEventArgs e)
+        {
+            foreach (Control control in children)
+                control.MouseUp(e);
+        }
+        public virtual void MouseEnter()
+        {
+            foreach (Control control in children)
+                control.MouseEnter();
+        }
+        public virtual void MouseLeave()
+        {
+            foreach (Control control in children)
+                control.MouseLeave();
+        }
+        public virtual void MouseMove()
+        {
+            foreach (Control control in children)
+                control.MouseMove();
+        }
+        public virtual void MouseWheel(MouseWheelEventArgs e)
+        {
+            foreach (Control control in children)
+                control.MouseWheel(e);
+        }
+
         protected virtual void clearArea()
         {
             GraphicConsole.ClearColor();
