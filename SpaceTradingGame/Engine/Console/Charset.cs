@@ -13,24 +13,24 @@ namespace SpaceTradingGame.Engine.Console
         const string CHARSET_STRING =
             " ☺☻♥♦♣♠•◘○◙♂♀♪♫☼" +
             "►◄↕‼¶§▬↨↑↓→←∟↔▲▼" +
-            "!\"#$%&'()*+,-./0" +
-            "123456789:;<=>?@" +
-            "ABCDEFGHIJKLMNOP" +
-            "QRSTUVWXYZ[\\]^_`" +
-            "abcdefghijklmnop" +
-            "qrstuvwxyz{|}~⌂Ç" +
-            "üéâäàåçêëèïîìÄÅÉ" +
-            "æÆôöòûùÿÖÜ¢£¥₧ƒá" +
-            "íóúñÑªº¿⌐¬½¼¡«»░" +
-            "▒▓│┤╡╢╖╕╣║╗╝╜╛┐└" +
-            "┴┬├─┼╞╟╚╔╩╦╠═╬╧╨" +
-            "╤╥╙╘╒╓╫╪┘┌█▄▌▐▀α" +
-            "ßΓπΣσµτΦΘΩδ∞φε∩≡" +
-            "±≥≤⌠⌡÷≈°∙·√ⁿ²■";
+            "\n!\"#$%&'()*+,-./" +
+            "0123456789:;<=>?" +
+            "@ABCDEFGHIJKLMNO" +
+            "PQRSTUVWXYZ[\\]^_" +
+            "`abcdefghijklmno" +
+            "pqrstuvwxyz{|}~⌂" +
+            "ÇüéâäàåçêëèïîìÄÅ" +
+            "ÉæÆôöòûùÿÖÜ¢£¥₧ƒ" +
+            "áíóúñÑªº¿⌐¬½¼¡«»" +
+            "░▒▓│┤╡╢╖╕╣║╗╝╜╛┐" +
+            "└┴┬├─┼╞╟╚╔╩╦╠═╬╧" +
+            "╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀" +
+            "αßΓπΣσµτΦΘΩδ∞φε∩" +
+            "≡±≥≤⌠⌡÷≈°∙·√ⁿ²■╠";
 
-        public Charset(Content.ContentManager contentManager, int charWidth, int charHeight)
+        public Charset(ContentManager contentManager, int charWidth, int charHeight)
         {
-            this.TextureID = contentManager.LoadTexture("charset.png");
+            this.TextureID = contentManager.LoadTexture("Content/charset.png");
 
             this.CharWidth = charWidth;
             this.CharHeight = charHeight;
@@ -40,11 +40,11 @@ namespace SpaceTradingGame.Engine.Console
             for (int i = 0; i < CHARSET_STRING.Length; i++)
             {
                 char ch = CHARSET_STRING[i];
-                characterIndex.Add(CHARSET_STRING[i], i);
+                characterIndex.Add(ch, i);
             }
 
             //Escape Characters
-            characterIndex.Add('\n', 0);
+            //characterIndex.Add('\n', 0);
             characterIndex.Add('\r', 0);
             characterIndex.Add('\t', 0);
         }

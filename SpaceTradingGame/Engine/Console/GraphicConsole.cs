@@ -9,7 +9,7 @@ namespace SpaceTradingGame.Engine.Console
 {
     public class GraphicConsole
     {
-        private GameWindow game;
+        private TradingGame game;
         private Shader consoleShader;
 
         private int left, top, cursorLeft, cursorTop;
@@ -24,8 +24,8 @@ namespace SpaceTradingGame.Engine.Console
 
         private DrawingUtilities drawingUtilities;
 
-        public GraphicConsole(GameWindow game) : this(game, 80, 30) { } //Default
-        public GraphicConsole(GameWindow game, int bufferWidth, int bufferHeight)
+        public GraphicConsole(TradingGame game) : this(game, 80, 30) { } //Default
+        public GraphicConsole(TradingGame game, int bufferWidth, int bufferHeight)
         {
             this.game = game;
 
@@ -39,7 +39,7 @@ namespace SpaceTradingGame.Engine.Console
             this.backgroundColor = Color.Black;
 
             this.drawingUtilities = new DrawingUtilities(this);
-            this.charset = new Charset(null, 8, 12);
+            this.charset = new Charset(game.Content, 8, 12);
 
             this.initShader();
 
@@ -179,8 +179,8 @@ namespace SpaceTradingGame.Engine.Console
         }
         private void initShader()
         {
-            string vertexSource = /*game.Content.StreamShaderSource("Dauntless.Resources.vertexShader.glsl")*/"FIX";
-            string fragmentSource = /*game.Content.StreamShaderSource("Dauntless.Resources.fragmentShader.glsl")*/"FIX";
+            string vertexSource = game.Content.LoadShaderSource("Content/vertexShader.glsl");
+            string fragmentSource = game.Content.LoadShaderSource("Content/fragmentShader.glsl");
 
             this.consoleShader = new Shader(vertexSource, fragmentSource);
             this.consoleShader.Use();

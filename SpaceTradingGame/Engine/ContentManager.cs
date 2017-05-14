@@ -8,7 +8,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using SpaceTradingGame.Engine.Shaders;
 
-namespace SpaceTradingGame.Engine.Content
+namespace SpaceTradingGame.Engine
 {
     public class ContentManager : IDisposable
     {
@@ -69,6 +69,10 @@ namespace SpaceTradingGame.Engine.Content
             }
 
             return shaderSource;
+        }
+        public string LoadShaderSource(string fileName)
+        {
+            return File.ReadAllText(fileName);
         }
     }
 }
