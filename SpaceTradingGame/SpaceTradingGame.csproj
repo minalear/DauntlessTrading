@@ -57,6 +57,22 @@
     <Compile Include="Engine\ContentManager.cs" />
     <Compile Include="Engine\GameTime.cs" />
     <Compile Include="Engine\Shaders\Shader.cs" />
+    <Compile Include="Engine\UI\Controls\AnimBox.cs" />
+    <Compile Include="Engine\UI\Controls\Button.cs" />
+    <Compile Include="Engine\UI\Controls\ButtonGroup.cs" />
+    <Compile Include="Engine\UI\Controls\CheckBox.cs" />
+    <Compile Include="Engine\UI\Controls\CheckBoxGroup.cs" />
+    <Compile Include="Engine\UI\Controls\Control.cs" />
+    <Compile Include="Engine\UI\Controls\InputBox.cs" />
+    <Compile Include="Engine\UI\Controls\Popup.cs" />
+    <Compile Include="Engine\UI\Controls\ScrollingList.cs" />
+    <Compile Include="Engine\UI\Controls\Slider.cs" />
+    <Compile Include="Engine\UI\Controls\TextBox.cs" />
+    <Compile Include="Engine\UI\Controls\Title.cs" />
+    <Compile Include="Engine\UI\Controls\ToggleButton.cs" />
+    <Compile Include="Engine\UI\Controls\ToggleButtonGroup.cs" />
+    <Compile Include="Engine\UI\Interface.cs" />
+    <Compile Include="Engine\UI\InterfaceManager.cs" />
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Material.cs" />
     <Compile Include="Game\Planetoid.cs" />
@@ -67,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Engine\UI\Interfaces\" />
     <Folder Include="Game\Factories\" />
   </ItemGroup>
   <ItemGroup>

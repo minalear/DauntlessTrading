@@ -11,7 +11,7 @@ namespace SpaceTradingGame.Engine.Console
             this.console = console;
         }
 
-        public void Rect(int x0, int y0, int width, int height, char token, bool solid)
+        public void DrawRect(int x0, int y0, int width, int height, char token, bool solid)
         {
             if (solid)
             {
@@ -35,12 +35,12 @@ namespace SpaceTradingGame.Engine.Console
                 }
             }
         }
-        public void Rect(Rectangle rect, char token, bool solid)
+        public void DrawRect(Rectangle rect, char token, bool solid)
         {
-            Rect(rect.X, rect.Y, rect.Width, rect.Height, token, solid);
+            DrawRect(rect.X, rect.Y, rect.Width, rect.Height, token, solid);
         }
 
-        public void Line(int x0, int y0, int x1, int y1, char token)
+        public void DrawLine(int x0, int y0, int x1, int y1, char token)
         {
             bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
             if (steep) { Swap<int>(ref x0, ref y0); Swap<int>(ref x1, ref y1); }
@@ -61,7 +61,7 @@ namespace SpaceTradingGame.Engine.Console
         }
         public void Swap<T>(ref T lhs, ref T rhs) { T temp; temp = lhs; lhs = rhs; rhs = temp; }
 
-        public void Circle(int xp, int yp, int r, char token)
+        public void DrawCircle(int xp, int yp, int r, char token)
         {
             int x = r, y = 0;
             int radiusError = 1 - x;

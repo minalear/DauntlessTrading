@@ -127,6 +127,11 @@ namespace SpaceTradingGame.Engine.Console
             this.foregroundColor = foreground;
             this.backgroundColor = background;
         }
+        public void SetCursor(Point position)
+        {
+            this.Left = position.X;
+            this.Top = position.Y;
+        }
         public void SetCursor(int left, int top)
         {
             this.Left = left;
@@ -151,6 +156,15 @@ namespace SpaceTradingGame.Engine.Console
         {
             this.foregroundColor = Color.White;
             this.backgroundColor = Color.Black;
+        }
+
+        public Point GetTilePosition(Point position)
+        {
+            return new Point(position.X / charset.CharWidth, position.Y / charset.CharHeight);
+        }
+        public Point GetTilePosition(int x, int y)
+        {
+            return new Point(x / charset.CharWidth, y / charset.CharHeight);
         }
 
         public void RenderFrame()

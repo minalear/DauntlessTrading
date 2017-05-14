@@ -26,7 +26,7 @@ namespace SpaceTradingGame.Engine.Console
             "└┴┬├─┼╞╟╚╔╩╦╠═╬╧" +
             "╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀" +
             "αßΓπΣσµτΦΘΩδ∞φε∩" +
-            "≡±≥≤⌠⌡÷≈°∙·√ⁿ²■╠";
+            "≡±≥≤⌠⌡÷≈°∙·√ⁿ²■";
 
         public Charset(ContentManager contentManager, int charWidth, int charHeight)
         {
