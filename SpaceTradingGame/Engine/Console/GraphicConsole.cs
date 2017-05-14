@@ -129,13 +129,13 @@ namespace SpaceTradingGame.Engine.Console
         }
         public void SetCursor(Point position)
         {
-            this.Left = position.X;
-            this.Top = position.Y;
+            this.cursorLeft = position.X;
+            this.cursorTop = position.Y;
         }
         public void SetCursor(int left, int top)
         {
-            this.Left = left;
-            this.Top = top;
+            this.cursorLeft = left;
+            this.cursorTop = top;
         }
         public void Clear()
         {
@@ -151,6 +151,9 @@ namespace SpaceTradingGame.Engine.Console
                     this.characterMatrix[x, y].BackgroundColor = Color.Black;
                 }
             }
+
+            Left = 0;
+            Top = 0;
         }
         public void ClearColor()
         {

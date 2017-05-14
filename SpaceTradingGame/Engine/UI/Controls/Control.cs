@@ -13,13 +13,13 @@ namespace SpaceTradingGame.Engine.UI.Controls
         protected List<Control> children;
 
         public Control Parent { get { return this.parent; } }
+        public Interface Interface { get; set; }
         public Point Position { get { return this.getPosition(); } set { this.setPosition(value); } }
         public Point Size { get { return this.size; } set { this.size = value; } }
         public List<Control> Children { get { return this.children; } set { this.children = value; } }
         public bool IsVisible { get; set; }
 
-        protected GraphicConsole GraphicConsole { get { return InterfaceManager.Console; } }
-        protected DrawingUtilities DrawingUtilities { get { return InterfaceManager.DrawingUtilities; } }
+        protected GraphicConsole GraphicConsole { get { return Interface.InterfaceManager.Console; } }
 
         public Control()
         {
@@ -90,7 +90,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         protected virtual void clearArea()
         {
             GraphicConsole.ClearColor();
-            DrawingUtilities.DrawRect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
+            GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
         }
         protected Point getPosition()
         {

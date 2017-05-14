@@ -24,15 +24,19 @@ namespace SpaceTradingGame.Engine.UI
             this.game.MouseLeave += Game_MouseLeave;
             this.game.MouseMove += Game_MouseMove;
             this.game.MouseWheel += Game_MouseWheel;
+
+            activeInterface = new Interface(this);
         }
 
         public void DrawFrame(GameTime gameTime)
         {
             activeInterface.DrawFrame(gameTime);
+            console.RenderFrame();
         }
         public void UpdateFrame(GameTime gameTime)
         {
             activeInterface.UpdateFrame(gameTime);
+            console.UpdateFrame(gameTime);
         }
 
         private void Game_MouseDown(object sender, MouseButtonEventArgs e)
@@ -53,6 +57,7 @@ namespace SpaceTradingGame.Engine.UI
         }
         private void Game_MouseMove(object sender, MouseMoveEventArgs e)
         {
+            console.SetCursor(console.GetTilePosition(e.Position));
             activeInterface.Game_MouseMove(sender, e);
         }
         private void Game_MouseWheel(object sender, MouseWheelEventArgs e)

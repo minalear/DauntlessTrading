@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using OpenTK.Input;
 using SpaceTradingGame.Engine.UI.Controls;
@@ -9,6 +10,8 @@ namespace SpaceTradingGame.Engine.UI
     {
         private InterfaceManager interfaceManager;
         private List<Control> controls;
+
+        public InterfaceManager InterfaceManager { get { return interfaceManager; } }
 
         public Interface(InterfaceManager manager)
         {
@@ -47,13 +50,16 @@ namespace SpaceTradingGame.Engine.UI
 
         public void RegisterControl(Control control)
         {
+            control.Interface = this;
             controls.Add(control);
         }
 
         /* INPUT FUNCTIONS */
         public void Game_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            Point mousePoint = new Point(
+                interfaceManager.Console.CursorLeft,
+                interfaceManager.Console.CursorTop);
         }
         public void Game_MouseUp(object sender, MouseButtonEventArgs e)
         {
