@@ -64,6 +64,7 @@ namespace SpaceTradingGame.Engine.UI
         }
         public void DrawStep()
         {
+            Console.Clear();
             activeInterface.DrawStep();
         }
         public void UpdateStep()
