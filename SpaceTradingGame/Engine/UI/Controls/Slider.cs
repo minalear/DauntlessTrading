@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections.Generic;
+using OpenTK.Input;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -41,42 +42,40 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             this.drawRail();
 
-            GraphicConsole.SetColors(this.barColor, this.fillColor);
+            GraphicConsole.SetColor(this.barColor, this.fillColor);
             GraphicConsole.Put(this.barToken, this.barPosition.X, this.barPosition.Y);
             
             base.DrawStep();
         }
         public override void UpdateFrame(GameTime gameTime)
         {
-            if (this.isMouseHover())
-            {
-                #region Scrolling
-                int difference = InputManager.GetDistanceScrolled() / this.scrollSize;
-
-                if (difference != 0)
-                {
-                    this.currentValue += difference;
-
-                    if (this.currentValue < 0f)
-                        this.currentValue = 0f;
-                    else if (this.currentValue > 100f)
-                        this.currentValue = 100f;
-
-                    this.onValueChange();
-                    InterfaceManager.DrawStep();
-                }
-                #endregion
-            }
-            
             base.UpdateFrame(gameTime);
+        }
+        public override void MouseWheel(MouseWheelEventArgs e)
+        {
+            int difference = e.Delta / this.scrollSize;
+
+            if (difference != 0)
+            {
+                this.currentValue += difference;
+
+                if (this.currentValue < 0f)
+                    this.currentValue = 0f;
+                else if (this.currentValue > 100f)
+                    this.currentValue = 100f;
+
+                this.onValueChange();
+                InterfaceManager.DrawStep();
+            }
+
+            base.MouseWheel(e);
         }
 
         protected void onValueChange()
         {
             this.setBarPosition();
 
-            if (this.ValueChanged != null)
-                this.ValueChanged(this, this.currentValue / 100f);
+            this.ValueChanged?.Invoke(this, this.currentValue / 100f);
         }
 
         private void setBarPosition()
@@ -98,20 +97,20 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         private void drawRail()
         {
-            GraphicConsole.SetColors(this.railColor, this.fillColor);
+            GraphicConsole.SetColor(this.railColor, this.fillColor);
             if (this.sliderMode == SliderModes.Horizontal)
-                DrawingUtilities.DrawLine(this.Position.X, this.Position.Y, this.Position.X + this.Size.X, this.Position.Y, this.railToken);
+                GraphicConsole.Draw.Line(this.Position.X, this.Position.Y, this.Position.X + this.Size.X, this.Position.Y, this.railToken);
             else if (this.sliderMode == SliderModes.Vertical)
-                DrawingUtilities.DrawLine(this.Position.X, this.Position.Y, this.Position.X, this.Position.Y + this.Size.Y, this.railToken);
+                GraphicConsole.Draw.Line(this.Position.X, this.Position.Y, this.Position.X, this.Position.Y + this.Size.Y, this.railToken);
         }
 
         private SliderModes sliderMode;
         private char railToken = '═';
         private char barToken = '▓';
 
-        private Color barColor = Color.LightGray;
-        private Color railColor = Color.DarkGray;
-        private Color fillColor = Color.Black;
+        private Color4 barColor = Color.LightGray;
+        private Color4 railColor = Color.DarkGray;
+        private Color4 fillColor = Color.Black;
         private int scrollSize;
 
         private float currentValue = 0f;
@@ -120,9 +119,9 @@ namespace SpaceTradingGame.Engine.UI.Controls
         public SliderModes SliderMode { get { return this.sliderMode; } set { this.sliderMode = value; } }
         public char RailToken { get { return this.railToken; } set { this.railToken = value; } }
         public char BarToken { get { return this.barToken; } set { this.barToken = value; } }
-        public Color BarColor { get { return this.barColor; } set { this.barColor = value; } }
-        public Color RailColor { get { return this.railColor; } set { this.railColor = value; } }
-        public Color FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
+        public Color4 BarColor { get { return this.barColor; } set { this.barColor = value; } }
+        public Color4 RailColor { get { return this.railColor; } set { this.railColor = value; } }
+        public Color4 FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
         public float Value { get { return this.currentValue; } set { this.currentValue = value; this.onValueChange(); } }
 
         public enum SliderModes { Horizontal, Vertical }

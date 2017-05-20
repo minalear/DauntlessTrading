@@ -21,6 +21,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         public bool IsVisible { get; set; }
 
         protected GraphicConsole GraphicConsole { get { return Interface.InterfaceManager.Console; } }
+        protected InterfaceManager InterfaceManager { get { return Interface.InterfaceManager; } }
 
         public Control()
         {
@@ -83,32 +84,42 @@ namespace SpaceTradingGame.Engine.UI.Controls
         public virtual void MouseDown(MouseButtonEventArgs e)
         {
             foreach (Control control in children)
-                control.MouseDown(e);
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseDown(e);
+            }
         }
         public virtual void MouseUp(MouseButtonEventArgs e)
         {
             foreach (Control control in children)
-                control.MouseUp(e);
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseUp(e);
+            }
         }
-        public virtual void MouseEnter()
-        {
-            foreach (Control control in children)
-                control.MouseEnter();
-        }
-        public virtual void MouseLeave()
-        {
-            foreach (Control control in children)
-                control.MouseLeave();
-        }
+        public virtual void MouseEnter() { }
+        public virtual void MouseLeave() { }
         public virtual void MouseMove()
         {
             foreach (Control control in children)
-                control.MouseMove();
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                {
+                    if (!control.Contains(InterfaceManager.PreviousCursorPosition))
+                        control.MouseEnter();
+                    control.MouseMove();
+                }
+                else if (control.Contains(InterfaceManager.PreviousCursorPosition))
+                    control.MouseLeave();
+            }
         }
         public virtual void MouseWheel(MouseWheelEventArgs e)
         {
             foreach (Control control in children)
-                control.MouseWheel(e);
+            {
+                if (control.Contains(InterfaceManager.CurrentCursorPosition))
+                    control.MouseWheel(e);
+            }
         }
 
         protected virtual void clearArea()

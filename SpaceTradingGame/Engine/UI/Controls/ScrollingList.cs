@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK.Input;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -17,8 +19,8 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         public override void DrawStep()
         {
-            GraphicConsole.SetColors(Color.Transparent, this.fillColor);
-            DrawingUtilities.DrawRect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
+            GraphicConsole.SetColor(Color.Transparent, this.fillColor);
+            GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
 
             if (!scroll)
             {
@@ -33,11 +35,11 @@ namespace SpaceTradingGame.Engine.UI.Controls
             else
             {
                 //Scroll Bar Rail
-                GraphicConsole.SetColors(this.scrollRailColor, this.fillColor);
-                DrawingUtilities.DrawLine(this.Position.X + this.Size.X, this.Position.Y, this.Position.X + this.Size.X, this.Position.Y + this.Size.Y - 1, this.scrollRail);
+                GraphicConsole.SetColor(this.scrollRailColor, this.fillColor);
+                GraphicConsole.Draw.Line(this.Position.X + this.Size.X, this.Position.Y, this.Position.X + this.Size.X, this.Position.Y + this.Size.Y - 1, this.scrollRail);
 
                 //Scroll Barl
-                GraphicConsole.SetColors(this.scrollBarColor, this.fillColor);
+                GraphicConsole.SetColor(this.scrollBarColor, this.fillColor);
                 GraphicConsole.SetCursor(this.Position.X + this.Size.X, (int)(this.scrollValue / 100f * this.Size.Y) + this.Position.Y);
                 GraphicConsole.Write(this.scrollBar);
 
@@ -61,72 +63,72 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public override void UpdateFrame(GameTime gameTime)
         {
-            if (this.isMouseHover())
+            base.UpdateFrame(gameTime);
+        }
+        public override void MouseLeave()
+        {
+            this.hoverIndex = -1;
+            InterfaceManager.DrawStep();
+
+            base.MouseLeave();
+        }
+        public override void MouseMove()
+        {
+            int index = getIndexOfClick(InterfaceManager.CurrentCursorPosition);
+            if (index >= 0 && index < this.objectList.Count)
             {
-                #region Scrolling
-                if (this.scroll)
-                {
-                    int differenceValue = InputManager.GetDistanceScrolled();
+                this.hoverIndex = index;
+                InterfaceManager.DrawStep();
 
-                    if (differenceValue != 0)
-                    {
-                        this.scrollValue -= differenceValue / (this.objectList.Count / 2);
-
-                        if (this.scrollValue < 0f)
-                            this.scrollValue = 0f;
-                        else if (this.scrollValue >= 100f)
-                            this.scrollValue = 99f;
-
-                        InterfaceManager.DrawStep();
-                    }
-                }
-                #endregion
-                #region Selection/Hovering
-                if (InputManager.MouseButtonWasClicked(MouseButtons.Left))
-                {
-                    int index = getIndexOfClick(GraphicConsole.GetTilePosition(InputManager.GetCurrentMousePosition()));
-                    if (index >= 0 && index < this.objectList.Count)
-                    {
-                        this.selectedIndex = index;
-                        InterfaceManager.DrawStep();
-
-                        this.onSelect();
-                    }
-                    else
-                    {
-                        this.selectedIndex = -1;
-
-                        if (this.Deselected != null)
-                            this.Deselected(this);
-
-                        InterfaceManager.DrawStep();
-                    }
-                }
-                else //Get Hover
-                {
-                    int index = getIndexOfClick(GraphicConsole.GetTilePosition(InputManager.GetCurrentMousePosition()));
-                    if (index >= 0 && index < this.objectList.Count)
-                    {
-                        this.hoverIndex = index;
-                        InterfaceManager.DrawStep();
-
-                        this.onHover();
-                    }
-                    else
-                    {
-                        this.hoverIndex = -1;
-                        InterfaceManager.DrawStep();
-                    }
-                }
-                #endregion
+                this.onHover();
             }
-            else if (this.wasHover())
+            else
             {
                 this.hoverIndex = -1;
                 InterfaceManager.DrawStep();
             }
 
-            base.UpdateFrame(gameTime);
+            base.MouseMove();
+        }
+        public override void MouseUp(MouseButtonEventArgs e)
+        {
+            int index = getIndexOfClick(InterfaceManager.CurrentCursorPosition);
+            if (index >= 0 && index < this.objectList.Count)
+            {
+                this.selectedIndex = index;
+                InterfaceManager.DrawStep();
+
+                this.onSelect();
+            }
+            else
+            {
+                this.selectedIndex = -1;
+
+                this.Deselected?.Invoke(this);
+
+                InterfaceManager.DrawStep();
+            }
+
+            base.MouseUp(e);
+        }
+        public override void MouseWheel(MouseWheelEventArgs e)
+        {
+            if (this.scroll)
+            {
+                if (e.Delta != 0)
+                {
+                    this.scrollValue -= e.Delta / (this.objectList.Count / 2);
+
+                    if (this.scrollValue < 0f)
+                        this.scrollValue = 0f;
+                    else if (this.scrollValue >= 100f)
+                        this.scrollValue = 99f;
+
+                    InterfaceManager.DrawStep();
+                }
+            }
+
+            base.MouseWheel(e);
         }
 
         public void SetList<T>(List<T> newList) where T:ListItem
@@ -204,13 +206,11 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         protected void onHover()
         {
-            if (this.Hover != null)
-                this.Hover(this, this.hoverIndex);
+            this.Hover?.Invoke(this, this.hoverIndex);
         }
         protected void onSelect()
         {
-            if (this.Selected != null)
-                this.Selected(this, this.selectedIndex);
+            this.Selected?.Invoke(this, this.selectedIndex);
         }
 
         private void setupList()
@@ -259,22 +259,22 @@ namespace SpaceTradingGame.Engine.UI.Controls
         private void setConsoleColors(int index)
         {
             if (index == this.selectedIndex)
-                GraphicConsole.SetColors(this.selectedTextColor, this.selectedFillColor);
+                GraphicConsole.SetColor(this.selectedTextColor, this.selectedFillColor);
             else if (index == this.hoverIndex)
-                GraphicConsole.SetColors(this.hoverTextColor, this.hoverFillColor);
+                GraphicConsole.SetColor(this.hoverTextColor, this.hoverFillColor);
             else
-                GraphicConsole.SetColors(this.objectList[index].TextColor, this.fillColor);
+                GraphicConsole.SetColor(this.objectList[index].TextColor, this.fillColor);
         }
 
         private List<ListItem> objectList;
-        private Color textColor = Color.White;
-        private Color fillColor = Color.Black;
-        private Color selectedTextColor = Color.Black;
-        private Color selectedFillColor = Color.White;
-        private Color hoverTextColor = Color.White;
-        private Color hoverFillColor = new Color(170, 181, 187);
-        private Color scrollRailColor = Color.Gray;
-        private Color scrollBarColor = Color.LightGray;
+        private Color4 textColor = Color4.White;
+        private Color4 fillColor = Color4.Black;
+        private Color4 selectedTextColor = Color4.Black;
+        private Color4 selectedFillColor = Color4.White;
+        private Color4 hoverTextColor = Color4.White;
+        private Color4 hoverFillColor = new Color4(170, 181, 187, 255);
+        private Color4 scrollRailColor = Color4.Gray;
+        private Color4 scrollBarColor = Color4.LightGray;
 
         private bool scroll = false;
         private int selectedIndex = -1;
@@ -293,14 +293,14 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         #region Properties
         public List<ListItem> Items { get { return this.objectList; } set { this.SetList(value); } }
-        public Color TextColor { get { return this.textColor; } set { this.textColor = value; } }
-        public Color FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
-        public Color SelectedTextColor { get { return this.selectedTextColor; } set { this.selectedTextColor = value; } }
-        public Color SelectedFillColor { get { return this.selectedFillColor; } set { this.selectedFillColor = value; } }
-        public Color HoverTextColor { get { return this.hoverTextColor; } set { this.hoverTextColor = value; } }
-        public Color HoverFillColor { get { return this.hoverFillColor; } set { this.hoverFillColor = value; } }
-        public Color ScrollRailColor { get { return this.scrollRailColor; } set { this.scrollRailColor = value; } }
-        public Color ScrollBarColor { get { return this.scrollBarColor; } set { this.scrollBarColor = value; } }
+        public Color4 TextColor { get { return this.textColor; } set { this.textColor = value; } }
+        public Color4 FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
+        public Color4 SelectedTextColor { get { return this.selectedTextColor; } set { this.selectedTextColor = value; } }
+        public Color4 SelectedFillColor { get { return this.selectedFillColor; } set { this.selectedFillColor = value; } }
+        public Color4 HoverTextColor { get { return this.hoverTextColor; } set { this.hoverTextColor = value; } }
+        public Color4 HoverFillColor { get { return this.hoverFillColor; } set { this.hoverFillColor = value; } }
+        public Color4 ScrollRailColor { get { return this.scrollRailColor; } set { this.scrollRailColor = value; } }
+        public Color4 ScrollBarColor { get { return this.scrollBarColor; } set { this.scrollBarColor = value; } }
         public bool HasSelection { get { return (this.selectedIndex != -1); } }
         public int SelectedIndex { get { return this.selectedIndex; } set { this.SetSelection(value); } }
         #endregion

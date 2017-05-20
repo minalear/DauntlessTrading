@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK.Input;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -17,24 +18,24 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             if (this.visible)
             {
-                GraphicConsole.SetColors(Color.Transparent, this.fillColor);
-                DrawingUtilities.DrawRect(this.position.X, this.position.Y, this.size.X, this.size.Y, ' ', true);
+                GraphicConsole.SetColor(Color.Transparent, this.fillColor);
+                GraphicConsole.Draw.Rect(this.position.X, this.position.Y, this.size.X, this.size.Y, ' ', true);
 
-                GraphicConsole.SetColors(this.borderColor, this.fillColor);
-                DrawingUtilities.DrawRect(this.position.X, this.position.Y, this.size.X, this.size.Y, this.borderToken, false);
+                GraphicConsole.SetColor(this.borderColor, this.fillColor);
+                GraphicConsole.Draw.Rect(this.position.X, this.position.Y, this.size.X, this.size.Y, this.borderToken, false);
 
                 if (this.isMultilined)
                 {
                     for (int i = 0; i < this.lines.Length; i++)
                     {
-                        GraphicConsole.SetColors(this.textColor, this.fillColor);
+                        GraphicConsole.SetColor(this.textColor, this.fillColor);
                         GraphicConsole.SetCursor((GraphicConsole.BufferWidth / 2) - (this.size.X - 4) / 2, this.position.Y + 2 + i);
                         GraphicConsole.Write(this.lines[i]);
                     }
                 }
                 else
                 {
-                    GraphicConsole.SetColors(this.textColor, this.fillColor);
+                    GraphicConsole.SetColor(this.textColor, this.fillColor);
                     GraphicConsole.SetCursor((GraphicConsole.BufferWidth / 2) - (this.size.X - 4) / 2, GraphicConsole.BufferHeight / 2);
                     GraphicConsole.Write(this.message);
                 }
@@ -46,7 +47,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             if (this.visible)
             {
-                this.elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                this.elapsedTime += gameTime.ElapsedTime.Milliseconds;
 
                 if (this.elapsedTime >= duration)
                 {
@@ -55,9 +56,6 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
                     InterfaceManager.DrawStep();
                 }
-
-                if (InputManager.MouseButtonIsDown(MouseButtons.Left))
-                    this.elapsedTime = this.duration;
             }
         }
 
@@ -86,9 +84,17 @@ namespace SpaceTradingGame.Engine.UI.Controls
             InterfaceManager.DrawStep();
         }
 
+        public override void MouseUp(MouseButtonEventArgs e)
+        {
+            //Clear the message from the screen
+            if (this.visible)
+                this.elapsedTime = this.duration;
+
+            base.MouseUp(e);
+        }
         private void setSize()
         {
-            if (this.message.Contains('\n'))
+            if (this.message.Contains("\n"))
             {
                 int longestWidth = 0;
 

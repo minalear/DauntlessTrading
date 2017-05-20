@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections.Generic;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -27,11 +27,11 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         public override void DrawStep()
         {
-            GraphicConsole.SetColors(this.textColor, this.fillColor);
+            GraphicConsole.SetColor(this.textColor, this.fillColor);
 
             if (this.textAlignMode == TextAlignModes.Center)
             {
-                int x = (int)(this.Position.X - this.text.Length / 2);
+                int x = this.Position.X - this.text.Length / 2;
 
                 GraphicConsole.SetCursor(x, this.Position.Y);
                 GraphicConsole.Write(this.text);
@@ -43,7 +43,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
             }
             else if (this.textAlignMode == TextAlignModes.Right)
             {
-                int x = (int)(this.Position.X - this.text.Length);
+                int x = this.Position.X - this.text.Length;
                 
                 GraphicConsole.SetCursor(x, this.Position.Y);
                 GraphicConsole.Write(this.text);
@@ -54,14 +54,14 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         private string text;
         private TextAlignModes textAlignMode = TextAlignModes.Center;
-        private Color textColor = Color.White;
-        private Color fillColor = Color.Black;
+        private Color4 textColor = Color.White;
+        private Color4 fillColor = Color.Black;
 
         #region Properties
         public string Text { get { return this.text; } set { this.text = value; } }
         public TextAlignModes AlignMode { get { return this.textAlignMode; } set { this.textAlignMode = value; } }
-        public Color TextColor { get { return this.textColor; } set { this.textColor = value; } }
-        public Color FillColor { get { return this.fillColor; } set { this.fillColor = value; } } 
+        public Color4 TextColor { get { return this.textColor; } set { this.textColor = value; } }
+        public Color4 FillColor { get { return this.fillColor; } set { this.fillColor = value; } } 
         #endregion
 
         public enum TextAlignModes { Center, Left, Right }

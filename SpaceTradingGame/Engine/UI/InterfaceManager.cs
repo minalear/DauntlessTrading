@@ -34,9 +34,12 @@ namespace SpaceTradingGame.Engine.UI
             this.game.MouseWheel += Game_MouseWheel;
 
             activeInterface = new Interface(this);
-            Button button = new Button(null, "Hello", 5, 5);
-            button.FillColor = Color.Blue;
-            activeInterface.RegisterControl(button);
+            Button button1 = new Button(null, "Hello", 5, 5);
+            ToggleButton button2 = new ToggleButton(null, "Toggle", 5, 9);
+
+            button1.FillColor = Color.Blue;
+            activeInterface.RegisterControl(button1);
+            activeInterface.RegisterControl(button2);
 
             activeInterface.OnEnable();
         }
@@ -50,6 +53,14 @@ namespace SpaceTradingGame.Engine.UI
         {
             activeInterface.UpdateFrame(gameTime);
             console.UpdateFrame(gameTime);
+        }
+        public void DrawStep()
+        {
+            activeInterface.DrawStep();
+        }
+        public void UpdateStep()
+        {
+            activeInterface.UpdateStep();
         }
 
         private void Game_MouseDown(object sender, MouseButtonEventArgs e)

@@ -8,9 +8,8 @@ namespace SpaceTradingGame.Engine.UI
 {
     public class Interface
     {
+        private List<Control> controls;
         private InterfaceManager interfaceManager;
-
-        private List<Control> controls, hoveredControls;
 
         public InterfaceManager InterfaceManager { get { return interfaceManager; } }
 

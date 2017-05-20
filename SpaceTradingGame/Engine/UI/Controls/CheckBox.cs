@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections.Generic;
+using OpenTK.Input;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -21,11 +22,11 @@ namespace SpaceTradingGame.Engine.UI.Controls
             GraphicConsole.SetCursor(this.Position.X, this.Position.Y);
 
             if (this.isHover) //Mouse is hovering
-                GraphicConsole.SetColors(this.foregroundColorHover, this.backgroundColorHover);
+                GraphicConsole.SetColor(this.foregroundColorHover, this.backgroundColorHover);
             else if (this.enabled) //Check box is checked
-                GraphicConsole.SetColors(this.foregroundColorEnabled, this.backgroundColorEnabled);
+                GraphicConsole.SetColor(this.foregroundColorEnabled, this.backgroundColorEnabled);
             else //Check box isn't checked
-                GraphicConsole.SetColors(this.foregroundColorDisabled, this.backgroundColorDisabled);
+                GraphicConsole.SetColor(this.foregroundColorDisabled, this.backgroundColorDisabled);
 
 
             if (this.enabled)
@@ -37,42 +38,47 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public override void UpdateFrame(GameTime gameTime)
         {
-            if (this.isMouseHover())
-            {
-                this.isHover = true;
+            
+        }
 
-                if (InputManager.MouseButtonWasClicked(MouseButtons.Left))
-                {
-                    this.onToggle();
+        public override void MouseEnter()
+        {
+            this.isHover = true;
+            this.DrawStep();
 
-                    InterfaceManager.UpdateStep();
-                    InterfaceManager.DrawStep();
+            base.MouseEnter();
+        }
+        public override void MouseLeave()
+        {
+            this.isHover = false;
+            this.DrawStep();
 
-                    this.isHover = false;
-                }
-                else if (InputManager.MouseButtonIsDown(MouseButtons.Left))
-                {
-                    this.isHover = false;
-                    this.DrawStep();
-                }
-                else if (!this.wasHover())
-                {
-                    this.DrawStep();
-                }
-            }
-            else if (this.wasHover())
-            {
-                this.isHover = false;
-                this.DrawStep();
-            }
+            base.MouseLeave();
+        }
+        public override void MouseDown(MouseButtonEventArgs e)
+        {
+            this.isHover = false;
+            this.DrawStep();
+
+            base.MouseDown(e);
+        }
+        public override void MouseUp(MouseButtonEventArgs e)
+        {
+            this.onToggle();
+
+            InterfaceManager.UpdateStep();
+            InterfaceManager.DrawStep();
+
+            this.isHover = false;
+
+            base.MouseUp(e);
         }
 
         protected void onToggle()
         {
             this.enabled = !this.enabled;
 
-            if (this.Toggled != null)
-                this.Toggled(this);
+            this.Toggled?.Invoke(this);
         }
 
         private char enabledToken = '⌂';
@@ -81,17 +87,17 @@ namespace SpaceTradingGame.Engine.UI.Controls
         private bool enabled = false;
         private bool isHover = false;
 
-        private Color foregroundColorEnabled = Color.Black;
-        private Color foregroundColorDisabled = Color.White;
-        private Color foregroundColorHover = Color.White;
+        private Color4 foregroundColorEnabled = Color4.Black;
+        private Color4 foregroundColorDisabled = Color4.White;
+        private Color4 foregroundColorHover = Color4.White;
 
-        private Color backgroundColorEnabled = Color.White;
-        private Color backgroundColorDisabled = Color.Black;
-        private Color backgroundColorHover = new Color(170, 181, 187);
+        private Color4 backgroundColorEnabled = Color4.White;
+        private Color4 backgroundColorDisabled = Color4.Black;
+        private Color4 backgroundColorHover = new Color4(170, 181, 187, 255);
 
         #region Properties
-        public Color ForegroundColor { get; set; }
-        public Color BackgroundColor { get; set; }
+        public Color4 ForegroundColor { get; set; }
+        public Color4 BackgroundColor { get; set; }
         public char EnabledToken { get { return this.enabledToken; } set { this.enabledToken = value; } }
         public char DisabledToken { get { return this.disabledToken; } set { this.disabledToken = value; } }
         public bool Enabled { get { return this.enabled; } set { this.enabled = value; } }

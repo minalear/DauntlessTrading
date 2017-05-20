@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Drawing;
 using System.Collections.Generic;
 
@@ -43,7 +44,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             if (!this.isPaused)
             {
-                this.elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                this.elapsedTime += gameTime.ElapsedTime.Milliseconds;
 
                 if (this.elapsedTime >= this.timePerFrame)
                     this.UpdateStep();

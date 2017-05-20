@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections.Generic;
+using OpenTK.Input;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -37,7 +38,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
             {
                 //Fill Area
                 GraphicConsole.SetColor(Color.Transparent, this.fillColorHover);
-                DrawingUtilities.DrawRect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
+                GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
 
                 //Write Text
                 GraphicConsole.SetColor(this.textColorHover, this.fillColorHover);
@@ -48,7 +49,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
             {
                 //Fill Area
                 GraphicConsole.SetColor(Color.Transparent, this.fillColor);
-                DrawingUtilities.DrawRect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
+                GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
 
                 //Write Text
                 GraphicConsole.SetColor(this.textColor, this.fillColor);
@@ -59,7 +60,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
             {
                 //Fill Area
                 GraphicConsole.SetColor(Color.Transparent, this.fillColorPressed);
-                DrawingUtilities.DrawRect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
+                GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
 
                 //Write Text
                 GraphicConsole.SetColor(this.textColorPressed, this.fillColorPressed);
@@ -71,46 +72,51 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public override void UpdateFrame(GameTime gameTime)
         {
-            if (this.isMouseHover())
-            {
-                this.mode = ButtonModes.Hover;
 
-                if (InputManager.MouseButtonWasClicked(MouseButtons.Left))
-                {
-                    this.onButtonPress(MouseButtons.Left);
+        }
 
-                    InterfaceManager.UpdateStep();
-                    InterfaceManager.DrawStep();
-                }
-                else if (InputManager.MouseButtonIsDown(MouseButtons.Left))
-                {
-                    this.mode = ButtonModes.Pressed;
-                    this.DrawStep();
-                }
-                else if (!this.wasHover())
-                {
-                    this.onButtonHover();
-                    this.DrawStep();
-                }
-            }
-            else if (this.wasHover())
-            {
-                if (this.enabled)
-                    this.mode = ButtonModes.Pressed;
-                else
-                    this.mode = ButtonModes.Normal;
+        public override void MouseEnter()
+        {
+            this.mode = ButtonModes.Hover;
+            this.onButtonHover();
+            this.DrawStep();
 
-                InterfaceManager.DrawStep();
-            }
+            base.MouseEnter();
+        }
+        public override void MouseLeave()
+        {
+            if (this.enabled)
+                this.mode = ButtonModes.Pressed;
+            else
+                this.mode = ButtonModes.Normal;
+
+            InterfaceManager.DrawStep();
+
+            base.MouseLeave();
+        }
+        public override void MouseDown(MouseButtonEventArgs e)
+        {
+            this.mode = ButtonModes.Pressed;
+            this.DrawStep();
+
+            base.MouseDown(e);
+        }
+        public override void MouseUp(MouseButtonEventArgs e)
+        {
+            this.onButtonPress(MouseButton.Left);
+
+            InterfaceManager.UpdateStep();
+            InterfaceManager.DrawStep();
+
+            base.MouseUp(e);
         }
 
         //Event Methods
-        protected void onButtonPress(MouseButtons button)
+        protected void onButtonPress(MouseButton button)
         {
             this.enabled = !this.enabled;
 
-            if (this.Click != null)
-                this.Click(this);
+            this.Click?.Invoke(this);
 
             if (this.enabled)
                 this.mode = ButtonModes.Pressed;
@@ -119,8 +125,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         protected void onButtonHover()
         {
-            if (this.Hover != null)
-                this.Hover(this);
+            this.Hover?.Invoke(this);
         }
 
         private void setDefaults()
@@ -141,9 +146,9 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
 
         private string text;
-        private Color textColor, fillColor;
-        private Color textColorHover, fillColorHover;
-        private Color textColorPressed, fillColorPressed;
+        private Color4 textColor, fillColor;
+        private Color4 textColorHover, fillColorHover;
+        private Color4 textColorPressed, fillColorPressed;
         private ButtonModes mode;
         private Point textPosition;
         private bool enabled = false;
@@ -152,23 +157,23 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         #region Properties
         public string Text { get { return this.text; } set { this.text = value; this.setTextPosition(); } }
-        public Color TextColor { get { return this.textColor; } set { this.textColor = value; } }
-        public Color FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
-        public Color TextColorHover { get { return this.textColorHover; } set { this.textColorHover = value; } }
-        public Color FillColorHover { get { return this.fillColorHover; } set { this.fillColorHover = value; } }
-        public Color TextColorPressed { get { return this.textColorPressed; } set { this.textColorPressed = value; } }
-        public Color FillColorPressed { get { return this.fillColorPressed; } set { this.fillColorPressed = value; } }
+        public Color4 TextColor { get { return this.textColor; } set { this.textColor = value; } }
+        public Color4 FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
+        public Color4 TextColorHover { get { return this.textColorHover; } set { this.textColorHover = value; } }
+        public Color4 FillColorHover { get { return this.fillColorHover; } set { this.fillColorHover = value; } }
+        public Color4 TextColorPressed { get { return this.textColorPressed; } set { this.textColorPressed = value; } }
+        public Color4 FillColorPressed { get { return this.fillColorPressed; } set { this.fillColorPressed = value; } }
         public bool Enabled { get { return this.enabled; } set { this.enabled = value; } }
         #endregion
         #region Constants
-        private static Color DEFAULT_TEXT_COLOR = Color.White;
-        private static Color DEFAULT_FILL_COLOR = Color.Black;
+        private static Color4 DEFAULT_TEXT_COLOR = Color4.White;
+        private static Color4 DEFAULT_FILL_COLOR = Color4.Black;
 
-        private static Color DEFAULT_TEXT_HOVER_COLOR = Color.White;
-        private static Color DEFAULT_FILL_HOVER_COLOR = new Color(170, 181, 187);
+        private static Color4 DEFAULT_TEXT_HOVER_COLOR = Color4.White;
+        private static Color4 DEFAULT_FILL_HOVER_COLOR = new Color4(170, 181, 187, 255);
 
-        private static Color DEFAULT_TEXT_PRESSED_COLOR = Color.Black;
-        private static Color DEFAULT_FILL_PRESSED_COLOR = Color.White;
+        private static Color4 DEFAULT_TEXT_PRESSED_COLOR = Color4.Black;
+        private static Color4 DEFAULT_FILL_PRESSED_COLOR = Color4.White;
         #endregion
 
         public event ButtonToggled Click;

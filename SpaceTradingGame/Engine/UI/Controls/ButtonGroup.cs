@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK.Input;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -26,10 +27,9 @@ namespace SpaceTradingGame.Engine.UI.Controls
             this.buttons.Add(button);
         }
 
-        void button_Click(object sender, MouseButtons button)
+        void button_Click(object sender, MouseButton button)
         {
-            if (Click != null)
-                Click((Button)sender);
+            Click?.Invoke((Button)sender);
         }
 
         public event ButtonClicked Click;
