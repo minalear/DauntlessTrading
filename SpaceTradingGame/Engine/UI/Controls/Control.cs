@@ -139,7 +139,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         protected void setPosition(Point point)
         {
-            if (!this.isAbsolute)
+            if (this.isAbsolute)
                 this.position = point;
             else
             {

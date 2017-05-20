@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 using OpenTK.Input;
 using SpaceTradingGame.Engine.Console;
-using SpaceTradingGame.Engine.UI.Controls;
+using SpaceTradingGame.Engine.UI.Interfaces;
 
 namespace SpaceTradingGame.Engine.UI
 {
@@ -12,6 +13,7 @@ namespace SpaceTradingGame.Engine.UI
         private GraphicConsole console;
 
         private Interface activeInterface;
+        private Dictionary<string, Interface> interfaces;
 
         public GraphicConsole Console { get { return console; } }
 
@@ -23,6 +25,8 @@ namespace SpaceTradingGame.Engine.UI
             this.game = game;
             this.console = new GraphicConsole(game, 100, 37);
 
+            this.interfaces = new Dictionary<string, Interface>();
+
             CurrentCursorPosition = Point.Empty;
             PreviousCursorPosition = Point.Empty;
 
@@ -33,14 +37,18 @@ namespace SpaceTradingGame.Engine.UI
             this.game.MouseMove += Game_MouseMove;
             this.game.MouseWheel += Game_MouseWheel;
 
-            activeInterface = new Interface(this);
-            Button button1 = new Button(null, "Hello", 5, 5);
-            ToggleButton button2 = new ToggleButton(null, "Toggle", 5, 9);
+            this.interfaces.Add("Test", new TestInterface(this));
+            this.interfaces.Add("Second", new SecondInterface(this));
 
-            button1.FillColor = Color.Blue;
-            activeInterface.RegisterControl(button1);
-            activeInterface.RegisterControl(button2);
+            ChangeInterface("Test");
+        }
 
+        public void ChangeInterface(string name)
+        {
+            if (activeInterface != null)
+                activeInterface.OnDisable();
+
+            activeInterface = this.interfaces[name];
             activeInterface.OnEnable();
         }
 
