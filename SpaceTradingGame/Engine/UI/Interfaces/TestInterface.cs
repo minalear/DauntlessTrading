@@ -16,7 +16,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             button.Click += (sender, e) =>
             {
-                InterfaceManager.ChangeInterface("Second");
+                InterfaceManager.ChangeInterface("Test");
             };
             button2.Click += (sender, e) =>
             {
