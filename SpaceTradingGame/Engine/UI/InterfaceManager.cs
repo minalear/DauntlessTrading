@@ -15,6 +15,7 @@ namespace SpaceTradingGame.Engine.UI
         private Interface activeInterface;
         private Dictionary<string, Interface> interfaces;
 
+        public TradingGame Game { get { return game; } }
         public GraphicConsole Console { get { return console; } }
 
         public Point CurrentCursorPosition { get; set; }
@@ -39,8 +40,9 @@ namespace SpaceTradingGame.Engine.UI
 
             this.interfaces.Add("Test", new TestInterface(this));
             this.interfaces.Add("Trading", new TradingInterface(this));
+            this.interfaces.Add("Travel", new TravelInterface(this));
 
-            ChangeInterface("Trading");
+            ChangeInterface("Travel");
         }
 
         public void ChangeInterface(string name)

@@ -75,7 +75,9 @@
     <Compile Include="Engine\UI\InterfaceManager.cs" />
     <Compile Include="Engine\UI\Interfaces\TestInterface.cs" />
     <Compile Include="Engine\UI\Interfaces\TradingInterface.cs" />
+    <Compile Include="Engine\UI\Interfaces\TravelInterface.cs" />
     <Compile Include="Engine\Utilities.cs" />
+    <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Material.cs" />
     <Compile Include="Game\Planetoid.cs" />

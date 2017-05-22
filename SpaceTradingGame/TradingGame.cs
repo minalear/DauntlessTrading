@@ -16,12 +16,14 @@ namespace SpaceTradingGame
 
         private ContentManager content;
         private InterfaceManager interfaceManager;
+        private GameManager gameManager;
 
         public TradingGame() : base(799, 443, GraphicsMode.Default, "Dauntless Trading Company")
         {
             gameTime = new GameTime();
 
             content = new ContentManager(this);
+            gameManager = new GameManager();
             interfaceManager = new InterfaceManager(this);
         }
 
@@ -40,5 +42,6 @@ namespace SpaceTradingGame
         }
 
         public ContentManager Content { get { return content; } }
+        public GameManager GameManager { get { return gameManager; } }
     }
 }
