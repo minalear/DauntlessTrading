@@ -13,15 +13,28 @@ namespace SpaceTradingGame.Game
             Materials.Add(Material.Hydrogen, new MetaInfo(Material.Hydrogen, 100));
             Materials.Add(Material.Copper, new MetaInfo(Material.Copper, 9));
             Materials.Add(Material.Gold, new MetaInfo(Material.Gold, 87));
-
-            PrintDebugInfo(Material.Hydrogen);
-            PrintDebugInfo(Material.Copper);
-            PrintDebugInfo(Material.Gold);
         }
 
-        public void PrintDebugInfo(Material material)
+        public double Buy(Material material, int amount)
         {
-            Console.WriteLine("{0} - {1} - ${2}", material.Name, Materials[material].Amount, Materials[material].Price);
+            if (amount > 0 && amount <= Materials[material].Amount)
+            {
+                double total = Materials[material].Price * amount;
+                Materials[material].Amount -= amount;
+                Materials[material].CalculatePrice();
+
+                return total;
+            }
+
+            return 0.0;
+        }
+        public double Sell(Material material, int amount)
+        {
+            double total = Materials[material].Price * amount;
+            Materials[material].Amount += amount;
+            Materials[material].CalculatePrice();
+
+            return total;
         }
 
         public class MetaInfo

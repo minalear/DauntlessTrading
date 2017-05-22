@@ -14,6 +14,11 @@ namespace SpaceTradingGame.Game
         public double Weight { get; set; }
         public int Rarity { get; set; }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public static Material Hydrogen = new Material()
         {
             Name = "Hydrogen",
