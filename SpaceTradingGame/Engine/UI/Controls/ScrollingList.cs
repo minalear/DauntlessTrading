@@ -38,7 +38,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
                 GraphicConsole.SetColor(this.scrollRailColor, this.fillColor);
                 GraphicConsole.Draw.Line(this.Position.X + this.Size.X, this.Position.Y, this.Position.X + this.Size.X, this.Position.Y + this.Size.Y - 1, this.scrollRail);
 
-                //Scroll Barl
+                //Scroll Bar
                 GraphicConsole.SetColor(this.scrollBarColor, this.fillColor);
                 GraphicConsole.SetCursor(this.Position.X + this.Size.X, (int)(this.scrollValue / 100f * this.Size.Y) + this.Position.Y);
                 GraphicConsole.Write(this.scrollBar);

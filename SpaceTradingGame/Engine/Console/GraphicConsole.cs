@@ -25,6 +25,8 @@ namespace SpaceTradingGame.Engine.Console
 
         private DrawingUtilities drawingUtilities;
 
+        //TODO Create a bounding function that prevents drawing out of a specific square
+
         public GraphicConsole(TradingGame game) : this(game, 80, 30) { } //Default
         public GraphicConsole(TradingGame game, int bufferWidth, int bufferHeight)
         {

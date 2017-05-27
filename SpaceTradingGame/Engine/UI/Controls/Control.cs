@@ -122,12 +122,18 @@ namespace SpaceTradingGame.Engine.UI.Controls
             }
         }
 
+        public void SetParent(Control parent)
+        {
+            this.parent = parent;
+            this.isAbsolute = false;
+        }
+
         protected virtual void clearArea()
         {
             GraphicConsole.ClearColor();
             GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
         }
-        protected Point getPosition()
+        protected virtual Point getPosition()
         {
             if (this.isAbsolute)
                 return this.position;
@@ -137,7 +143,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
                 return new Point(this.position.X + parentPos.X, this.position.Y + parentPos.Y);
             }
         }
-        protected void setPosition(Point point)
+        protected virtual void setPosition(Point point)
         {
             if (this.isAbsolute)
                 this.position = point;

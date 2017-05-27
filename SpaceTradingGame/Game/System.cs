@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SpaceTradingGame.Game
 {
-    public class System
+    public class System : Engine.UI.Controls.ListItem
     {
         public string Name { get; set; }
         public List<Planetoid> Planetoids { get; set; }
@@ -12,6 +12,8 @@ namespace SpaceTradingGame.Game
         {
             Name = name;
             Planetoids = new List<Planetoid>();
+
+            this.ListText = Name;
         }
     }
 }

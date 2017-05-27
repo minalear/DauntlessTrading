@@ -12,6 +12,7 @@ namespace SpaceTradingGame.Engine.UI
         private InterfaceManager interfaceManager;
 
         public InterfaceManager InterfaceManager { get { return interfaceManager; } }
+        public Engine.Console.GraphicConsole GraphicConsole { get { return interfaceManager.Console; } }
         public Game.GameManager GameManager { get { return interfaceManager.Game.GameManager; } }
 
         public Interface(InterfaceManager manager)
