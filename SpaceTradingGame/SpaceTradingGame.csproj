@@ -73,6 +73,7 @@
     <Compile Include="Engine\UI\Controls\ToggleButtonGroup.cs" />
     <Compile Include="Engine\UI\Interface.cs" />
     <Compile Include="Engine\UI\InterfaceManager.cs" />
+    <Compile Include="Engine\UI\Interfaces\ShipScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TestInterface.cs" />
     <Compile Include="Engine\UI\Interfaces\TradingInterface.cs" />
