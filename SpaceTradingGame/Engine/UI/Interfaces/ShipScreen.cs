@@ -43,7 +43,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             };
             scrollingList.SetList(list);
 
-            descriptionBox.Text = "This is a very cool and awesome description box.  <color Blue>Hello I'm blue.<color>";
+            descriptionBox.Text = "This is a very <color Red>cool<color> and <color Yellow>awesome<color> description box.  <color Blue>Hello I'm blue.<color>";
 
             //Titles
             RegisterControl(shipDesignationTitle);
