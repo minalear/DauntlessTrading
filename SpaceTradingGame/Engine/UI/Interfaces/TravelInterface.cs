@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using SpaceTradingGame.Game;
-using SpaceTradingGame.Game.UI.Controls;
 using SpaceTradingGame.Engine.UI.Controls;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces

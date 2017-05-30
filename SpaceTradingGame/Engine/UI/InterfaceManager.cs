@@ -38,11 +38,13 @@ namespace SpaceTradingGame.Engine.UI
             this.game.MouseMove += Game_MouseMove;
             this.game.MouseWheel += Game_MouseWheel;
 
+            this.interfaces.Add("Start", new StartScreen(this));
+
             this.interfaces.Add("Test", new TestInterface(this));
             this.interfaces.Add("Trading", new TradingInterface(this));
             this.interfaces.Add("Travel", new TravelInterface(this));
 
-            ChangeInterface("Travel");
+            ChangeInterface("Start");
         }
 
         public void ChangeInterface(string name)

@@ -215,7 +215,7 @@ namespace SpaceTradingGame.Engine.Console
         private void setVertexBuffer()
         {
             vertices = new float[40 * bufferWidth * bufferHeight];
-            System.Console.WriteLine(vertices.Length * sizeof(float));
+            //System.Console.WriteLine(vertices.Length * sizeof(float));
             this.updateVertexBuffer();
 
             this.vao = GL.GenVertexArray();

@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4FD0292F-6C95-4A02-A303-21EB28B0325E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SpaceTradingGame</RootNamespace>
     <AssemblyName>SpaceTradingGame</AssemblyName>
@@ -73,6 +73,7 @@
     <Compile Include="Engine\UI\Controls\ToggleButtonGroup.cs" />
     <Compile Include="Engine\UI\Interface.cs" />
     <Compile Include="Engine\UI\InterfaceManager.cs" />
+    <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TestInterface.cs" />
     <Compile Include="Engine\UI\Interfaces\TradingInterface.cs" />
     <Compile Include="Engine\UI\Interfaces\TravelInterface.cs" />
