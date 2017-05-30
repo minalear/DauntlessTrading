@@ -307,13 +307,18 @@ namespace SpaceTradingGame.Engine.UI.Controls
     }
     public class ListItem
     {
-        public virtual Color TextColor { get; set; }
+        public virtual Color4 TextColor { get; set; }
         public virtual string ListText { get; set; }
 
         public ListItem()
         {
             this.ListText = " ";
-            this.TextColor = Color.White;
+            this.TextColor = Color4.White;
+        }
+        public ListItem(string text)
+        {
+            this.ListText = text;
+            this.TextColor = Color4.White;
         }
 
         public static implicit operator string(ListItem item)

@@ -67,7 +67,7 @@
     <Compile Include="Engine\UI\Controls\Popup.cs" />
     <Compile Include="Engine\UI\Controls\ScrollingList.cs" />
     <Compile Include="Engine\UI\Controls\Slider.cs" />
-    <None Include="Engine\UI\Controls\TextBox.cs" />
+    <Compile Include="Engine\UI\Controls\TextBox.cs" />
     <Compile Include="Engine\UI\Controls\Title.cs" />
     <Compile Include="Engine\UI\Controls\ToggleButton.cs" />
     <Compile Include="Engine\UI\Controls\ToggleButtonGroup.cs" />

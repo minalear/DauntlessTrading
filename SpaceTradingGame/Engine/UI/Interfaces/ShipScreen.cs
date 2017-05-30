@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
 
@@ -29,6 +30,21 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             rightEngine = new Button(null, " ", 13, 14, 3, 2);
             rightEngine.FillColor = new Color4(50, 50, 50, 255);
 
+            scrollingList = new ScrollingList(null, 30, 1, GraphicConsole.BufferWidth - 31, 22);
+            scrollingList.FillColor = new Color4(50, 50, 50, 255);
+            descriptionBox = new TextBox(null, 30, 24, GraphicConsole.BufferWidth - 31, 12);
+            descriptionBox.FillColor = new Color4(50, 50, 50, 255);
+
+            List<ListItem> list = new List<ListItem>() {
+                new ListItem("Item 01"),
+                new ListItem("Item 02"),
+                new ListItem("Item 03"),
+                new ListItem("Item 04")
+            };
+            scrollingList.SetList(list);
+
+            descriptionBox.Text = "This is a very cool and awesome description box.  <color Blue>Hello I'm blue.<color>";
+
             //Titles
             RegisterControl(shipDesignationTitle);
             RegisterControl(shipModelTitle);
@@ -41,6 +57,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(drive);
             RegisterControl(leftEngine);
             RegisterControl(rightEngine);
+
+            //Other
+            RegisterControl(scrollingList);
+            RegisterControl(descriptionBox);
         }
 
         public override void DrawStep()
@@ -63,5 +83,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private Title shipDesignationTitle, shipModelTitle;
         private Button cockpit, leftWing, rightWing, cargoBay, drive, leftEngine, rightEngine;
+        private ScrollingList scrollingList;
+        private TextBox descriptionBox;
     }
 }
