@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
 
@@ -23,6 +25,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 GraphicConsole.BufferHeight - 3, Title.TextAlignModes.Center);
             infoTitle.TextColor = Color4.Gray;
 
+            generateRandomStars();
+
             RegisterControl(mainTitle);
             RegisterControl(subTitle);
             RegisterControl(newGameButton);
@@ -32,7 +36,67 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(infoTitle);
         }
 
+        private void generateRandomStars()
+        {
+            stars = new List<Point>();
+            
+            for (int i = 0; i < 80; i++)
+            {
+                stars.Add(new Point(
+                    RNG.Next(0, GraphicConsole.BufferWidth),
+                    RNG.Next(0, GraphicConsole.BufferHeight)));
+            }
+        }
+        private void updateStars()
+        {
+            //For moving the stars down
+            for (int i = 0; i < stars.Count; i++)
+            {
+                stars[i] = new Point(stars[i].X, stars[i].Y + 1);
+                if (stars[i].Y >= GraphicConsole.BufferHeight)
+                    stars[i] = new Point(stars[i].X, 0);
+            }
+        }
+        public override void DrawStep()
+        {
+            for (int i = 0; i < stars.Count; i++)
+            {
+                //Color variance in the stars
+                int rng = RNG.Next(0, 100);
+                if (rng <= 10)
+                    GraphicConsole.SetColor(RED, Color4.Black);
+                else if (rng <= 25)
+                    GraphicConsole.SetColor(GRAY, Color4.Black);
+                else
+                    GraphicConsole.SetColor(DARK_GRAY, Color4.Black);
+
+                GraphicConsole.Put('.', stars[i].X, stars[i].Y);
+            }
+            GraphicConsole.ClearColor();
+
+            base.DrawStep();
+        }
+        public override void UpdateFrame(GameTime gameTime)
+        {
+            //Make the stars twinkle by forcing the screen to draw
+            timer += gameTime.ElapsedTime.TotalSeconds;
+            if (timer >= 0.75)
+            {
+                timer = 0.0;
+                InterfaceManager.DrawStep();
+            }
+
+            base.UpdateFrame(gameTime);
+        }
+
+        private double timer = 0.0;
+
         private Title mainTitle, subTitle, infoTitle;
         private Button newGameButton, loadGameButton, optionsButton, exitButton;
+        private List<Point> stars;
+
+        private Color4 DARK_GRAY = new Color4(25, 25, 25, 255);
+        private Color4 RED = new Color4(75, 50, 50, 255);
+        private Color4 GRAY = new Color4(50, 50, 50, 255);
     }
 }
