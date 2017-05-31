@@ -22,6 +22,7 @@ namespace SpaceTradingGame.Engine.Console
         private int vao, vbo;
 
         private Color4 foregroundColor, backgroundColor;
+        private Rectangle drawingBounds;
 
         private DrawingUtilities drawingUtilities;
 
@@ -40,6 +41,8 @@ namespace SpaceTradingGame.Engine.Console
 
             this.foregroundColor = Color.White;
             this.backgroundColor = Color.Black;
+
+            this.drawingBounds = new Rectangle(0, 0, bufferWidth, bufferHeight);
 
             this.drawingUtilities = new DrawingUtilities(this);
             this.charset = new Charset(game.Content, 8, 12);
@@ -113,7 +116,7 @@ namespace SpaceTradingGame.Engine.Console
 
         public void Put(char token, int x, int y)
         {
-            if (x >= 0 && x < bufferWidth && y >= 0 && y < bufferHeight)
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
                 this.put(token, x, y);
         }
         //Doesn't bound check, private use only
@@ -140,9 +143,18 @@ namespace SpaceTradingGame.Engine.Console
             this.Left = left;
             this.Top = top;
         }
+        public void SetBounds(Rectangle bounds)
+        {
+            this.drawingBounds = bounds;
+        }
+        public void SetBounds(int x, int y, int width, int height)
+        {
+            this.drawingBounds = new Rectangle(x, y, width, height);
+        }
         public void Clear()
         {
             this.ClearColor();
+            this.ClearBounds();
 
             for (int y = 0; y < this.bufferHeight; y++)
             {
@@ -162,6 +174,10 @@ namespace SpaceTradingGame.Engine.Console
         {
             this.foregroundColor = Color.White;
             this.backgroundColor = Color.Black;
+        }
+        public void ClearBounds()
+        {
+            this.drawingBounds = new Rectangle(0, 0, bufferWidth, bufferHeight);
         }
 
         public Point GetTilePosition(Point position)
@@ -365,6 +381,7 @@ namespace SpaceTradingGame.Engine.Console
         public int BufferHeight { get { return this.bufferHeight; } }
         public Color4 ForegroundColor { get { return this.foregroundColor; } }
         public Color4 BackgroundColor { get { return this.backgroundColor; } }
+        public Rectangle DrawingBounds { get { return this.drawingBounds; } }
 
         public DrawingUtilities Draw { get { return this.drawingUtilities; } }
     }
