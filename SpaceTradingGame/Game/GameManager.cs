@@ -15,6 +15,7 @@ namespace SpaceTradingGame.Game
 
             //Sol System
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
+            solSystem.StarColor = OpenTK.Graphics.Color4.Yellow;
 
             //Terra
             Planetoid terra = new Planetoid(solSystem, "Terra");
