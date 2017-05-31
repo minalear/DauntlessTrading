@@ -32,7 +32,9 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.Draw.Line(mapBounds.Left + 1, y, mapBounds.Right - 1, y, '.');
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
-            
+
+            if (drawSelectedSystem)
+                drawPaths();
             drawSystems();
             GraphicConsole.ClearBounds();
             drawBorder(mapBounds);
@@ -118,6 +120,37 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             }
 
             GraphicConsole.ClearColor();
+        }
+        private void drawPaths()
+        {
+            double travelRadius = 1250.0;
+            int r = (int)(travelRadius / GraphicConsole.BufferWidth);
+
+            Point center = getScreenPosFromCoord(selectedSystem.MapCoord);
+            GraphicConsole.SetColor(Color4.Gray, Color4.Black);
+            GraphicConsole.Draw.Circle(center.X , center.Y, r, '.');
+
+            GraphicConsole.SetColor(Color4.Red, Color4.Black);
+            for (int i = 0; i < systemList.Count; i++)
+            {
+                if (distance(selectedSystem.System.Coordinates, systemList[i].System.Coordinates) <= travelRadius)
+                {
+                    Point point = getScreenPosFromCoord(systemList[i].MapCoord);
+                    GraphicConsole.Draw.Line(center.X, center.Y, point.X, point.Y, '.');
+                }
+            }
+            GraphicConsole.ClearColor();
+        }
+        private Point getScreenPosFromCoord(Point coord)
+        {
+            coord.X += Position.X + (int)(mapOffset.X / GraphicConsole.BufferWidth);
+            coord.Y += Position.Y + (int)(mapOffset.Y / GraphicConsole.BufferWidth);
+
+            return coord;
+        }
+        private double distance(Vector2 a, Vector2 b)
+        {
+            return Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
         }
 
         public class MapPoint
