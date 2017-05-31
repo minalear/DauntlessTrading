@@ -182,5 +182,21 @@ namespace SpaceTradingGame.Engine
         {
             return NextDouble() * (max - min) + min;
         }
+
+        /// <summary>
+        /// Returns a random float number.
+        /// </summary>
+        public static float NextFloat()
+        {
+            return (float)randomGenerator.NextDouble();
+        }
+
+        /// <summary>
+        /// Returns a random float number between two values.
+        /// </summary>
+        public static float NextFloat(float min, float max)
+        {
+            return NextFloat() * (max - min) + min;
+        }
     }
 }
