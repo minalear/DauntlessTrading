@@ -51,7 +51,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         public override void DrawStep()
         {
-            drawBorder();
+            GraphicConsole.SetBounds(mapBounds);
 
             Vector2 origin = Vector2.Zero;
             origin.X += mapOffset.X / GraphicConsole.BufferWidth;
@@ -60,14 +60,17 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             int x = (int)(origin.X + mapBounds.X);
             int y = (int)(origin.Y + mapBounds.Y);
 
-            GraphicConsole.SetBounds(mapBounds);
             GraphicConsole.SetColor(Color4.Gray, Color4.Black);
             GraphicConsole.Draw.Line(x, mapBounds.Top + 1, x, mapBounds.Bottom - 1, '.');
             GraphicConsole.Draw.Line(mapBounds.Left + 1, y, mapBounds.Right - 1, y, '.');
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
+            
+            drawSystems();
+
             GraphicConsole.ClearBounds();
 
+            drawBorder();
             base.DrawStep();
         }
         private void drawBorder()
@@ -81,6 +84,21 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             GraphicConsole.Put('┐', mapBounds.Right, mapBounds.Top);
             GraphicConsole.Put('└', mapBounds.Left, mapBounds.Bottom);
             GraphicConsole.Put('┘', mapBounds.Right, mapBounds.Bottom);
+        }
+        private void drawSystems()
+        {
+            for (int i = 0; i < GameManager.Systems.Count; i++)
+            {
+                System.Drawing.Point point = getPointFromCoord(GameManager.Systems[i].Coordinates);
+                GraphicConsole.Put('*', point.X, point.Y);
+            }
+        }
+        private System.Drawing.Point getPointFromCoord(Vector2 coord)
+        {
+            int x = (int)(coord.X / GraphicConsole.BufferWidth) + (int)(mapOffset.X / GraphicConsole.BufferWidth);
+            int y = (int)(coord.Y / GraphicConsole.BufferWidth) + (int)(mapOffset.Y / GraphicConsole.BufferWidth);
+
+            return new System.Drawing.Point(x + mapBounds.X, y + mapBounds.Y);
         }
 
         private Title screenTitle;

@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK;
 
 namespace SpaceTradingGame.Game
 {
-    public class System : Engine.UI.Controls.ListItem
+    public class StarSystem : Engine.UI.Controls.ListItem
     {
         public string Name { get; set; }
         public List<Planetoid> Planetoids { get; set; }
 
-        public System(string name)
+        public Vector2 Coordinates { get; set; }
+
+        public StarSystem(string name)
         {
             Name = name;
             Planetoids = new List<Planetoid>();
+
+            Coordinates = Vector2.Zero;
 
             this.ListText = Name;
         }

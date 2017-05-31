@@ -5,13 +5,13 @@ namespace SpaceTradingGame.Game
 {
     public class Planetoid : Engine.UI.Controls.ListItem
     {
-        public System System { get; set; }
+        public StarSystem System { get; set; }
         public Planetoid Parent { get; set; }
         public string Name { get; set; }
         public List<Planetoid> Moons { get; set; }
         public List<Station> Stations { get; set; }
 
-        public Planetoid(System system, string name)
+        public Planetoid(StarSystem system, string name)
         {
             System = system;
             Name = name;
@@ -21,7 +21,7 @@ namespace SpaceTradingGame.Game
 
             ListText = Name;
         }
-        public Planetoid(System system, string name, Planetoid parent)
+        public Planetoid(StarSystem system, string name, Planetoid parent)
         {
             System = system;
             Name = name;

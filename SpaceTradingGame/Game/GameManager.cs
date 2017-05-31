@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
     public class GameManager
     {
-        private List<System> systems;
+        private List<StarSystem> systems;
 
         public GameManager()
         {
-            systems = new List<System>();
+            systems = new List<StarSystem>();
+            generateRandomSystems();
 
             //Sol System
-            System solSystem = new System("Sol");
+            StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
 
             //Terra
             Planetoid terra = new Planetoid(solSystem, "Terra");
@@ -36,7 +38,21 @@ namespace SpaceTradingGame.Game
 
             systems.Add(solSystem);
         }
+        private void generateRandomSystems()
+        {
+            int numSystems = RNG.Next(250, 500);
+            for (int i = 0; i < numSystems; i++)
+            {
+                StarSystem system = new Game.StarSystem("Test");
+                system.Coordinates = new OpenTK.Vector2(
+                    RNG.NextFloat(-10000.0f, 10000.0f),
+                    RNG.NextFloat(-10000.0f, 10000.0f)
+                );
 
-        public List<System> Systems { get { return systems; } }
+                systems.Add(system);
+            }
+        }
+
+        public List<StarSystem> Systems { get { return systems; } }
     }
 }
