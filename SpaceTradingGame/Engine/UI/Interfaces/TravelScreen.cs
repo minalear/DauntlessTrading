@@ -53,6 +53,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             GraphicConsole.SetBounds(mapBounds);
 
+            //The background color can be used to designate regions within space
+            //Useful for filters to show factions and other map details
+
             Vector2 origin = Vector2.Zero;
             origin.X += mapOffset.X / GraphicConsole.BufferWidth;
             origin.Y += mapOffset.Y / GraphicConsole.BufferWidth;
@@ -90,7 +93,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             for (int i = 0; i < GameManager.Systems.Count; i++)
             {
                 System.Drawing.Point point = getPointFromCoord(GameManager.Systems[i].Coordinates);
-                GraphicConsole.Put('*', point.X, point.Y);
+                GraphicConsole.Put('☼', point.X, point.Y);
             }
         }
         private System.Drawing.Point getPointFromCoord(Vector2 coord)
