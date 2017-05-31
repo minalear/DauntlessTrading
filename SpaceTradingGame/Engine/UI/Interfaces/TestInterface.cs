@@ -17,17 +17,33 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             for (int i = 0; i < stars.Count; i++)
             {
                 Point point = getMapPosition(stars[i].Coordinate);
-                Button starButton = new Button(null, "☼", point.X, point.Y, 1, 1);
-                starButton.Click += (sender, e) =>
+                if (point.X >= 0 && point.Y >= 0 && point.X < GraphicConsole.BufferWidth && point.Y < GraphicConsole.BufferHeight)
                 {
-                    drawLines = true;
-                    Control button = (Control)sender;
-                    //selectedStar = new Point(button.Position.X, button.Position.Y);
+                    Button starButton = new Button(null, "☼", point.X, point.Y, 1, 1);
 
-                    InterfaceManager.DrawStep();
-                };
-                RegisterControl(starButton);
+                    int index = i; //For lambda function
+
+                    starButton.Click += (sender, e) =>
+                    {
+                        drawLines = true;
+                        Control button = (Control)sender;
+                        selectedStar = stars[index];
+
+                        title.Text = selectedStar.Name;
+
+                        InterfaceManager.DrawStep();
+                    };
+                    RegisterControl(starButton);
+                }
+                else
+                {
+                    stars.RemoveAt(i);
+                    i--;
+                }
             }
+
+            title = new Title(null, "System", GraphicConsole.BufferWidth / 2, 1);
+            RegisterControl(title);
         }
 
         public override void DrawStep()
@@ -35,13 +51,20 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             if (drawLines)
             {
                 GraphicConsole.SetColor(Color.Gray, Color.Black);
+
+                Point pointA = getMapPosition(selectedStar.Coordinate);
+
+                double travelRadius = 1000.0;
+                int r = (int)(travelRadius / GraphicConsole.BufferWidth);
+                GraphicConsole.Draw.Circle(pointA.X, pointA.Y, r, '.');
+
+                GraphicConsole.SetColor(Color.Red, Color.Black);
                 for (int i = 0; i < stars.Count; i++)
                 {
-                    if (distance(stars[i].Coordinate, selectedStar.Coordinate) <= 15.0)
+                    double dist = distance(stars[i].Coordinate, selectedStar.Coordinate);
+                    if (dist <= travelRadius)
                     {
-                        Point pointA = getMapPosition(stars[i].Coordinate);
-                        Point pointB = getMapPosition(selectedStar.Coordinate);
-
+                        Point pointB = getMapPosition(stars[i].Coordinate);
                         GraphicConsole.Draw.Line(pointA.X, pointA.Y, pointB.X, pointB.Y, '.');
                     }
                 }
@@ -58,7 +81,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
         private void generateStars()
         {
-            int numStars = RNG.Next(25, 50);
+            int numStars = RNG.Next(50, 100);
             stars = new List<StarSystem>();
 
             for (int i = 0; i < numStars; i++)
@@ -72,8 +95,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
         private Point getMapPosition(Vector2 coordinate)
         {
+            //Due to the width/height of each cell being different, we need to ensure that the Y is calculated off the BufferWidth
             int x = (int)(coordinate.X / GraphicConsole.BufferWidth);
-            int y = (int)(coordinate.Y / GraphicConsole.BufferHeight);
+            int y = (int)(coordinate.Y / GraphicConsole.BufferWidth);
 
             return new Point(x, y);
         }
@@ -81,6 +105,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private bool drawLines = false;
         private StarSystem selectedStar;
         private List<StarSystem> stars;
+
+        private Title title;
 
         public class StarSystem
         {
@@ -94,8 +120,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 StarColor = colors[RNG.Next(0, colors.Length)];
 
                 Coordinate = new Vector2(
-                    RNG.NextFloat(-1000.0f, 1000.0f),
-                    RNG.NextFloat(-1000.0f, 1000.0f));
+                    RNG.NextFloat(0.0f, 10000.0f),
+                    RNG.NextFloat(0.0f, 5000.0f));
             }
 
             private static string[] prefix = { "Car", "Bar", "Gnar", "Var", "Uia", "Mar", "Lua", "Mua" };

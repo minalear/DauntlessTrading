@@ -77,7 +77,7 @@
     <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TestInterface.cs" />
     <Compile Include="Engine\UI\Interfaces\TradingInterface.cs" />
-    <Compile Include="Engine\UI\Interfaces\TravelInterface.cs" />
+    <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\Market.cs" />
