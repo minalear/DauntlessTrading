@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
 using SpaceTradingGame.Game;
 using SpaceTradingGame.Engine.UI.Controls;
 
@@ -12,13 +14,59 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             mapBounds = new System.Drawing.Rectangle(1, 2, 74, 33);
 
-            screenTitle = new Title(null, "Travel", GraphicConsole.BufferWidth / 2, 1, Title.TextAlignModes.Center);
+            screenTitle = new Title(null, "Star Map", GraphicConsole.BufferWidth / 2, 1, Title.TextAlignModes.Center);
+
+            up = new Button(null, "▲", 87, 30);
+            down = new Button(null, "▼", 87, 34);
+            left = new Button(null, "◄", 84, 32);
+            right = new Button(null, "►", 90, 32);
+
+            up.Click += (sender, e) =>
+            {
+                mapOffset.Y += 100f;
+                InterfaceManager.DrawStep();
+            };
+            down.Click += (sender, e) =>
+            {
+                mapOffset.Y -= 100f;
+                InterfaceManager.DrawStep();
+            };
+            left.Click += (sender, e) =>
+            {
+                mapOffset.X += 100f;
+                InterfaceManager.DrawStep();
+            };
+            right.Click += (sender, e) =>
+            {
+                mapOffset.X -= 100f;
+                InterfaceManager.DrawStep();
+            };
+
             RegisterControl(screenTitle);
+            RegisterControl(up);
+            RegisterControl(down);
+            RegisterControl(left);
+            RegisterControl(right);
         }
 
         public override void DrawStep()
         {
             drawBorder();
+
+            Vector2 origin = Vector2.Zero;
+            origin.X += mapOffset.X / GraphicConsole.BufferWidth;
+            origin.Y += mapOffset.Y / GraphicConsole.BufferWidth;
+
+            int x = (int)(origin.X + mapBounds.X);
+            int y = (int)(origin.Y + mapBounds.Y);
+
+            GraphicConsole.SetBounds(mapBounds);
+            GraphicConsole.SetColor(Color4.Gray, Color4.Black);
+            GraphicConsole.Draw.Line(x, mapBounds.Top + 1, x, mapBounds.Bottom - 1, '.');
+            GraphicConsole.Draw.Line(mapBounds.Left + 1, y, mapBounds.Right - 1, y, '.');
+            GraphicConsole.SetCursor(x + 1, y - 1);
+            GraphicConsole.ClearColor();
+            GraphicConsole.ClearBounds();
 
             base.DrawStep();
         }
@@ -36,6 +84,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
 
         private Title screenTitle;
+        private Button up, down, left, right;
         private System.Drawing.Rectangle mapBounds;
+
+        private Vector2 mapOffset = new Vector2(3700, 1650);
     }
 }
