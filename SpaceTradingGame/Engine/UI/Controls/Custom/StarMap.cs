@@ -13,6 +13,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         public StarMap()
         {
             systemList = new List<MapPoint>();
+            path = new List<Point>();
         }
 
         public override void DrawStep()
@@ -28,8 +29,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             int y = (int)(origin.Y + mapBounds.Y);
 
             GraphicConsole.SetColor(axisColor, Color4.Black);
-            GraphicConsole.Draw.Line(x, mapBounds.Top + 1, x, mapBounds.Bottom - 1, '.');
-            GraphicConsole.Draw.Line(mapBounds.Left + 1, y, mapBounds.Right - 1, y, '.');
+            GraphicConsole.Draw.Line(x, mapBounds.Top + 1, x, mapBounds.Bottom - 1, '·');
+            GraphicConsole.Draw.Line(mapBounds.Left + 1, y, mapBounds.Right - 1, y, '·');
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
 
@@ -42,6 +43,10 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             base.DrawStep();
         }
 
+        public void SetCurrentSystem(StarSystem system)
+        {
+            currentSystem = new MapPoint(system, GraphicConsole.BufferWidth);
+        }
         public void SetSystemList(List<StarSystem> list)
         {
             systemList.Clear();
@@ -80,6 +85,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             }
 
             drawSelectedSystem = systemFound;
+            if (drawSelectedSystem)
+                plotPath();
 
             InterfaceManager.DrawStep();
             base.MouseUp(e);
@@ -99,6 +106,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawSystems()
         {
+            //Draw every system
             foreach (MapPoint point in systemList)
             {
                 Point relativePos = point.MapCoord;
@@ -108,6 +116,14 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 GraphicConsole.SetColor(point.System.StarColor, Color4.Black);
                 GraphicConsole.Put('☼', relativePos.X + Position.X, relativePos.Y + Position.Y);
             }
+
+            //Draw current system
+            Point systemPos = currentSystem.MapCoord;
+            systemPos.X += (int)(mapOffset.X / GraphicConsole.BufferWidth);
+            systemPos.Y += (int)(mapOffset.Y / GraphicConsole.BufferWidth);
+
+            GraphicConsole.SetColor(Color4.Black, currentSystem.System.StarColor);
+            GraphicConsole.Put('☼', systemPos.X + Position.X, systemPos.Y + Position.Y);
 
             if (drawSelectedSystem)
             {
@@ -123,23 +139,102 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawPaths()
         {
-            double travelRadius = 1250.0;
+            /*double travelRadius = 1250.0;
             int r = (int)(travelRadius / GraphicConsole.BufferWidth);
 
-            Point center = getScreenPosFromCoord(selectedSystem.MapCoord);
+            Point center = getScreenPosFromCoord(currentSystem.MapCoord);
             GraphicConsole.SetColor(Color4.Gray, Color4.Black);
-            GraphicConsole.Draw.Circle(center.X , center.Y, r, '.');
+            GraphicConsole.Draw.Circle(center.X , center.Y, r, '·');
 
             GraphicConsole.SetColor(Color4.Red, Color4.Black);
-            for (int i = 0; i < systemList.Count; i++)
+            /*for (int i = 0; i < systemList.Count; i++)
             {
                 if (distance(selectedSystem.System.Coordinates, systemList[i].System.Coordinates) <= travelRadius)
                 {
                     Point point = getScreenPosFromCoord(systemList[i].MapCoord);
                     GraphicConsole.Draw.Line(center.X, center.Y, point.X, point.Y, '.');
                 }
+            }*/
+            /*Point target = getScreenPosFromCoord(selectedSystem.MapCoord);
+            GraphicConsole.Draw.Line(center.X, center.Y, target.X, target.Y, '.');
+            GraphicConsole.ClearColor();*/
+
+            GraphicConsole.SetColor(Color4.Red, Color4.Black);
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Point a = getScreenPosFromCoord(path[i]);
+                Point b = getScreenPosFromCoord(path[i + 1]);
+
+                GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '.');
             }
             GraphicConsole.ClearColor();
+        }
+        private void plotPath()
+        {
+            //IDEA Eventually will incorporate "jump radius" for engines that allow players to upgrade and take
+            //a more direct route to their destinations.
+            //Since I cannot guarentee that each system will be within that radius, maybe let players jump out of that
+            //radius at the expense of a ton more fuel
+
+            if (!drawSelectedSystem)
+            {
+                path.Clear();
+            }
+            else
+            {
+                path.Clear();
+                path.Add(currentSystem.MapCoord);
+
+                MapPoint currentNode = currentSystem;
+                MapPoint testNode = selectedSystem;
+                MapPoint target = selectedSystem;
+
+                List<MapPoint> ignoredSystems = new List<MapPoint>();
+
+                bool final = false;
+                while (!final)
+                {
+                    //Find closest system
+                    for (int i = 0; i < systemList.Count; i++)
+                    {
+                        if (systemList[i].Equals(currentNode)) continue;
+                        if (ignoredSystems.Contains(systemList[i])) continue;
+
+                        if (distance(currentNode.System.Coordinates, systemList[i].System.Coordinates) < 
+                            distance(currentNode.System.Coordinates, testNode.System.Coordinates))
+                        {
+                            testNode = systemList[i];
+                        }
+                    }
+
+                    //Check if closest node is target
+                    if (testNode.Equals(target))
+                        break;
+
+                    //Check if node gets closer to target
+                    if (distance(testNode.System.Coordinates, target.System.Coordinates) < 
+                        distance(currentNode.System.Coordinates, target.System.Coordinates))
+                    {
+                        path.Add(testNode.MapCoord);
+                        currentNode = testNode;
+
+                        ignoredSystems.Clear();
+                    }
+                    else
+                    {
+                        ignoredSystems.Add(testNode);
+                        testNode = target;
+                    }
+                }
+
+                path.Add(target.MapCoord);
+            }
+
+            //Find closest system
+            //If closest system's distance to target is shorter than current system, add that to path
+            //Move node to latest node
+            //If not, keep finding closest systems
+            //Repeat until reaching destination
         }
 
         private Point getScreenPosFromCoord(Point coord)
@@ -168,13 +263,31 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
                 MapCoord = new Point(x, y);
             }
+
+            public override bool Equals(object obj)
+            {
+                if (obj.GetType() == typeof(MapPoint))
+                {
+                    return (System.ID == ((MapPoint)obj).System.ID);
+                }
+
+                return base.Equals(obj);
+            }
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
 
         private List<MapPoint> systemList;
-        private MapPoint selectedSystem;
+        private List<Point> path;
+        private MapPoint currentSystem, selectedSystem;
         private bool drawSelectedSystem = false;
         private Vector2 mapOffset = new Vector2(3700, 1650);
 
         private Color4 axisColor = Color4.Gray;
+
+        public StarSystem CurrentSystem { get { return currentSystem.System; } }
+        public StarSystem SelectedSystem { get { return selectedSystem.System; } }
     }
 }

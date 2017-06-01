@@ -52,6 +52,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public override void OnEnable()
         {
             starMap.SetSystemList(GameManager.Systems);
+            starMap.SetCurrentSystem(GameManager.Systems[0]); //Sol System
 
             base.OnEnable();
         }

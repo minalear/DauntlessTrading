@@ -11,7 +11,6 @@ namespace SpaceTradingGame.Game
         public GameManager()
         {
             systems = new List<StarSystem>();
-            generateRandomSystems();
 
             //Sol System
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
@@ -38,6 +37,7 @@ namespace SpaceTradingGame.Game
             solSystem.Planetoids.Add(jupiter);
 
             systems.Add(solSystem);
+            generateRandomSystems();
         }
         private void generateRandomSystems()
         {

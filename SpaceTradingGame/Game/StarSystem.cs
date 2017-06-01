@@ -8,6 +8,9 @@ namespace SpaceTradingGame.Game
 {
     public class StarSystem : Engine.UI.Controls.ListItem
     {
+        private static int _nextValidID = 0;
+
+        public int ID { get; set; }
         public string Name { get; set; }
         public Color4 StarColor { get; set; }
         public List<Planetoid> Planetoids { get; set; }
@@ -16,6 +19,7 @@ namespace SpaceTradingGame.Game
 
         public StarSystem(string name)
         {
+            ID = _nextValidID++;
             Name = name;
             Planetoids = new List<Planetoid>();
 
