@@ -171,11 +171,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void plotPath()
         {
-            //IDEA Eventually will incorporate "jump radius" for engines that allow players to upgrade and take
-            //a more direct route to their destinations.
-            //Since I cannot guarentee that each system will be within that radius, maybe let players jump out of that
-            //radius at the expense of a ton more fuel
-
             if (!drawSelectedSystem)
             {
                 path.Clear();
