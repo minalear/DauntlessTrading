@@ -141,6 +141,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             }
             GraphicConsole.ClearColor();
         }
+
         private Point getScreenPosFromCoord(Point coord)
         {
             coord.X += Position.X + (int)(mapOffset.X / GraphicConsole.BufferWidth);
