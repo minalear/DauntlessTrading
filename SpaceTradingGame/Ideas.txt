@@ -2,3 +2,6 @@
   * the quality of their engine
     * engines will have a "jump radius" spec that let players jump a set distance with a set amount of fuel
 	* may allow engines to jump out of that radius, but at the expense of a lot more fuel
+Functional stock market listing all businesses
+  * stealing and attacking shipments from these businesses will cause stock to drop
+  * increasing business will raise stock prices
