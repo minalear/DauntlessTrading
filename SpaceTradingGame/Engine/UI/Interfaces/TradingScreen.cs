@@ -41,19 +41,35 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             playerAddHundred = new Button(null, "100>", 32, 8, 6, 3);
             playerAddHundred.FillColor = lighterColor;
 
-            computerRemoveOne = new Button(null, "<1", 62, GraphicConsole.BufferHeight - 4, 6, 3);
-            computerRemoveOne.FillColor = lighterColor;
-            computerRemoveTen = new Button(null, "<10", 62, GraphicConsole.BufferHeight - 7, 6, 3);
-            computerRemoveTen.FillColor = lighterColor;
-            computerRemoveHundred = new Button(null, "<100", 62, GraphicConsole.BufferHeight - 10, 6, 3);
-            computerRemoveHundred.FillColor = lighterColor;
+            playerRemoveOne.Click += (sender, e) => RemovePlayerItem(offeredList.GetSelection(), 1);
+            playerRemoveTen.Click += (sender, e) => RemovePlayerItem(offeredList.GetSelection(), 10);
+            playerRemoveHundred.Click += (sender, e) => RemovePlayerItem(offeredList.GetSelection(), 100);
 
-            computerAddOne = new Button(null, "1>", 68, GraphicConsole.BufferHeight - 4, 6, 3);
-            computerAddOne.FillColor = darkerColor;
-            computerAddTen = new Button(null, "10>", 68, GraphicConsole.BufferHeight - 7, 6, 3);
-            computerAddTen.FillColor = darkerColor;
-            computerAddHundred = new Button(null, "100>", 68, GraphicConsole.BufferHeight - 10, 6, 3);
-            computerAddHundred.FillColor = darkerColor;
+            playerAddOne.Click += (sender, e) => AddPlayerItem(inventoryList.GetSelection(), 1);
+            playerAddTen.Click += (sender, e) => AddPlayerItem(inventoryList.GetSelection(), 10);
+            playerAddHundred.Click += (sender, e) => AddPlayerItem(inventoryList.GetSelection(), 100);
+
+            computerAddOne = new Button(null, "<1", 62, GraphicConsole.BufferHeight - 4, 6, 3);
+            computerAddOne.FillColor = lighterColor;
+            computerAddTen = new Button(null, "<10", 62, GraphicConsole.BufferHeight - 7, 6, 3);
+            computerAddTen.FillColor = lighterColor;
+            computerAddHundred = new Button(null, "<100", 62, GraphicConsole.BufferHeight - 10, 6, 3);
+            computerAddHundred.FillColor = lighterColor;
+
+            computerRemoveOne = new Button(null, "1>", 68, GraphicConsole.BufferHeight - 4, 6, 3);
+            computerRemoveOne.FillColor = darkerColor;
+            computerRemoveTen = new Button(null, "10>", 68, GraphicConsole.BufferHeight - 7, 6, 3);
+            computerRemoveTen.FillColor = darkerColor;
+            computerRemoveHundred = new Button(null, "100>", 68, GraphicConsole.BufferHeight - 10, 6, 3);
+            computerRemoveHundred.FillColor = darkerColor;
+
+            computerRemoveOne.Click += (sender, e) => RemoveComputerItem(interestedList.GetSelection(), 1);
+            computerRemoveTen.Click += (sender, e) => RemoveComputerItem(interestedList.GetSelection(), 10);
+            computerRemoveHundred.Click += (sender, e) => RemoveComputerItem(interestedList.GetSelection(), 100);
+
+            computerAddOne.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 1);
+            computerAddTen.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 10);
+            computerAddHundred.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 100);
 
             playerInventory = new List<ListItem>() { "Gold", "Ivory", "Copper" };
             computerInventory = new List<ListItem>() { "Rose Gold", "Rose Ivory", "Rose Copper" };
@@ -80,6 +96,48 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(computerRemoveTen);
             RegisterControl(computerRemoveHundred);
             #endregion
+        }
+
+        public void AddPlayerItem(ListItem item, int number)
+        {
+            if (inventoryList.HasSelection)
+            {
+                inventoryList.RemoveItem(item);
+                offeredList.AddItem(item);
+
+                InterfaceManager.DrawStep();
+            }
+        }
+        public void RemovePlayerItem(ListItem item, int number)
+        {
+            if (offeredList.HasSelection)
+            {
+                offeredList.RemoveItem(item);
+                inventoryList.AddItem(item);
+
+                InterfaceManager.DrawStep();
+            }
+        }
+
+        public void AddComputerItem(ListItem item, int number)
+        {
+            if (availableItemsList.HasSelection)
+            {
+                availableItemsList.RemoveItem(item);
+                interestedList.AddItem(item);
+
+                InterfaceManager.DrawStep();
+            }
+        }
+        public void RemoveComputerItem(ListItem item, int number)
+        {
+            if (interestedList.HasSelection)
+            {
+                interestedList.RemoveItem(item);
+                availableItemsList.AddItem(item);
+
+                InterfaceManager.DrawStep();
+            }
         }
 
         private Title screenTitle;

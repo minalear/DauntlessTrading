@@ -179,7 +179,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public ListItem GetSelection()
         {
-            return this.objectList[this.selectedIndex];
+            return (selectedIndex != -1) ? this.objectList[this.selectedIndex] : null;
         }
         public void RemoveItem(string item)
         {
@@ -202,6 +202,10 @@ namespace SpaceTradingGame.Engine.UI.Controls
                 if (this.selectedIndex >= this.Items.Count)
                     this.ClearSelection();
             }
+        }
+        public void AddItem(ListItem item)
+        {
+            this.Items.Add(item);
         }
 
         protected void onHover()
