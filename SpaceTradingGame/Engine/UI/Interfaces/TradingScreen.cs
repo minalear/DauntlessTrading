@@ -13,30 +13,55 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             screenTitle = new Title(null, "Trading Hub", GraphicConsole.BufferWidth / 2, 1, Title.TextAlignModes.Center);
 
+            Color4 controlFillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
+            Color4 darkerColor = new Color4(0.1f, 0.1f, 0.1f, 1f);
+            Color4 lighterColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
+
             inventoryList = new ScrollingList(null, 1, 2, 25, GraphicConsole.BufferHeight - 3);
-            inventoryList.FillColor = Color4.Gray;
+            inventoryList.FillColor = controlFillColor;
             availableItemsList = new ScrollingList(null, GraphicConsole.BufferWidth - 26, 2, 25, GraphicConsole.BufferHeight - 3);
-            availableItemsList.FillColor = Color4.SlateBlue;
+            availableItemsList.FillColor = controlFillColor;
 
             offeredList = new ScrollingList(null, 38, 2, 25, 9);
-            offeredList.FillColor = Color4.Snow;
-            interestedList = new ScrollingList(null, 38, GraphicConsole.BufferHeight - 10, 25, 9);
-            interestedList.FillColor = Color4.DarkSeaGreen;
+            offeredList.FillColor = controlFillColor;
+            interestedList = new ScrollingList(null, 37, GraphicConsole.BufferHeight - 10, 25, 9);
+            interestedList.FillColor = controlFillColor;
 
             playerRemoveOne = new Button(null, "<1", 26, 2, 6, 3);
-            playerRemoveOne.FillColor = Color4.DarkRed;
+            playerRemoveOne.FillColor = darkerColor;
             playerRemoveTen = new Button(null, "<10", 26, 5, 6, 3);
-            playerRemoveTen.FillColor = Color4.DarkGreen;
+            playerRemoveTen.FillColor = darkerColor;
             playerRemoveHundred = new Button(null, "<100", 26, 8, 6, 3);
-            playerRemoveHundred.FillColor = Color4.DarkBlue;
+            playerRemoveHundred.FillColor = darkerColor;
 
             playerAddOne = new Button(null, "1>", 32, 2, 6, 3);
-            playerAddOne.FillColor = Color4.Red;
+            playerAddOne.FillColor = lighterColor;
             playerAddTen = new Button(null, "10>", 32, 5, 6, 3);
-            playerAddTen.FillColor = Color4.Green;
+            playerAddTen.FillColor = lighterColor;
             playerAddHundred = new Button(null, "100>", 32, 8, 6, 3);
-            playerAddHundred.FillColor = Color4.Blue;
-            
+            playerAddHundred.FillColor = lighterColor;
+
+            computerRemoveOne = new Button(null, "<1", 62, GraphicConsole.BufferHeight - 4, 6, 3);
+            computerRemoveOne.FillColor = lighterColor;
+            computerRemoveTen = new Button(null, "<10", 62, GraphicConsole.BufferHeight - 7, 6, 3);
+            computerRemoveTen.FillColor = lighterColor;
+            computerRemoveHundred = new Button(null, "<100", 62, GraphicConsole.BufferHeight - 10, 6, 3);
+            computerRemoveHundred.FillColor = lighterColor;
+
+            computerAddOne = new Button(null, "1>", 68, GraphicConsole.BufferHeight - 4, 6, 3);
+            computerAddOne.FillColor = darkerColor;
+            computerAddTen = new Button(null, "10>", 68, GraphicConsole.BufferHeight - 7, 6, 3);
+            computerAddTen.FillColor = darkerColor;
+            computerAddHundred = new Button(null, "100>", 68, GraphicConsole.BufferHeight - 10, 6, 3);
+            computerAddHundred.FillColor = darkerColor;
+
+            playerInventory = new List<ListItem>() { "Gold", "Ivory", "Copper" };
+            computerInventory = new List<ListItem>() { "Rose Gold", "Rose Ivory", "Rose Copper" };
+
+            inventoryList.SetList(playerInventory);
+            availableItemsList.SetList(computerInventory);
+
+            #region Control Registration
             RegisterControl(screenTitle);
             RegisterControl(inventoryList);
             RegisterControl(availableItemsList);
@@ -48,6 +73,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(playerRemoveOne);
             RegisterControl(playerRemoveTen);
             RegisterControl(playerRemoveHundred);
+            RegisterControl(computerAddOne);
+            RegisterControl(computerAddTen);
+            RegisterControl(computerAddHundred);
+            RegisterControl(computerRemoveOne);
+            RegisterControl(computerRemoveTen);
+            RegisterControl(computerRemoveHundred);
+            #endregion
         }
 
         private Title screenTitle;
@@ -55,5 +87,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private ScrollingList offeredList, interestedList;
         private Button playerRemoveOne, playerRemoveTen, playerRemoveHundred;
         private Button playerAddOne, playerAddTen, playerAddHundred;
+        private Button computerRemoveOne, computerRemoveTen, computerRemoveHundred;
+        private Button computerAddOne, computerAddTen, computerAddHundred;
+
+        private List<ListItem> playerInventory;
+        private List<ListItem> computerInventory;
     }
 }
