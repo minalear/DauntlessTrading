@@ -20,6 +20,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             left = new Button(null, "◄", 84, 32);
             right = new Button(null, "►", 90, 32);
 
+            travelButton = new Button(null, "Travel", 76, 2);
+
+            //UI Events
             up.Click += (sender, e) =>
             {
                 starMap.PanMap(0f, 100f);
@@ -41,12 +44,18 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.DrawStep();
             };
 
+            travelButton.Click += (sender, e) =>
+            {
+                starMap.SetCurrentSystem(starMap.SelectedSystem);
+            };
+
             RegisterControl(screenTitle);
             RegisterControl(starMap);
             RegisterControl(up);
             RegisterControl(down);
             RegisterControl(left);
             RegisterControl(right);
+            RegisterControl(travelButton);
         }
 
         public override void OnEnable()
@@ -64,6 +73,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private Title screenTitle;
         private Button up, down, left, right;
+        private Button travelButton;
         private StarMap starMap;
     }
 }

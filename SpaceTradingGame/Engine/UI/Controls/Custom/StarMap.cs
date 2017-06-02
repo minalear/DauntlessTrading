@@ -46,6 +46,9 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         public void SetCurrentSystem(StarSystem system)
         {
             currentSystem = new MapPoint(system, GraphicConsole.BufferWidth);
+            drawSelectedSystem = false;
+
+            InterfaceManager.DrawStep();
         }
         public void SetSystemList(List<StarSystem> list)
         {
