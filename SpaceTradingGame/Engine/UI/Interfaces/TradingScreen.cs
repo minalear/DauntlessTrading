@@ -17,6 +17,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             Color4 darkerColor = new Color4(0.1f, 0.1f, 0.1f, 1f);
             Color4 lighterColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
 
+            TradingListItem.BufferWidth = 25; //Set to the width of the inventory screens
+
             inventoryList = new ScrollingList(null, 1, 2, 25, GraphicConsole.BufferHeight - 3);
             inventoryList.FillColor = controlFillColor;
             availableItemsList = new ScrollingList(null, GraphicConsole.BufferWidth - 26, 2, 25, GraphicConsole.BufferHeight - 3);
@@ -71,8 +73,18 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             computerAddTen.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 10);
             computerAddHundred.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 100);
 
-            playerInventory = new List<ListItem>() { "Gold", "Ivory", "Copper" };
-            computerInventory = new List<ListItem>() { "Rose Gold", "Rose Ivory", "Rose Copper" };
+            playerInventory = new List<TradingListItem>()
+            {
+                new TradingListItem(Material.Gold, 100),
+                new TradingListItem(Material.Copper, 58),
+                new TradingListItem(Material.Hydrogen, 1287)
+            };
+            computerInventory = new List<TradingListItem>()
+            {
+                new TradingListItem(Material.Gold, 1200),
+                new TradingListItem(Material.Copper, 15),
+                new TradingListItem(Material.Hydrogen, 8712)
+            };
 
             inventoryList.SetList(playerInventory);
             availableItemsList.SetList(computerInventory);
@@ -102,8 +114,27 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             if (inventoryList.HasSelection)
             {
-                inventoryList.RemoveItem(item);
-                offeredList.AddItem(item);
+                TradingListItem tradingItem = (TradingListItem)item;
+
+                //Check if the requested number exceeds the amount in the inventory
+                number = (tradingItem.Quantity >= number) ? number : tradingItem.Quantity;
+                tradingItem.Quantity -= number;
+
+                //If the inventory has run out of items, remove it from the list
+                if (tradingItem.Quantity <= 0) inventoryList.RemoveItem(item);
+
+                //Check if the offered items list has the item, if it does update, otherwise add it
+                TradingListItem offeredItem;
+                if (!hasItem(offeredList, tradingItem, out offeredItem))
+                {
+                    offeredItem = new TradingListItem(tradingItem.Material, 0);
+                    offeredList.AddItem(offeredItem);
+                }
+                offeredItem.Quantity += number;
+
+                //Update displays
+                tradingItem.UpdateDisplayInformation();
+                offeredItem.UpdateDisplayInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -112,8 +143,27 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             if (offeredList.HasSelection)
             {
-                offeredList.RemoveItem(item);
-                inventoryList.AddItem(item);
+                TradingListItem tradingItem = (TradingListItem)item;
+
+                //Check if the requested number exceeds the amount in the inventory
+                number = (tradingItem.Quantity >= number) ? number : tradingItem.Quantity;
+                tradingItem.Quantity -= number;
+
+                //If the inventory has run out of items, remove it from the list
+                if (tradingItem.Quantity <= 0) offeredList.RemoveItem(item);
+
+                //Check if the offered items list has the item, if it does update, otherwise add it
+                TradingListItem offeredItem;
+                if (!hasItem(inventoryList, tradingItem, out offeredItem))
+                {
+                    offeredItem = new TradingListItem(tradingItem.Material, 0);
+                    inventoryList.AddItem(offeredItem);
+                }
+                offeredItem.Quantity += number;
+
+                //Update displays
+                tradingItem.UpdateDisplayInformation();
+                offeredItem.UpdateDisplayInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -123,8 +173,27 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             if (availableItemsList.HasSelection)
             {
-                availableItemsList.RemoveItem(item);
-                interestedList.AddItem(item);
+                TradingListItem tradingItem = (TradingListItem)item;
+
+                //Check if the requested number exceeds the amount in the inventory
+                number = (tradingItem.Quantity >= number) ? number : tradingItem.Quantity;
+                tradingItem.Quantity -= number;
+
+                //If the inventory has run out of items, remove it from the list
+                if (tradingItem.Quantity <= 0) availableItemsList.RemoveItem(item);
+
+                //Check if the offered items list has the item, if it does update, otherwise add it
+                TradingListItem offeredItem;
+                if (!hasItem(interestedList, tradingItem, out offeredItem))
+                {
+                    offeredItem = new TradingListItem(tradingItem.Material, 0);
+                    interestedList.AddItem(offeredItem);
+                }
+                offeredItem.Quantity += number;
+
+                //Update displays
+                tradingItem.UpdateDisplayInformation();
+                offeredItem.UpdateDisplayInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -133,11 +202,45 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             if (interestedList.HasSelection)
             {
-                interestedList.RemoveItem(item);
-                availableItemsList.AddItem(item);
+                TradingListItem tradingItem = (TradingListItem)item;
+
+                //Check if the requested number exceeds the amount in the inventory
+                number = (tradingItem.Quantity >= number) ? number : tradingItem.Quantity;
+                tradingItem.Quantity -= number;
+
+                //If the inventory has run out of items, remove it from the list
+                if (tradingItem.Quantity <= 0) interestedList.RemoveItem(item);
+
+                //Check if the offered items list has the item, if it does update, otherwise add it
+                TradingListItem offeredItem;
+                if (!hasItem(availableItemsList, tradingItem, out offeredItem))
+                {
+                    offeredItem = new TradingListItem(tradingItem.Material, 0);
+                    availableItemsList.AddItem(offeredItem);
+                }
+                offeredItem.Quantity += number;
+
+                //Update displays
+                tradingItem.UpdateDisplayInformation();
+                offeredItem.UpdateDisplayInformation();
 
                 InterfaceManager.DrawStep();
             }
+        }
+
+        private bool hasItem(ScrollingList list, TradingListItem item, out TradingListItem offeredItem)
+        {
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                if ((list.Items[i] as TradingListItem).Material == item.Material)
+                {
+                    offeredItem = (TradingListItem)list.Items[i];
+                    return true;
+                }
+            }
+
+            offeredItem = null;
+            return false;
         }
 
         private Title screenTitle;
@@ -148,7 +251,37 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button computerRemoveOne, computerRemoveTen, computerRemoveHundred;
         private Button computerAddOne, computerAddTen, computerAddHundred;
 
-        private List<ListItem> playerInventory;
-        private List<ListItem> computerInventory;
+        private List<TradingListItem> playerInventory;
+        private List<TradingListItem> computerInventory;
+
+        public class TradingListItem : ListItem
+        {
+            public static int BufferWidth = 25;
+            public Material Material;
+            public int Quantity;
+
+            public TradingListItem(Material material, int quantity)
+            {
+                this.Material = material;
+                this.Quantity = quantity;
+
+                UpdateDisplayInformation();
+            }
+
+            public void UpdateDisplayInformation()
+            {
+                //MaterialName     Price      xQuantity
+                string name = Material.Name;
+                string price = Material.BaseValue.ToString();
+                string quantity = "x" + Quantity.ToString();
+
+                int bufferLeft = BufferWidth - (name.Length + price.Length + quantity.Length);
+                int frontSpace = (bufferLeft % 2 == 0) ? bufferLeft / 2 : bufferLeft / 2 + 1;
+                int backSpace = bufferLeft / 2;
+
+                string formattedText = name + new string(' ', frontSpace) + price + new string(' ', backSpace) + quantity;
+                this.ListText = formattedText;
+            }
+        }
     }
 }
