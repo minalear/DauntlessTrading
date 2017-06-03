@@ -5,3 +5,5 @@
 Functional stock market listing all businesses
   * stealing and attacking shipments from these businesses will cause stock to drop
   * increasing business will raise stock prices
+Gathering favor with different factions will result in better trade deals
+  * They will accept lower margins on trades and may even accept negative trades

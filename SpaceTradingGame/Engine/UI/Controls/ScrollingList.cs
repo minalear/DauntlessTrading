@@ -142,6 +142,11 @@ namespace SpaceTradingGame.Engine.UI.Controls
             if (this.selectedIndex >= this.Items.Count)
                 this.ClearSelection();
         }
+        public void ClearList()
+        {
+            this.Items.Clear();
+            this.ClearSelection();
+        }
         public void ClearSelection()
         {
             this.selectedIndex = -1;

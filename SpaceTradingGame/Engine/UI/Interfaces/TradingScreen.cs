@@ -77,6 +77,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             computerAddTen.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 10);
             computerAddHundred.Click += (sender, e) => AddComputerItem(availableItemsList.GetSelection(), 100);
 
+            makeOfferButton = new Button(null, "Make Offer", GraphicConsole.BufferWidth / 2 - 6, GraphicConsole.BufferHeight / 2 - 3);
+            makeOfferButton.Click += (sender, e) => makeOffer();
+
+            popupMessage = new Popup(null);
+
             playerInventory = new List<TradingListItem>()
             {
                 new TradingListItem(Material.Gold, 100),
@@ -114,6 +119,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(computerRemoveOne);
             RegisterControl(computerRemoveTen);
             RegisterControl(computerRemoveHundred);
+            RegisterControl(makeOfferButton);
+            RegisterControl(popupMessage);
             #endregion
         }
 
@@ -239,6 +246,64 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             }
         }
 
+        private void makeOffer()
+        {
+            double playerValue = 0.0;
+            foreach (TradingListItem item in offeredList.Items)
+            {
+                playerValue += item.Quantity * item.Material.BaseValue;
+            }
+
+            double computerValue = 0.0;
+            foreach (TradingListItem item in interestedList.Items)
+            {
+                computerValue += item.Quantity * item.Material.BaseValue;
+            }
+
+            double diff = playerValue - computerValue;
+
+            if (diff >= 0.0)
+            {
+                differenceValueTitle.Text = "Good deal!";
+                makeTrade();
+            }
+            else
+                differenceValueTitle.Text = "Bad deal...";
+
+            InterfaceManager.DrawStep();
+        }
+        private void makeTrade()
+        {
+            foreach (TradingListItem item in offeredList.Items)
+            {
+                TradingListItem existingItem;
+                if (hasItem(availableItemsList, item, out existingItem))
+                {
+                    existingItem.Quantity += item.Quantity;
+                    existingItem.UpdateDisplayInformation();
+                }
+                else
+                    availableItemsList.AddItem(item);
+            }
+            foreach (TradingListItem item in interestedList.Items)
+            {
+                TradingListItem existingItem;
+                if (hasItem(inventoryList, item, out existingItem))
+                {
+                    existingItem.Quantity += item.Quantity;
+                    existingItem.UpdateDisplayInformation();
+                }
+                else
+                    inventoryList.AddItem(item);
+            }
+
+            offeredList.ClearList();
+            interestedList.ClearList();
+
+            updateScreenInformation();
+            InterfaceManager.DrawStep();
+        }
+
         private bool hasItem(ScrollingList list, TradingListItem item, out TradingListItem offeredItem)
         {
             for (int i = 0; i < list.Items.Count; i++)
@@ -275,6 +340,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 differenceValueTitle.TextColor = Color4.Red;
                 differenceValueTitle.Text = "◄ " + Math.Abs(diff).ToString() + "δ";
             }
+            else if (diff == 0.0)
+            {
+                differenceValueTitle.TextColor = Color4.White;
+                differenceValueTitle.Text = Math.Abs(diff).ToString() + "δ";
+            }
             else
             {
                 differenceValueTitle.TextColor = Color4.Green;
@@ -290,6 +360,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button playerAddOne, playerAddTen, playerAddHundred;
         private Button computerRemoveOne, computerRemoveTen, computerRemoveHundred;
         private Button computerAddOne, computerAddTen, computerAddHundred;
+        private Button makeOfferButton;
+        private Popup popupMessage;
 
         private List<TradingListItem> playerInventory;
         private List<TradingListItem> computerInventory;
