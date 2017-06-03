@@ -25,6 +25,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 GraphicConsole.BufferHeight - 3, Title.TextAlignModes.Center);
             infoTitle.TextColor = Color4.Gray;
 
+            exitButton.Click += (sender, e) => { InterfaceManager.Game.Exit(); };
+
             generateRandomStars();
 
             RegisterControl(mainTitle);
@@ -63,9 +65,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 //Color variance in the stars
                 int rng = RNG.Next(0, 100);
-                if (rng <= 10)
+                if (rng <= 5)
+                    GraphicConsole.SetColor(BLUE, Color4.Black);
+                else if (rng <= 15)
                     GraphicConsole.SetColor(RED, Color4.Black);
-                else if (rng <= 25)
+                else if (rng <= 30)
                     GraphicConsole.SetColor(GRAY, Color4.Black);
                 else
                     GraphicConsole.SetColor(DARK_GRAY, Color4.Black);
@@ -80,7 +84,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             //Make the stars twinkle by forcing the screen to draw
             timer += gameTime.ElapsedTime.TotalSeconds;
-            if (timer >= 0.75)
+            if (timer >= 0.85)
             {
                 timer = 0.0;
                 InterfaceManager.DrawStep();
@@ -97,6 +101,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private Color4 DARK_GRAY = new Color4(25, 25, 25, 255);
         private Color4 RED = new Color4(75, 50, 50, 255);
+        private Color4 BLUE = new Color4(75, 95, 95, 255);
         private Color4 GRAY = new Color4(50, 50, 50, 255);
     }
 }
