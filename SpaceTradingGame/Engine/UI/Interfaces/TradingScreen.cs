@@ -13,6 +13,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             screenTitle = new Title(null, "Trading Hub", GraphicConsole.BufferWidth / 2, 1, Title.TextAlignModes.Center);
 
+            playerValueTitle = new Title(null, "Player Value", 50, 11, Title.TextAlignModes.Center);
+            computerValueTitle = new Title(null, "Computer Value", 51, GraphicConsole.BufferHeight - 11, Title.TextAlignModes.Center);
+            differenceValueTitle = new Title(null, "Difference Value", GraphicConsole.BufferWidth / 2, GraphicConsole.BufferHeight / 2, Title.TextAlignModes.Center);
+
             Color4 controlFillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
             Color4 darkerColor = new Color4(0.1f, 0.1f, 0.1f, 1f);
             Color4 lighterColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
@@ -91,6 +95,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             #region Control Registration
             RegisterControl(screenTitle);
+            RegisterControl(playerValueTitle);
+            RegisterControl(computerValueTitle);
+            RegisterControl(differenceValueTitle);
             RegisterControl(inventoryList);
             RegisterControl(availableItemsList);
             RegisterControl(offeredList);
@@ -135,6 +142,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Update displays
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
+                updateScreenInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -164,6 +172,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Update displays
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
+                updateScreenInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -194,6 +203,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Update displays
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
+                updateScreenInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -223,6 +233,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Update displays
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
+                updateScreenInformation();
 
                 InterfaceManager.DrawStep();
             }
@@ -242,8 +253,37 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             offeredItem = null;
             return false;
         }
+        private void updateScreenInformation()
+        {
+            double playerValue = 0.0;
+            foreach (TradingListItem item in offeredList.Items)
+            {
+                playerValue += item.Quantity * item.Material.BaseValue;
+            }
+            playerValueTitle.Text = playerValue.ToString();
+
+            double computerValue = 0.0;
+            foreach (TradingListItem item in interestedList.Items)
+            {
+                computerValue += item.Quantity * item.Material.BaseValue;
+            }
+            computerValueTitle.Text = computerValue.ToString();
+
+            double diff = playerValue - computerValue;
+            if (diff < 0.0)
+            {
+                differenceValueTitle.TextColor = Color4.Red;
+                differenceValueTitle.Text = "◄ " + Math.Abs(diff).ToString() + "δ";
+            }
+            else
+            {
+                differenceValueTitle.TextColor = Color4.Green;
+                differenceValueTitle.Text = Math.Abs(diff).ToString() + "δ ►";
+            }
+        }
 
         private Title screenTitle;
+        private Title playerValueTitle, computerValueTitle, differenceValueTitle;
         private ScrollingList inventoryList, availableItemsList;
         private ScrollingList offeredList, interestedList;
         private Button playerRemoveOne, playerRemoveTen, playerRemoveHundred;
