@@ -80,8 +80,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             makeOfferButton = new Button(null, "Make Offer", GraphicConsole.BufferWidth / 2 - 6, GraphicConsole.BufferHeight / 2 - 3);
             makeOfferButton.Click += (sender, e) => makeOffer();
 
-            popupMessage = new Popup(null);
-
             playerInventory = new List<TradingListItem>()
             {
                 new TradingListItem(Material.Gold, 100),
@@ -120,7 +118,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(computerRemoveTen);
             RegisterControl(computerRemoveHundred);
             RegisterControl(makeOfferButton);
-            RegisterControl(popupMessage);
             #endregion
         }
 
@@ -361,7 +358,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button computerRemoveOne, computerRemoveTen, computerRemoveHundred;
         private Button computerAddOne, computerAddTen, computerAddHundred;
         private Button makeOfferButton;
-        private Popup popupMessage;
 
         private List<TradingListItem> playerInventory;
         private List<TradingListItem> computerInventory;

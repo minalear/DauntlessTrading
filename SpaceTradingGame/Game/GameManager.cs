@@ -44,14 +44,37 @@ namespace SpaceTradingGame.Game
             int numSystems = RNG.Next(250, 500);
             for (int i = 0; i < numSystems; i++)
             {
-                StarSystem system = new Game.StarSystem("Test");
+                StarSystem system = new StarSystem(randomSystemName());
                 system.Coordinates = new OpenTK.Vector2(
                     RNG.NextFloat(-10000.0f, 10000.0f),
                     RNG.NextFloat(-10000.0f, 10000.0f)
                 );
 
+                system.Planetoids = generateRandomPlanets(system);
+                
                 systems.Add(system);
             }
+        }
+        private string randomSystemName()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string name = chars[RNG.Next(0, chars.Length)].ToString() + chars[RNG.Next(0, chars.Length)].ToString() + "-";
+            name += RNG.Next(0, 10).ToString() + RNG.Next(0, 10).ToString() + RNG.Next(0, 10).ToString() + RNG.Next(0, 10).ToString();
+
+            return name;
+        }
+        private List<Planetoid> generateRandomPlanets(StarSystem system)
+        {
+            List<Planetoid> planets = new List<Planetoid>();
+            int num = RNG.Next(0, 8);
+
+            for (int i = 0; i < num; i++)
+            {
+                Planetoid planet = new Planetoid(system, string.Format("{0}-{1}", system.Name, i));
+                planets.Add(planet);
+            }
+
+            return planets;
         }
 
         public List<StarSystem> Systems { get { return systems; } }
