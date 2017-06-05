@@ -53,7 +53,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public override void MouseWheel(MouseWheelEventArgs e)
         {
-            int difference = e.Delta / this.scrollSize;
+            int difference = e.Delta;
 
             if (difference != 0)
             {
