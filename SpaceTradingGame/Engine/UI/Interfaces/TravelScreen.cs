@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
 using SpaceTradingGame.Engine.UI.Controls.Custom;
+using SpaceTradingGame.Game;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
 {
@@ -52,7 +54,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             travelButton.Click += (sender, e) =>
             {
                 if (starMap.HasSystemSelected)
-                    starMap.SetCurrentSystem(starMap.SelectedSystem);
+                {
+                    StartTraveling();
+                }
             };
             detailsButton.Click += (sender, e) =>
             {
@@ -72,6 +76,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 systemDesc.Text = desc;
                 InterfaceManager.DrawStep();
             };
+
+            travelManager = new TravelManager(starMap);
 
             RegisterControl(screenTitle);
             RegisterControl(systemTitle);
@@ -97,11 +103,109 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             base.DrawStep();
         }
+        public override void UpdateFrame(GameTime gameTime)
+        {
+            if (travelManager.IsTraveling)
+            {
+                travelManager.UpdateFrame(gameTime);
+
+                //Used to draw the interface ever 1 second while traveling
+                drawTimer += gameTime.ElapsedTime.TotalSeconds;
+                if (drawTimer >= 1)
+                {
+                    drawTimer = 0.0;
+                    InterfaceManager.DrawStep();
+                }
+            }
+
+            base.UpdateFrame(gameTime);
+        }
+        public void StartTraveling()
+        {
+            travelManager.SetTravelPath(starMap.GetTravelPath());
+        }
+
+        private TravelManager travelManager;
+        private bool isTraveling = false;
+        private double drawTimer = 0.0;
 
         private Title screenTitle, systemTitle;
         private TextBox systemDesc;
         private Button up, down, left, right;
         private Button travelButton, detailsButton;
         private StarMap starMap;
+    }
+
+    public class TravelManager
+    {
+        private StarMap starMap;
+        private StarSystem[] travelPath;
+
+        private Vector2 playerPosition;
+        private int currentNode, nextNode;
+        private Vector2 travelVector;
+
+        private float timeToNextNode;
+        private double timer;
+
+        public float MoveSpeed = 100.0f;
+        public bool IsTraveling = false;
+
+        public TravelManager(StarMap map)
+        {
+            starMap = map;
+        }
+
+        public void SetTravelPath(StarSystem[] systemPath)
+        {
+            travelPath = systemPath;
+            playerPosition = systemPath[0].Coordinates;
+
+            currentNode = 0;
+            nextNode = 1;
+
+            updateVectors();
+
+            starMap.DrawPlayerPosition = true;
+            IsTraveling = true;
+        }
+        public void UpdateFrame(GameTime gameTime)
+        {
+            UpdatePlayerPosition((float)gameTime.ElapsedTime.TotalSeconds);
+
+            timer += gameTime.ElapsedTime.TotalSeconds;
+            if (timer >= timeToNextNode)
+            {
+                //Travel finished
+                if (currentNode == nextNode)
+                {
+                    starMap.SetCurrentSystem(travelPath[travelPath.Length - 1]);
+                    starMap.DrawPlayerPosition = false;
+                    IsTraveling = false;
+                }
+                else
+                {
+                    timer = 0.0;
+                    currentNode++;
+                    nextNode = (nextNode + 1 != travelPath.Length) ? nextNode + 1 : nextNode;
+
+                    updateVectors();
+                }
+            }
+        }
+        public void UpdatePlayerPosition(float elapsed)
+        {
+            playerPosition += Vector2.Multiply(travelVector, MoveSpeed * elapsed);
+            starMap.SetPlayerPosition(playerPosition);
+        }
+
+        private void updateVectors()
+        {
+            travelVector = travelPath[nextNode].Coordinates - travelPath[currentNode].Coordinates;
+            travelVector.Normalize();
+
+            float distance = travelPath[currentNode].Coordinates.Distance(travelPath[nextNode].Coordinates);
+            timeToNextNode = distance / MoveSpeed;
+        }
     }
 }

@@ -16,6 +16,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             path = new List<StarSystem>();
 
             HasSystemSelected = false;
+            DrawPlayerPosition = false;
+            PlayerPosition = Point.Empty;
         }
 
         public override void DrawStep()
@@ -42,6 +44,13 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.ClearBounds();
             drawBorder(mapBounds);
 
+            if (DrawPlayerPosition)
+            {
+                GraphicConsole.SetColor(Color4.Red, Color4.Black);
+                GraphicConsole.Put('@', getScreenPosFromCoord(PlayerPosition));
+            }
+
+            GraphicConsole.ClearColor();
             base.DrawStep();
         }
 
@@ -58,9 +67,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         {
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].MapCoord = new Point(
-                    (int)(list[i].Coordinates.X / this.Size.X),
-                    (int)(list[i].Coordinates.Y / this.Size.X));
+                list[i].MapCoord = getCoordFromWorldPos(list[i].Coordinates);
             }
 
             systemList.Clear();
@@ -73,7 +80,11 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         public StarSystem[] GetTravelPath()
         {
-            return null;
+            return path.ToArray();
+        }
+        public void SetPlayerPosition(Vector2 worldPosition)
+        {
+            PlayerPosition = getCoordFromWorldPos(worldPosition);
         }
 
         public override void MouseUp(MouseButtonEventArgs e)
@@ -214,8 +225,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                         if (systemList[i].Equals(currentNode)) continue;
                         if (ignoredSystems.Contains(systemList[i])) continue;
 
-                        if (distance(currentNode.Coordinates, systemList[i].Coordinates) < 
-                            distance(currentNode.Coordinates, testNode.Coordinates))
+                        if (currentNode.Coordinates.Distance(systemList[i].Coordinates) <
+                            currentNode.Coordinates.Distance(testNode.Coordinates))
                         {
                             testNode = systemList[i];
                         }
@@ -226,8 +237,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                         break;
 
                     //Check if node gets closer to target
-                    if (distance(testNode.Coordinates, target.Coordinates) < 
-                        distance(currentNode.Coordinates, target.Coordinates))
+                    if (testNode.Coordinates.Distance(target.Coordinates) <
+                        currentNode.Coordinates.Distance(target.Coordinates))
                     {
                         path.Add(testNode);
                         currentNode = testNode;
@@ -258,9 +269,11 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
             return coord;
         }
-        private double distance(Vector2 a, Vector2 b)
+        private Point getCoordFromWorldPos(Vector2 pos)
         {
-            return Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
+            return new Point(
+                (int)(pos.X / this.Size.X),
+                (int)(pos.Y / this.size.X));
         }
 
         private List<StarSystem> systemList;
@@ -275,6 +288,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         public StarSystem SelectedSystem { get { return selectedSystem; } }
 
         public bool HasSystemSelected { get; set; }
+        public bool DrawPlayerPosition { get; set; }
+        public Point PlayerPosition { get; set; }
 
         public delegate void SystemSelected(object sender, StarSystem system);
         public SystemSelected Selected;
