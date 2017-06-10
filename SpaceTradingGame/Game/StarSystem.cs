@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
@@ -16,6 +17,7 @@ namespace SpaceTradingGame.Game
         public List<Planetoid> Planetoids { get; set; }
 
         public Vector2 Coordinates { get; set; }
+        public Point MapCoord { get; set; }
 
         public StarSystem(string name)
         {
@@ -27,6 +29,17 @@ namespace SpaceTradingGame.Game
             StarColor = colors[RNG.Next(0, colors.Length)];
 
             this.ListText = Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() == typeof(StarSystem))
+                return ((StarSystem)obj).ID == ID;
+            return base.Equals(obj);
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         private static Color4[] colors = { Color4.Red, Color4.Orange, Color4.Yellow, Color4.Cyan, Color4.Blue, Color4.White };

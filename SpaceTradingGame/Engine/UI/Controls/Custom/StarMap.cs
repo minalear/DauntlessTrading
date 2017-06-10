@@ -12,8 +12,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
     {
         public StarMap()
         {
-            systemList = new List<MapPoint>();
-            path = new List<Point>();
+            systemList = new List<StarSystem>();
+            path = new List<StarSystem>();
 
             HasSystemSelected = false;
         }
@@ -48,7 +48,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         public void SetCurrentSystem(StarSystem system)
         {
             Interface.GameManager.CurrentSystem = system;
-            currentSystem = new MapPoint(system, GraphicConsole.BufferWidth);
+            currentSystem = system;
             drawSelectedSystem = false;
             HasSystemSelected = false;
 
@@ -56,16 +56,24 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         public void SetSystemList(List<StarSystem> list)
         {
-            systemList.Clear();
             for (int i = 0; i < list.Count; i++)
             {
-                systemList.Add(new MapPoint(list[i], GraphicConsole.BufferWidth));
+                list[i].MapCoord = new Point(
+                    (int)(list[i].Coordinates.X / this.Size.X),
+                    (int)(list[i].Coordinates.Y / this.Size.X));
             }
+
+            systemList.Clear();
+            systemList = list;
         }
         public void PanMap(float x, float y)
         {
             mapOffset.X += x;
             mapOffset.Y += y;
+        }
+        public StarSystem[] GetTravelPath()
+        {
+            return null;
         }
 
         public override void MouseUp(MouseButtonEventArgs e)
@@ -118,13 +126,13 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         private void drawSystems()
         {
             //Draw every system
-            foreach (MapPoint point in systemList)
+            foreach (StarSystem point in systemList)
             {
                 Point relativePos = point.MapCoord;
                 relativePos.X += (int)(mapOffset.X / GraphicConsole.BufferWidth);
                 relativePos.Y += (int)(mapOffset.Y / GraphicConsole.BufferWidth);
 
-                GraphicConsole.SetColor(point.System.StarColor, Color4.Black);
+                GraphicConsole.SetColor(point.StarColor, Color4.Black);
                 GraphicConsole.Put('☼', relativePos.X + Position.X, relativePos.Y + Position.Y);
             }
 
@@ -133,7 +141,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             systemPos.X += (int)(mapOffset.X / GraphicConsole.BufferWidth);
             systemPos.Y += (int)(mapOffset.Y / GraphicConsole.BufferWidth);
 
-            GraphicConsole.SetColor(Color4.Black, currentSystem.System.StarColor);
+            GraphicConsole.SetColor(Color4.Black, currentSystem.StarColor);
             GraphicConsole.Put('☼', systemPos.X + Position.X, systemPos.Y + Position.Y);
 
             if (drawSelectedSystem)
@@ -142,7 +150,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 relativePos.X += (int)(mapOffset.X / GraphicConsole.BufferWidth);
                 relativePos.Y += (int)(mapOffset.Y / GraphicConsole.BufferWidth);
 
-                GraphicConsole.SetColor(Color4.Black, selectedSystem.System.StarColor);
+                GraphicConsole.SetColor(Color4.Black, selectedSystem.StarColor);
                 GraphicConsole.Put('☼', relativePos.X + Position.X, relativePos.Y + Position.Y);
             }
 
@@ -173,8 +181,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.SetColor(Color4.Red, Color4.Black);
             for (int i = 0; i < path.Count - 1; i++)
             {
-                Point a = getScreenPosFromCoord(path[i]);
-                Point b = getScreenPosFromCoord(path[i + 1]);
+                Point a = getScreenPosFromCoord(path[i].MapCoord);
+                Point b = getScreenPosFromCoord(path[i + 1].MapCoord);
 
                 GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '.');
             }
@@ -189,13 +197,13 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             else
             {
                 path.Clear();
-                path.Add(currentSystem.MapCoord);
+                path.Add(currentSystem);
 
-                MapPoint currentNode = currentSystem;
-                MapPoint testNode = selectedSystem;
-                MapPoint target = selectedSystem;
+                StarSystem currentNode = currentSystem;
+                StarSystem testNode = selectedSystem;
+                StarSystem target = selectedSystem;
 
-                List<MapPoint> ignoredSystems = new List<MapPoint>();
+                List<StarSystem> ignoredSystems = new List<StarSystem>();
 
                 bool final = false;
                 while (!final)
@@ -206,8 +214,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                         if (systemList[i].Equals(currentNode)) continue;
                         if (ignoredSystems.Contains(systemList[i])) continue;
 
-                        if (distance(currentNode.System.Coordinates, systemList[i].System.Coordinates) < 
-                            distance(currentNode.System.Coordinates, testNode.System.Coordinates))
+                        if (distance(currentNode.Coordinates, systemList[i].Coordinates) < 
+                            distance(currentNode.Coordinates, testNode.Coordinates))
                         {
                             testNode = systemList[i];
                         }
@@ -218,10 +226,10 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                         break;
 
                     //Check if node gets closer to target
-                    if (distance(testNode.System.Coordinates, target.System.Coordinates) < 
-                        distance(currentNode.System.Coordinates, target.System.Coordinates))
+                    if (distance(testNode.Coordinates, target.Coordinates) < 
+                        distance(currentNode.Coordinates, target.Coordinates))
                     {
-                        path.Add(testNode.MapCoord);
+                        path.Add(testNode);
                         currentNode = testNode;
 
                         ignoredSystems.Clear();
@@ -233,7 +241,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                     }
                 }
 
-                path.Add(target.MapCoord);
+                path.Add(target);
             }
 
             //Find closest system
@@ -255,46 +263,16 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             return Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
         }
 
-        public class MapPoint
-        {
-            public StarSystem System;
-            public Point MapCoord;
-
-            public MapPoint(StarSystem system, int mapWidth)
-            {
-                this.System = system;
-
-                int x = (int)(system.Coordinates.X / mapWidth);
-                int y = (int)(system.Coordinates.Y / mapWidth);
-
-                MapCoord = new Point(x, y);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (obj.GetType() == typeof(MapPoint))
-                {
-                    return (System.ID == ((MapPoint)obj).System.ID);
-                }
-
-                return base.Equals(obj);
-            }
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
-        }
-
-        private List<MapPoint> systemList;
-        private List<Point> path;
-        private MapPoint selectedSystem, currentSystem;
+        private List<StarSystem> systemList;
+        private List<StarSystem> path;
+        private StarSystem selectedSystem, currentSystem;
         private bool drawSelectedSystem = false;
         private Vector2 mapOffset = new Vector2(3700, 1650);
 
         private Color4 axisColor = Color4.Gray;
 
         public StarSystem CurrentSystem { get { return Interface.GameManager.CurrentSystem; } }
-        public StarSystem SelectedSystem { get { return selectedSystem.System; } }
+        public StarSystem SelectedSystem { get { return selectedSystem; } }
 
         public bool HasSystemSelected { get; set; }
 
