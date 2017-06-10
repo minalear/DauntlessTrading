@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenTK;
 using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine
@@ -133,6 +134,11 @@ namespace SpaceTradingGame.Engine
             double mult = System.Math.Pow(10.0, digits);
             double result = System.Math.Truncate(mult * f) / mult;
             return result;
+        }
+
+        public static float Distance(this Vector2 a, Vector2 b)
+        {
+            return (float)Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
         }
     }
 

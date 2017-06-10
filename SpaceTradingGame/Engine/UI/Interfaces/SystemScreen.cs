@@ -67,18 +67,5 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             base.DrawStep();
         }
-
-        private Color4 variateColor(Color4 color)
-        {
-            int varR = (RNG.Next(0, 101) <= 50) ? 1 : -1;
-            int varG = (RNG.Next(0, 101) <= 50) ? 1 : -1;
-            int varB = (RNG.Next(0, 101) <= 50) ? 1 : -1;
-
-            return new Color4(
-                color.R + (color.R * 0.4f) * varR,
-                color.G + (color.G * 0.4f) * varG,
-                color.B + (color.B * 0.4f) * varB,
-                1f);
-        }
     }
 }

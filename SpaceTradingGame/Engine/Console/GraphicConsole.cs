@@ -114,11 +114,16 @@ namespace SpaceTradingGame.Engine.Console
             this.Write(obj.ToString() + "\n");
         }
 
+        public void Put(char token, Point point)
+        {
+            Put(token, point.X, point.Y);
+        }
         public void Put(char token, int x, int y)
         {
             if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
                 this.put(token, x, y);
         }
+        
         //Doesn't bound check, private use only
         private void put(char token, int x, int y)
         {
