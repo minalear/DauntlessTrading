@@ -81,21 +81,21 @@ namespace SpaceTradingGame.Engine.UI.Controls
             this.mode = ButtonModes.Hover;
 
             this.Hover?.Invoke(this);
-            this.DrawStep();
+            InterfaceManager.DrawStep();
 
             base.MouseEnter();
         }
         public override void MouseLeave()
         {
             this.mode = ButtonModes.Normal;
-            this.DrawStep();
+            InterfaceManager.DrawStep();
 
             base.MouseLeave();
         }
         public override void MouseDown(MouseButtonEventArgs e)
         {
             this.mode = ButtonModes.Pressed;
-            this.DrawStep();
+            InterfaceManager.DrawStep();
 
             base.MouseDown(e);
         }
@@ -103,7 +103,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             this.mode = ButtonModes.Hover;
             this.Click?.Invoke(this, e.Button);
-            this.DrawStep();
+            InterfaceManager.DrawStep();
 
             base.MouseUp(e);
         }
