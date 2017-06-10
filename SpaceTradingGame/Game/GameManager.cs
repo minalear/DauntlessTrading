@@ -7,6 +7,7 @@ namespace SpaceTradingGame.Game
     public class GameManager
     {
         private List<StarSystem> systems;
+        private StarSystem currentSystem;
 
         public GameManager()
         {
@@ -38,6 +39,8 @@ namespace SpaceTradingGame.Game
 
             systems.Add(solSystem);
             generateRandomSystems();
+
+            CurrentSystem = solSystem;
         }
         private void generateRandomSystems()
         {
@@ -78,5 +81,6 @@ namespace SpaceTradingGame.Game
         }
 
         public List<StarSystem> Systems { get { return systems; } }
+        public StarSystem CurrentSystem { get { return currentSystem; } set { currentSystem = value; } }
     }
 }

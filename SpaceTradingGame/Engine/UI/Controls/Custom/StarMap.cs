@@ -47,8 +47,10 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
         public void SetCurrentSystem(StarSystem system)
         {
+            Interface.GameManager.CurrentSystem = system;
             currentSystem = new MapPoint(system, GraphicConsole.BufferWidth);
             drawSelectedSystem = false;
+            HasSystemSelected = false;
 
             InterfaceManager.DrawStep();
         }
@@ -285,13 +287,13 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
         private List<MapPoint> systemList;
         private List<Point> path;
-        private MapPoint currentSystem, selectedSystem;
+        private MapPoint selectedSystem, currentSystem;
         private bool drawSelectedSystem = false;
         private Vector2 mapOffset = new Vector2(3700, 1650);
 
         private Color4 axisColor = Color4.Gray;
 
-        public StarSystem CurrentSystem { get { return currentSystem.System; } }
+        public StarSystem CurrentSystem { get { return Interface.GameManager.CurrentSystem; } }
         public StarSystem SelectedSystem { get { return selectedSystem.System; } }
 
         public bool HasSystemSelected { get; set; }
