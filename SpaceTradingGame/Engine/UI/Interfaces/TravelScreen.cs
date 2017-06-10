@@ -65,15 +65,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             starMap.Selected += (sender, e) =>
             {
-                systemTitle.Text = e.Name;
-
-                string desc = "";
-                foreach (Game.Planetoid planet in e.Planetoids)
-                {
-                    desc += planet.Name + "\n";
-                }
-
-                systemDesc.Text = desc;
+                updateScreenInformation();
                 InterfaceManager.DrawStep();
             };
 
@@ -95,6 +87,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             starMap.SetSystemList(GameManager.Systems);
             starMap.SetCurrentSystem(GameManager.CurrentSystem);
+
+            updateScreenInformation();
 
             base.OnEnable();
         }
@@ -123,6 +117,19 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public void StartTraveling()
         {
             travelManager.SetTravelPath(starMap.GetTravelPath());
+        }
+
+        private void updateScreenInformation()
+        {
+            systemTitle.Text = GameManager.CurrentSystem;
+
+            string desc = "";
+            foreach (Game.Planetoid planet in GameManager.CurrentSystem.Planetoids)
+            {
+                desc += planet.Name + "\n";
+            }
+
+            systemDesc.Text = desc;
         }
 
         private TravelManager travelManager;
