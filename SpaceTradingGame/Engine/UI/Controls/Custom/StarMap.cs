@@ -14,6 +14,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         {
             systemList = new List<MapPoint>();
             path = new List<Point>();
+
+            HasSystemSelected = false;
         }
 
         public override void DrawStep()
@@ -93,6 +95,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 plotPath();
                 this.Selected?.Invoke(this, SelectedSystem);
             }
+            HasSystemSelected = systemFound;
 
             InterfaceManager.DrawStep();
             base.MouseUp(e);
@@ -290,6 +293,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
         public StarSystem CurrentSystem { get { return currentSystem.System; } }
         public StarSystem SelectedSystem { get { return selectedSystem.System; } }
+
+        public bool HasSystemSelected { get; set; }
 
         public delegate void SystemSelected(object sender, StarSystem system);
         public SystemSelected Selected;

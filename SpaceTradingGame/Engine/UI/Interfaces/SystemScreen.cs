@@ -61,10 +61,26 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
                     GraphicConsole.SetColor(planet.Color, Color4.Black);
                     GraphicConsole.Draw.Circle(x * 20 + 25, y * 15 + 10, planet.R, '.');
+
+                    int moons = RNG.Next(0, 5);
+                    for (int j = 0; j < moons; j++)
+                    {
+                        double angle = OpenTK.MathHelper.DegreesToRadians(j * 30) - OpenTK.MathHelper.DegreesToRadians(90.0);
+                        int mX = (int)(Math.Cos(angle) * (planet.R + 2.5)) + (x * 20 + 25);
+                        int mY = (int)(Math.Sin(angle) * (planet.R + 2.5)) + (y * 15 + 10);
+
+                        GraphicConsole.SetColor(Color4.White, Color4.Black);
+
+                        char token = (RNG.Next(0, 101) <= 50) ? '&' : '*';
+                        GraphicConsole.Put(token, mX, mY);
+                    }
                 }
             }
 
             GraphicConsole.ClearColor();
+
+            GraphicConsole.SetCursor(1, GraphicConsole.BufferHeight - 2);
+            GraphicConsole.WriteLine("-Not to scale-");
 
             base.DrawStep();
         }
