@@ -12,9 +12,36 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public SystemScreen(InterfaceManager manager)
             : base(manager)
         {
+            controlGroup = new Control();
+            controlGroup.Position = System.Drawing.Point.Empty;
+            controlGroup.Size = new System.Drawing.Point(GraphicConsole.BufferWidth, GraphicConsole.BufferHeight);
 
+            backButton = new Button(null, "Back", 0, 0);
+            backButton.Click += (sender, e) =>
+            {
+                InterfaceManager.ChangeInterface("Travel");
+            };
+
+            RegisterControl(controlGroup);
+            RegisterControl(backButton);
         }
 
+        public override void OnEnable()
+        {
+            controlGroup.Children.Clear();
+            for (int i = 0; i < GameManager.CurrentSystem.Planetoids.Count; i++)
+            {
+                int x = i % 4;
+                int y = i / 4;
+
+                Planetoid planet = GameManager.CurrentSystem.Planetoids[i];
+
+                Title title = new Title(controlGroup, planet, x * 20 + 25, y * 15 + 10, Title.TextAlignModes.Center);
+                controlGroup.Children.Add(title);
+            }
+
+            base.OnEnable();
+        }
         public override void DrawStep()
         {
             //Draw the star
@@ -34,29 +61,19 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
                 Planetoid planet = GameManager.CurrentSystem.Planetoids[i];
 
-                /*for (int j = 0; j < planet.R; j++)
-                {
-                    Color4 variatedColor = variateColor(planet.Color);
-                    GraphicConsole.SetColor(variatedColor, Color4.Black);
-                    GraphicConsole.Draw.Circle(x * 20 + 25, y * 15 + 10, j, '.');
-                }*/
-
                 int planetRadius = 5;
 
                 GraphicConsole.SetColor(Color4.White, Color4.Black);
                 GraphicConsole.Draw.Circle(x * 20 + 25, y * 15 + 10, planetRadius, '.');
 
-                int moons = RNG.Next(0, 5);
-                for (int j = 0; j < moons; j++)
+                for (int moon = 0; moon < planet.Moons.Count; moon++)
                 {
-                    double angle = OpenTK.MathHelper.DegreesToRadians(j * 30) - OpenTK.MathHelper.DegreesToRadians(90.0);
-                    int mX = (int)(Math.Cos(angle) * (planetRadius + 2.5)) + (x * 20 + 25);
-                    int mY = (int)(Math.Sin(angle) * (planetRadius + 2.5)) + (y * 15 + 10);
+                    double angle = OpenTK.MathHelper.DegreesToRadians(moon * 30) - OpenTK.MathHelper.DegreesToRadians(90.0);
+                    int mX = (int)(Math.Cos(angle) * (planetRadius + 3.1)) + (x * 20 + 25);
+                    int mY = (int)(Math.Sin(angle) * (planetRadius + 1)) + (y * 15 + 10);
 
                     GraphicConsole.SetColor(Color4.White, Color4.Black);
-
-                    char token = (RNG.Next(0, 101) <= 50) ? '&' : '*';
-                    GraphicConsole.Put(token, mX, mY);
+                    GraphicConsole.Put('*', mX, mY);
                 }
             }
 
@@ -67,5 +84,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             base.DrawStep();
         }
+
+        //For registering and clearing controls between interface loads
+        private Control controlGroup;
+        private Button backButton;
     }
 }

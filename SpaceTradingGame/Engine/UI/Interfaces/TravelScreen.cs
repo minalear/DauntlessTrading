@@ -121,10 +121,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private void updateScreenInformation()
         {
-            systemTitle.Text = GameManager.CurrentSystem;
+            StarSystem infoSystem = (starMap.HasSystemSelected) ? starMap.SelectedSystem : GameManager.CurrentSystem;
+            systemTitle.Text = infoSystem.Name;
 
             string desc = "";
-            foreach (Game.Planetoid planet in GameManager.CurrentSystem.Planetoids)
+            foreach (Game.Planetoid planet in infoSystem.Planetoids)
             {
                 desc += planet.Name + "\n";
             }
@@ -133,7 +134,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
 
         private TravelManager travelManager;
-        private bool isTraveling = false;
         private double drawTimer = 0.0;
 
         private Title screenTitle, systemTitle;

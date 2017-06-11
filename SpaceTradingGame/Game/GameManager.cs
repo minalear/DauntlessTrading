@@ -54,7 +54,7 @@ namespace SpaceTradingGame.Game
                 );
 
                 system.Planetoids = generateRandomPlanets(system);
-                
+
                 systems.Add(system);
             }
         }

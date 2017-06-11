@@ -20,7 +20,13 @@ namespace SpaceTradingGame.Engine.UI.Controls
         public List<Control> Children { get { return this.children; } set { this.children = value; } }
         public bool IsVisible { get; set; }
 
-        protected GraphicConsole GraphicConsole { get { return Interface.InterfaceManager.Console; } }
+        protected GraphicConsole GraphicConsole
+        {
+            get
+            {
+                return (isAbsolute) ? Interface.InterfaceManager.Console : parent.Interface.InterfaceManager.Console;
+            }
+        }
         protected InterfaceManager InterfaceManager { get { return Interface.InterfaceManager; } }
 
         public Control()

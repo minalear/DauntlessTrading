@@ -69,8 +69,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             {
                 list[i].MapCoord = getCoordFromWorldPos(list[i].Coordinates);
             }
-
-            systemList.Clear();
+            
             systemList = list;
         }
         public void PanMap(float x, float y)
@@ -111,12 +110,12 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             }
 
             drawSelectedSystem = systemFound;
+            HasSystemSelected = systemFound;
             if (drawSelectedSystem)
             {
                 plotPath();
                 this.Selected?.Invoke(this, SelectedSystem);
             }
-            HasSystemSelected = systemFound;
 
             InterfaceManager.DrawStep();
             base.MouseUp(e);

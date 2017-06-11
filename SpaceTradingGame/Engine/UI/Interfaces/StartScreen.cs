@@ -25,7 +25,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 GraphicConsole.BufferHeight - 3, Title.TextAlignModes.Center);
             infoTitle.TextColor = Color4.Gray;
 
-            exitButton.Click += (sender, e) => { InterfaceManager.Game.Exit(); };
+            newGameButton.Click += (sender, e) =>
+            {
+                InterfaceManager.ChangeInterface("Travel");
+            };
+            exitButton.Click += (sender, e) => 
+            {
+                InterfaceManager.Game.Exit();
+            };
 
             generateRandomStars();
 
