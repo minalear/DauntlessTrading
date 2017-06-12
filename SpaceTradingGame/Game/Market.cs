@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
@@ -7,12 +8,10 @@ namespace SpaceTradingGame.Game
     {
         public Dictionary<Material, MetaInfo> Materials { get; set; }
 
-        public Market()
+        public Market(StarSystem system)
         {
             Materials = new Dictionary<Material, MetaInfo>();
-            Materials.Add(Material.Hydrogen, new MetaInfo(Material.Hydrogen, 100));
-            Materials.Add(Material.Copper, new MetaInfo(Material.Copper, 9));
-            Materials.Add(Material.Gold, new MetaInfo(Material.Gold, 87));
+            starSystem = system;
         }
 
         public double Buy(Material material, int amount)
@@ -30,12 +29,28 @@ namespace SpaceTradingGame.Game
         }
         public double Sell(Material material, int amount)
         {
+            if (!Materials.ContainsKey(material))
+            {
+                Materials.Add(material, new MetaInfo(material, 0));
+            }
+
             double total = Materials[material].Price * amount;
             Materials[material].Amount += amount;
             Materials[material].CalculatePrice();
 
             return total;
         }
+        public void UpdateMarket()
+        {
+            foreach (Planetoid planet in starSystem.Planetoids)
+            {
+                if (planet.PrimeMaterial == null) continue;
+                MetaInfo info = new MetaInfo(planet.PrimeMaterial, RNG.Next(50 - planet.PrimeMaterial.Rarity, 500 - planet.PrimeMaterial.Rarity * 10));
+                Sell(planet.PrimeMaterial, info.Amount);
+            }
+        }
+
+        private StarSystem starSystem;
 
         public class MetaInfo
         {

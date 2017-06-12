@@ -54,6 +54,7 @@ namespace SpaceTradingGame.Game
                 );
 
                 system.Planetoids = generateRandomPlanets(system);
+                system.SystemMarket.UpdateMarket();
 
                 systems.Add(system);
             }
@@ -74,6 +75,14 @@ namespace SpaceTradingGame.Game
             for (int i = 0; i < num; i++)
             {
                 Planetoid planet = new Planetoid(system, string.Format("{0}-{1}", system.Name, i));
+                planet.PrimeMaterial = Material.MaterialList[RNG.Next(0, Material.MaterialList.Length)];
+
+                int numMoons = RNG.Next(0, 5);
+                for (int j = 0; j < numMoons; j++)
+                {
+                    Planetoid moon = new Planetoid(system, "Moon", planet);
+                }
+
                 planets.Add(planet);
             }
 

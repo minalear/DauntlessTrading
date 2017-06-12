@@ -22,8 +22,15 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.ChangeInterface("Travel");
             };
 
+            marketButton = new Button(null, "Market", 0, GraphicConsole.BufferHeight - 3);
+            marketButton.Click += (sender, e) =>
+            {
+                InterfaceManager.ChangeInterface("Trading");
+            };
+
             RegisterControl(controlGroup);
             RegisterControl(backButton);
+            RegisterControl(marketButton);
         }
 
         public override void OnEnable()
@@ -78,15 +85,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             }
 
             GraphicConsole.ClearColor();
-
-            GraphicConsole.SetCursor(1, GraphicConsole.BufferHeight - 2);
-            GraphicConsole.WriteLine("-Not to scale-");
-
             base.DrawStep();
         }
 
         //For registering and clearing controls between interface loads
         private Control controlGroup;
-        private Button backButton;
+        private Button backButton, marketButton;
     }
 }

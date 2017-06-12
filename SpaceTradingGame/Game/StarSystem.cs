@@ -19,6 +19,8 @@ namespace SpaceTradingGame.Game
         public Vector2 Coordinates { get; set; }
         public Point MapCoord { get; set; }
 
+        public Market SystemMarket { get; set; }
+
         public StarSystem(string name)
         {
             ID = _nextValidID++;
@@ -27,6 +29,8 @@ namespace SpaceTradingGame.Game
 
             Coordinates = Vector2.Zero;
             StarColor = colors[RNG.Next(0, colors.Length)];
+
+            SystemMarket = new Market(this);
 
             this.ListText = Name;
         }

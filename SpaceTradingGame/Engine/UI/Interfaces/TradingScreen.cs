@@ -17,6 +17,12 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             computerValueTitle = new Title(null, "Computer Value", 51, GraphicConsole.BufferHeight - 11, Title.TextAlignModes.Center);
             differenceValueTitle = new Title(null, "Difference Value", GraphicConsole.BufferWidth / 2, GraphicConsole.BufferHeight / 2, Title.TextAlignModes.Center);
 
+            backButton = new Button(null, "Back", 0, 0, 6, 1);
+            backButton.Click += (sender, e) =>
+            {
+                InterfaceManager.ChangeInterface("System");
+            };
+
             Color4 controlFillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
             Color4 darkerColor = new Color4(0.1f, 0.1f, 0.1f, 1f);
             Color4 lighterColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
@@ -118,7 +124,23 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(computerRemoveTen);
             RegisterControl(computerRemoveHundred);
             RegisterControl(makeOfferButton);
+            RegisterControl(backButton);
             #endregion
+        }
+
+        public override void OnEnable()
+        {
+            computerInventory.Clear();
+
+            Market market = GameManager.CurrentSystem.SystemMarket;
+            foreach (KeyValuePair<Material, Market.MetaInfo> material in market.Materials)
+            {
+                computerInventory.Add(new TradingListItem(material.Key, material.Value.Amount));
+            }
+
+            availableItemsList.SetList(computerInventory);
+
+            base.OnEnable();
         }
 
         public void AddPlayerItem(ListItem item, int number)
@@ -358,6 +380,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button computerRemoveOne, computerRemoveTen, computerRemoveHundred;
         private Button computerAddOne, computerAddTen, computerAddHundred;
         private Button makeOfferButton;
+        private Button backButton;
 
         private List<TradingListItem> playerInventory;
         private List<TradingListItem> computerInventory;
