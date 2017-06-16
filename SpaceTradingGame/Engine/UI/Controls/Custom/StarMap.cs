@@ -254,11 +254,29 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 path.Add(target);
             }
 
-            //Find closest system
-            //If closest system's distance to target is shorter than current system, add that to path
-            //Move node to latest node
-            //If not, keep finding closest systems
-            //Repeat until reaching destination
+            //Optimize Path
+            List<StarSystem> optimalPath = new List<StarSystem>();
+
+            double jumpRange = 400.0;
+            optimalPath.Add(path[0]);
+
+            for (int i = 0; i < path.Count; i++)
+            {
+                for (int j = path.Count - 1; j >= 0; j--)
+                {
+                    double dist = path[i].Coordinates.Distance(path[j].Coordinates);
+                    if (path[i].Coordinates.Distance(path[j].Coordinates) <= jumpRange)
+                    {
+                        i = j;
+                        optimalPath.Add(path[i]);
+
+                        break;
+                    }
+                }
+            }
+
+            path.Clear();
+            path = optimalPath;
         }
 
         private Point getScreenPosFromCoord(Point coord)
