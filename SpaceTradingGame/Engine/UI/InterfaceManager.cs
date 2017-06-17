@@ -50,7 +50,7 @@ namespace SpaceTradingGame.Engine.UI
 
             this.interfaces.Add("Test", new TestInterface(this));
             
-            ChangeInterface("Start");
+            ChangeInterface("NewGame");
         }
 
         public void ChangeInterface(string name)
