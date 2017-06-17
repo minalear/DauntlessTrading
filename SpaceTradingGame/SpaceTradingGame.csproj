@@ -63,7 +63,7 @@
     <Compile Include="Engine\UI\Controls\CheckBox.cs" />
     <Compile Include="Engine\UI\Controls\CheckBoxGroup.cs" />
     <Compile Include="Engine\UI\Controls\Control.cs" />
-    <None Include="Engine\UI\Controls\InputBox.cs" />
+    <Compile Include="Engine\UI\Controls\InputBox.cs" />
     <Compile Include="Engine\UI\Controls\Custom\StarMap.cs" />
     <Compile Include="Engine\UI\Controls\Popup.cs" />
     <Compile Include="Engine\UI\Controls\ScrollingList.cs" />

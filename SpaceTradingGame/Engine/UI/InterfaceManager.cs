@@ -37,6 +37,9 @@ namespace SpaceTradingGame.Engine.UI
             this.game.MouseLeave += Game_MouseLeave;
             this.game.MouseMove += Game_MouseMove;
             this.game.MouseWheel += Game_MouseWheel;
+            this.game.KeyPress += Game_KeyPress;
+            this.game.KeyUp += Game_KeyUp;
+            this.game.KeyDown += Game_KeyDown;
 
             this.interfaces.Add("Start", new StartScreen(this));
             this.interfaces.Add("Ship", new ShipScreen(this));
@@ -103,6 +106,18 @@ namespace SpaceTradingGame.Engine.UI
         private void Game_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             activeInterface.Game_MouseWheel(sender, e);
+        }
+        private void Game_KeyPress(object sender, OpenTK.KeyPressEventArgs e)
+        {
+            activeInterface.Game_KeyPress(sender, e);
+        }
+        private void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            activeInterface.Game_KeyUp(sender, e);
+        }
+        private void Game_KeyDown(object sender, KeyboardKeyEventArgs e)
+        {
+            activeInterface.Game_KeyDown(sender, e);
         }
     }
 }

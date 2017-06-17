@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK;
 using OpenTK.Input;
 using SpaceTradingGame.Engine.UI.Controls;
 
@@ -95,6 +96,27 @@ namespace SpaceTradingGame.Engine.UI
             {
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                     control.MouseWheel(e);
+            }
+        }
+        public void Game_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            foreach (Control control in controls)
+            {
+                control.KeyPress(e);
+            }
+        }
+        public void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            foreach (Control control in controls)
+            {
+                control.KeyUp(e);
+            }
+        }
+        public void Game_KeyDown(object sender, KeyboardKeyEventArgs e)
+        {
+            foreach (Control control in controls)
+            {
+                control.KeyDown(e);
             }
         }
     }

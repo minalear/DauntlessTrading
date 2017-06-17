@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Input;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -31,12 +33,12 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             this.clearArea();
 
-            GraphicConsole.SetColors(Color.Transparent, this.fillColor);
-            DrawingUtilities.DrawRect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
+            GraphicConsole.SetColor(Color.Transparent, this.fillColor);
+            GraphicConsole.Draw.Rect(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y, ' ', true);
 
             if (this.text != string.Empty)
             {
-                GraphicConsole.SetColors(this.textColor, this.fillColor);
+                GraphicConsole.SetColor(this.textColor, this.fillColor);
                 GraphicConsole.SetCursor(this.Position);
                 GraphicConsole.Write(this.text);
             }
@@ -48,24 +50,24 @@ namespace SpaceTradingGame.Engine.UI.Controls
             if (this.hasFocus)
             {
                 #region HasFocus Branch
-                this.cursorCounter += gameTime.ElapsedGameTime.TotalMilliseconds;
+                this.cursorCounter += gameTime.ElapsedTime.TotalMilliseconds;
 
                 if (this.cursorCounter >= cursorFlickerRate * 2)
                     this.cursorCounter = 0.0;
                 if (this.cursorCounter > cursorFlickerRate)
                 {
-                    GraphicConsole.SetColors(this.textColor, this.fillColor);
+                    GraphicConsole.SetColor(this.textColor, this.fillColor);
                     GraphicConsole.SetCursor(this.Position.X + this.text.Length, this.Position.Y);
                     GraphicConsole.Write(this.cursor);
                 }
                 else
                 {
-                    GraphicConsole.SetColors(this.textColor, this.fillColor);
+                    GraphicConsole.SetColor(this.textColor, this.fillColor);
                     GraphicConsole.SetCursor(this.Position.X + this.text.Length, this.Position.Y);
                     GraphicConsole.Write(' ');
                 }
 
-                if (InputManager.InputStream.CanRead)
+                /*if (InputManager.InputStream.CanRead)
                 {
                     #region Input Branch
                     char ch = (char)InputManager.InputStream.ReadByte();
@@ -98,11 +100,11 @@ namespace SpaceTradingGame.Engine.UI.Controls
                         }
                     }
                     #endregion
-                }
+                }*/
                 #endregion
             }
 
-            if (InputManager.MouseButtonWasClicked(MouseButtons.Left))
+            /*if (InputManager.MouseButtonWasClicked(MouseButtons.Left))
             {
                 if (this.isMouseHover())
                 {
@@ -122,7 +124,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
                     InputManager.AcceptInput = false;
                     InputManager.InputStream.Flush();
                 }
-            }
+            }*/
         }
         public void ForceSubmit(object sender)
         {
@@ -133,10 +135,28 @@ namespace SpaceTradingGame.Engine.UI.Controls
             this.text = "";
         }
 
+        public override void KeyPress(KeyPressEventArgs e)
+        {
+            if (hasFocus)
+            {
+                if (this.CharacterLimit == 0 || this.text.Length < this.characterLimit)
+                {
+                    this.text += e.KeyChar;
+                    this.DrawStep();
+                }
+            }
+        }
+        public override void MouseUp(MouseButtonEventArgs e)
+        {
+            this.hasFocus = true;
+            this.cursorCounter = 0.0;
+
+            this.DrawStep();
+        }
+
         protected void onSubmit(object sender)
         {
-            if (Submitted != null)
-                Submitted(sender);
+            Submitted?.Invoke(sender);
 
             InterfaceManager.UpdateStep();
             InterfaceManager.DrawStep();

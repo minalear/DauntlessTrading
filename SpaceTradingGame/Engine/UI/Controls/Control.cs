@@ -127,6 +127,9 @@ namespace SpaceTradingGame.Engine.UI.Controls
                     control.MouseWheel(e);
             }
         }
+        public virtual void KeyPress(OpenTK.KeyPressEventArgs e) { }
+        public virtual void KeyUp(KeyboardKeyEventArgs e) { }
+        public virtual void KeyDown(KeyboardKeyEventArgs e) { }
 
         public void SetParent(Control parent)
         {
