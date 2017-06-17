@@ -7,3 +7,4 @@ Functional stock market listing all businesses
   * increasing business will raise stock prices
 Gathering favor with different factions will result in better trade deals
   * They will accept lower margins on trades and may even accept negative trades
+Character creation and galaxy creation are separate, allowing players to play different people similar to Dwarf Fortress Adventure Mode
