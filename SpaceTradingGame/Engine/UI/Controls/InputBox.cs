@@ -49,7 +49,6 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             if (this.hasFocus)
             {
-                #region HasFocus Branch
                 this.cursorCounter += gameTime.ElapsedTime.TotalMilliseconds;
 
                 if (this.cursorCounter >= cursorFlickerRate * 2)
@@ -66,65 +65,6 @@ namespace SpaceTradingGame.Engine.UI.Controls
                     GraphicConsole.SetCursor(this.Position.X + this.text.Length, this.Position.Y);
                     GraphicConsole.Write(' ');
                 }
-
-                /*if (InputManager.InputStream.CanRead)
-                {
-                    #region Input Branch
-                    char ch = (char)InputManager.InputStream.ReadByte();
-
-                    if (ch == '\0') //NUL Terminator
-                    {
-                        if (!string.IsNullOrEmpty(this.text))
-                        {
-                            this.text = this.text.Remove(this.text.Length - 1);
-                            this.DrawStep();
-                        }
-                    }
-                    else if (ch == '\n' || ch == '\r')
-                    {
-                        this.onSubmit(null);
-                        InputManager.InputStream.Flush();
-                        InputManager.AcceptInput = false;
-
-                        this.hasFocus = false;
-                        this.DrawStep();
-                    }
-                    else if (ch == '\t')
-                        return;
-                    else
-                    {
-                        if (this.CharacterLimit == 0 || this.text.Length < this.characterLimit)
-                        {
-                            this.text += ch;
-                            this.DrawStep();
-                        }
-                    }
-                    #endregion
-                }*/
-                #endregion
-            }
-
-            /*if (InputManager.MouseButtonWasClicked(MouseButtons.Left))
-            {
-                if (this.isMouseHover())
-                {
-                    this.hasFocus = true;
-                    this.cursorCounter = 0.0;
-
-                    this.DrawStep();
-                    InputManager.AcceptInput = true;
-                    InputManager.InputStream.Flush();
-                }
-                else
-                {
-                    this.hasFocus = false;
-                    this.cursorCounter = 0.0;
-
-                    this.DrawStep();
-                    InputManager.AcceptInput = false;
-                    InputManager.InputStream.Flush();
-                }
-            }*/
         }
         public void ForceSubmit(object sender)
         {
@@ -144,6 +84,26 @@ namespace SpaceTradingGame.Engine.UI.Controls
                     this.text += e.KeyChar;
                     this.DrawStep();
                 }
+            }
+        }
+        public override void KeyUp(KeyboardKeyEventArgs e)
+        {
+            if (e.Key == Key.BackSpace)
+            {
+                if (text.Length > 0)
+                    text = text.Substring(0, text.Length - 1);
+                this.DrawStep();
+            }
+            else if (e.Key == Key.Enter)
+            {
+                this.onSubmit(this);
+                this.hasFocus = false;
+                this.DrawStep();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                this.hasFocus = false;
+                this.DrawStep();
             }
         }
         public override void MouseUp(MouseButtonEventArgs e)
