@@ -42,6 +42,7 @@ namespace SpaceTradingGame.Engine.UI
             this.game.KeyDown += Game_KeyDown;
 
             this.interfaces.Add("Start", new StartScreen(this));
+            this.interfaces.Add("NewGame", new NewGameScreen(this));
             this.interfaces.Add("Ship", new ShipScreen(this));
             this.interfaces.Add("Travel", new TravelScreen(this));
             this.interfaces.Add("System", new SystemScreen(this));
@@ -49,7 +50,7 @@ namespace SpaceTradingGame.Engine.UI
 
             this.interfaces.Add("Test", new TestInterface(this));
             
-            ChangeInterface("System");
+            ChangeInterface("Start");
         }
 
         public void ChangeInterface(string name)

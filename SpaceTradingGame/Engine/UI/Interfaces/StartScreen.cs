@@ -27,7 +27,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             newGameButton.Click += (sender, e) =>
             {
-                InterfaceManager.ChangeInterface("Travel");
+                InterfaceManager.ChangeInterface("NewGame");
             };
             exitButton.Click += (sender, e) => 
             {
