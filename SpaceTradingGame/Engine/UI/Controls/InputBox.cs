@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Input;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.UI.Controls
 {
@@ -132,8 +133,8 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
 
         private string text;
-        private Color textColor = Color.White;
-        private Color fillColor = Color.Black;
+        private Color4 textColor = Color4.White;
+        private Color4 fillColor = Color4.Black;
 
         private bool hasFocus = false;
         private bool isMultiline = false;
@@ -150,8 +151,8 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         #region Properties
         public string Text { get { return this.text; } set { this.text = value; } }
-        public Color TextColor { get { return this.textColor; } set { this.textColor = value; } }
-        public Color FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
+        public Color4 TextColor { get { return this.textColor; } set { this.textColor = value; } }
+        public Color4 FillColor { get { return this.fillColor; } set { this.fillColor = value; } }
         public bool HasFocus { get { return this.hasFocus; } set { this.hasFocus = value; } }
         //public bool IsMultiline { get { return this.isMultiline; } set { this.isMultiline = value; } }
         public bool ShowCursor { get { return this.showCursor; } set { this.showCursor = value; } }
