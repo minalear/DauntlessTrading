@@ -101,8 +101,14 @@ namespace SpaceTradingGame.Engine.UI.Controls
             {
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                     control.MouseUp(e);
+                else
+                    control.MouseUpAway(e);
             }
         }
+        /// <summary>
+        /// Called when the Mouse Button is released, but is not currently over the control
+        /// </summary>
+        public virtual void MouseUpAway(MouseEventArgs e) { }
         public virtual void MouseEnter() { }
         public virtual void MouseLeave() { }
         public virtual void MouseMove()

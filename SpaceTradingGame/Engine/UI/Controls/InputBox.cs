@@ -115,6 +115,14 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
             this.DrawStep();
         }
+        public override void MouseUpAway(MouseEventArgs e)
+        {
+            if (this.hasFocus)
+            {
+                this.hasFocus = false;
+                this.DrawStep();
+            }
+        }
 
         protected void onSubmit(object sender)
         {

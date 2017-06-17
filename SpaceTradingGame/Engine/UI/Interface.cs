@@ -72,6 +72,8 @@ namespace SpaceTradingGame.Engine.UI
             {
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                     control.MouseUp(e);
+                else
+                    control.MouseUpAway(e);
             }
         }
         public void Game_MouseEnter(object sender, EventArgs e) { }
