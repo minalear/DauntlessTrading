@@ -65,6 +65,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
                     GraphicConsole.SetCursor(this.Position.X + this.text.Length, this.Position.Y);
                     GraphicConsole.Write(' ');
                 }
+            }
         }
         public void ForceSubmit(object sender)
         {
