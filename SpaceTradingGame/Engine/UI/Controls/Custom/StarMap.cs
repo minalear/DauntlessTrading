@@ -38,6 +38,13 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
 
+            double travelRadius = Interface.GameManager.PlayerShip.BaseJumpRadius;
+            int r = (int)(travelRadius / GraphicConsole.BufferWidth);
+
+            Point center = getScreenPosFromCoord(currentSystem.MapCoord);
+            GraphicConsole.SetColor(Color4.Gray, Color4.Black);
+            GraphicConsole.Draw.Circle(center.X, center.Y, r, '·');
+
             if (drawSelectedSystem)
                 drawPaths();
             drawSystems();
@@ -168,26 +175,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawPaths()
         {
-            /*double travelRadius = 1250.0;
-            int r = (int)(travelRadius / GraphicConsole.BufferWidth);
-
-            Point center = getScreenPosFromCoord(currentSystem.MapCoord);
-            GraphicConsole.SetColor(Color4.Gray, Color4.Black);
-            GraphicConsole.Draw.Circle(center.X , center.Y, r, '·');
-
-            GraphicConsole.SetColor(Color4.Red, Color4.Black);
-            /*for (int i = 0; i < systemList.Count; i++)
-            {
-                if (distance(selectedSystem.System.Coordinates, systemList[i].System.Coordinates) <= travelRadius)
-                {
-                    Point point = getScreenPosFromCoord(systemList[i].MapCoord);
-                    GraphicConsole.Draw.Line(center.X, center.Y, point.X, point.Y, '.');
-                }
-            }*/
-            /*Point target = getScreenPosFromCoord(selectedSystem.MapCoord);
-            GraphicConsole.Draw.Line(center.X, center.Y, target.X, target.Y, '.');
-            GraphicConsole.ClearColor();*/
-
             GraphicConsole.SetColor(Color4.Red, Color4.Black);
             for (int i = 0; i < path.Count - 1; i++)
             {
@@ -257,7 +244,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             //Optimize Path
             List<StarSystem> optimalPath = new List<StarSystem>();
 
-            double jumpRange = 400.0;
+            double jumpRange = Interface.GameManager.PlayerShip.BaseJumpRadius;
             optimalPath.Add(path[0]);
 
             for (int i = 0; i < path.Count; i++)

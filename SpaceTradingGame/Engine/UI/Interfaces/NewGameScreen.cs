@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK.Graphics;
+using SpaceTradingGame.Game;
 using SpaceTradingGame.Engine.UI.Controls;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
@@ -33,6 +34,16 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipDescriptionBox.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
 
             startGameButton = new Button(null, "Start", GraphicConsole.BufferWidth - 8, GraphicConsole.BufferHeight - 4);
+            startGameButton.Click += (sender, e) =>
+            {
+                //if (!isValidInputs()) return;
+
+                Ship ship = new Ship(shipNameInput.Text.Trim(), /*shipSelectionList.GetSelection()*/ "Hello", 500, 2000);
+                GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);
+
+                InterfaceManager.ChangeInterface("Travel");
+            };
+
             backButton = new Button(null, "Back", 1, GraphicConsole.BufferHeight - 4);
             backButton.Click += (sender, e) =>
             {
@@ -77,6 +88,15 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             GraphicConsole.Draw.Line(1, 5, GraphicConsole.BufferWidth - 2, 5, '-');
             GraphicConsole.Draw.Line(1, 7, GraphicConsole.BufferWidth - 2, 7, '-');
             GraphicConsole.Draw.Line(1, 28, GraphicConsole.BufferWidth - 2, 28, '-');
+        }
+        private bool isValidInputs()
+        {
+            if (playerNameInput.Text.Trim().Length <= 0) return false;
+            if (companyNameInput.Text.Trim().Length <= 0) return false;
+            if (shipNameInput.Text.Trim().Length <= 0) return false;
+            if (!shipSelectionList.HasSelection) return false;
+
+            return true;
         }
         
         private InputBox playerNameInput, companyNameInput, shipNameInput;

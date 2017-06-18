@@ -9,6 +9,10 @@ namespace SpaceTradingGame.Game
         private List<StarSystem> systems;
         private StarSystem currentSystem;
 
+        private string playerName;
+        private string companyName;
+        private Ship playerShip;
+
         public GameManager()
         {
             systems = new List<StarSystem>();
@@ -42,6 +46,14 @@ namespace SpaceTradingGame.Game
 
             CurrentSystem = solSystem;
         }
+
+        public void SetupGame(string playerName, string companyName, Ship ship)
+        {
+            this.playerName = playerName;
+            this.companyName = companyName;
+            this.playerShip = ship;
+        }
+
         private void generateRandomSystems()
         {
             int numSystems = RNG.Next(250, 500);
@@ -89,7 +101,10 @@ namespace SpaceTradingGame.Game
             return planets;
         }
 
-        public List<StarSystem> Systems { get { return systems; } }
-        public StarSystem CurrentSystem { get { return currentSystem; } set { currentSystem = value; } }
+        public List<StarSystem> Systems { get { return this.systems; } }
+        public StarSystem CurrentSystem { get { return this.currentSystem; } set { this.currentSystem = value; } }
+        public string PlayerName { get { return this.playerName; } set { this.playerName = value; } }
+        public string CompanyName { get { return this.companyName; } set { this.companyName = value; } }
+        public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }
     }
 }
