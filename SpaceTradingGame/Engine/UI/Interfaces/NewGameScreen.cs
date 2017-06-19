@@ -20,15 +20,24 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             playerNameInput = new InputBox(null, 12, 2, 20);
             playerNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
+            playerNameInput.Text = "James Comey";
 
             shipNameInput = new InputBox(null, 12, 4, 20);
             shipNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
+            shipNameInput.Text = "Heart of the Horizon";
 
             companyNameInput = new InputBox(null, 12, 6, 20);
             companyNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
+            companyNameInput.Text = "Comey Shipping Inc.";
 
             shipSelectionList = new ScrollingList(null, 1, 9, 22, 19);
             shipSelectionList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
+            shipSelectionList.SetList(Ship.ShipBlueprints);
+            shipSelectionList.Selected += (sender, e) =>
+            {
+                shipDescriptionBox.Text = ((Ship)shipSelectionList.GetSelection()).ToString();
+                InterfaceManager.DrawStep();
+            };
 
             shipDescriptionBox = new TextBox(null, 24, 9, 35, 19);
             shipDescriptionBox.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
@@ -36,9 +45,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             startGameButton = new Button(null, "Start", GraphicConsole.BufferWidth - 8, GraphicConsole.BufferHeight - 4);
             startGameButton.Click += (sender, e) =>
             {
-                //if (!isValidInputs()) return;
+                if (!isValidInputs()) return;
 
-                Ship ship = new Ship(shipNameInput.Text.Trim(), /*shipSelectionList.GetSelection()*/ "Hello", 500, 2000);
+                Ship ship = (Ship)shipSelectionList.GetSelection();
                 GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);
 
                 InterfaceManager.ChangeInterface("Travel");
@@ -65,6 +74,12 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(backButton);
         }
 
+        public override void OnEnable()
+        {
+            shipSelectionList.SetSelection(0);
+
+            base.OnEnable();
+        }
         public override void DrawStep()
         {
             this.drawBorders();

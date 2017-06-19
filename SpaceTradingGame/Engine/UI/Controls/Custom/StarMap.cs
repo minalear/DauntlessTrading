@@ -181,7 +181,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 Point a = getScreenPosFromCoord(path[i].MapCoord);
                 Point b = getScreenPosFromCoord(path[i + 1].MapCoord);
 
-                GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '.');
+                GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '∙');
             }
             GraphicConsole.ClearColor();
         }

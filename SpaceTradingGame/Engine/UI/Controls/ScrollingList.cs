@@ -131,7 +131,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
             base.MouseWheel(e);
         }
 
-        public void SetList<T>(List<T> newList) where T:ListItem
+        public void SetList<T>(IList<T> newList) where T:ListItem
         {
             this.objectList.Clear();
 
