@@ -189,6 +189,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     starMap.SetCurrentSystem(travelPath[travelPath.Length - 1]);
                     starMap.DrawPlayerPosition = false;
                     IsTraveling = false;
+
+                    starMap.Interface.InterfaceManager.DrawStep();
                 }
                 else
                 {
@@ -209,7 +211,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private void updateVectors()
         {
             travelVector = travelPath[nextNode].Coordinates - travelPath[currentNode].Coordinates;
-            travelVector.Normalize();
+            if (travelVector.Length > 0) travelVector.Normalize();
 
             float distance = travelPath[currentNode].Coordinates.Distance(travelPath[nextNode].Coordinates);
             timeToNextNode = distance / MoveSpeed;

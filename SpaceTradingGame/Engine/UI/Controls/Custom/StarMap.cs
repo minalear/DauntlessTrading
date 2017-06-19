@@ -41,7 +41,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             double travelRadius = Interface.GameManager.PlayerShip.BaseJumpRadius;
             int r = (int)(travelRadius / GraphicConsole.BufferWidth);
 
-            Point center = getScreenPosFromCoord(currentSystem.MapCoord);
+            Point center = getScreenPosFromCoord(PlayerPosition);
             GraphicConsole.SetColor(Color4.Gray, Color4.Black);
             GraphicConsole.Draw.Circle(center.X, center.Y, r, '·');
 
