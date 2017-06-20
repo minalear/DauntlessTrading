@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 using SpaceTradingGame.Engine.UI.Controls;
 using SpaceTradingGame.Engine.UI.Controls.Custom;
 using SpaceTradingGame.Game;
@@ -26,8 +27,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             left = new Button(null, "◄", 84, 32);
             right = new Button(null, "►", 90, 32);
 
+            systemButton = new Button(null, "System", 76, 27);
             travelButton = new Button(null, "Travel", 76, 30);
-            detailsButton = new Button(null, "Details", 76, 27);
+            cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
 
             //UI Events
             up.Click += (sender, e) =>
@@ -58,7 +60,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     StartTraveling();
                 }
             };
-            detailsButton.Click += (sender, e) =>
+            systemButton.Click += (sender, e) =>
             {
                 InterfaceManager.ChangeInterface("System");
             };
@@ -80,7 +82,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(left);
             RegisterControl(right);
             RegisterControl(travelButton);
-            RegisterControl(detailsButton);
+            RegisterControl(systemButton);
+            RegisterControl(cargoButton);
         }
 
         public override void OnEnable()
@@ -114,6 +117,22 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             base.UpdateFrame(gameTime);
         }
+        public override void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+                starMap.PanMap(0f, 100f);
+            else if (e.Key == Key.Down)
+                starMap.PanMap(0f, -100f);
+            else if (e.Key == Key.Left)
+                starMap.PanMap(100f, 0f);
+            else if (e.Key == Key.Right)
+                starMap.PanMap(-100f, 0f);
+
+            InterfaceManager.DrawStep();
+
+            base.Game_KeyUp(sender, e);
+        }
+
         public void StartTraveling()
         {
             travelManager.SetTravelPath(starMap.GetTravelPath());
@@ -139,7 +158,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Title screenTitle, systemTitle;
         private TextBox systemDesc;
         private Button up, down, left, right;
-        private Button travelButton, detailsButton;
+        private Button travelButton, systemButton, cargoButton;
         private StarMap starMap;
     }
 
@@ -155,7 +174,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private float timeToNextNode;
         private double timer;
 
-        public float MoveSpeed = 100.0f;
+        public float MoveSpeed = 200.0f;
         public bool IsTraveling = false;
 
         public TravelManager(StarMap map)

@@ -76,9 +76,9 @@ namespace SpaceTradingGame.Engine.UI
                     control.MouseUpAway(e);
             }
         }
-        public void Game_MouseEnter(object sender, EventArgs e) { }
-        public void Game_MouseLeave(object sender, EventArgs e) { }
-        public void Game_MouseMove(object sender, MouseMoveEventArgs e)
+        public virtual void Game_MouseEnter(object sender, EventArgs e) { }
+        public virtual void Game_MouseLeave(object sender, EventArgs e) { }
+        public virtual void Game_MouseMove(object sender, MouseMoveEventArgs e)
         {
             foreach (Control control in controls)
             {
@@ -92,7 +92,7 @@ namespace SpaceTradingGame.Engine.UI
                     control.MouseLeave();
             }
         }
-        public void Game_MouseWheel(object sender, MouseWheelEventArgs e)
+        public virtual void Game_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             foreach (Control control in controls)
             {
@@ -100,21 +100,21 @@ namespace SpaceTradingGame.Engine.UI
                     control.MouseWheel(e);
             }
         }
-        public void Game_KeyPress(object sender, KeyPressEventArgs e)
+        public virtual void Game_KeyPress(object sender, KeyPressEventArgs e)
         {
             foreach (Control control in controls)
             {
                 control.KeyPress(e);
             }
         }
-        public void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
+        public virtual void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
         {
             foreach (Control control in controls)
             {
                 control.KeyUp(e);
             }
         }
-        public void Game_KeyDown(object sender, KeyboardKeyEventArgs e)
+        public virtual void Game_KeyDown(object sender, KeyboardKeyEventArgs e)
         {
             foreach (Control control in controls)
             {

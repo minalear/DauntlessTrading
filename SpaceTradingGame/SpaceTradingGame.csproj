@@ -83,6 +83,8 @@
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
     <Compile Include="Game\GameManager.cs" />
+    <Compile Include="Game\Inventory.cs" />
+    <Compile Include="Game\Item.cs" />
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Material.cs" />
     <Compile Include="Game\Planetoid.cs" />
