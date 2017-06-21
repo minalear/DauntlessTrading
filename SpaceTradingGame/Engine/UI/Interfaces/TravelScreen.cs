@@ -55,14 +55,20 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             travelButton.Click += (sender, e) =>
             {
-                if (starMap.HasSystemSelected)
+                if (starMap.HasSystemSelected && !travelManager.IsTraveling)
                 {
                     StartTraveling();
                 }
             };
             systemButton.Click += (sender, e) =>
             {
-                InterfaceManager.ChangeInterface("System");
+                if (!travelManager.IsTraveling)
+                    InterfaceManager.ChangeInterface("System");
+            };
+            cargoButton.Click += (sender, e) =>
+            {
+                if (!travelManager.IsTraveling)
+                    InterfaceManager.ChangeInterface("Ship");
             };
 
             starMap.Selected += (sender, e) =>

@@ -30,20 +30,25 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             rightEngine = new Button(null, " ", 13, 14, 3, 2);
             rightEngine.FillColor = new Color4(50, 50, 50, 255);
 
-            scrollingList = new ScrollingList(null, 30, 1, GraphicConsole.BufferWidth - 31, 22);
+            scrollingList = new ScrollingList(null, 30, 2, GraphicConsole.BufferWidth - 31, 21);
             scrollingList.FillColor = new Color4(50, 50, 50, 255);
             descriptionBox = new TextBox(null, 30, 24, GraphicConsole.BufferWidth - 31, 12);
             descriptionBox.FillColor = new Color4(50, 50, 50, 255);
 
-            List<ListItem> list = new List<ListItem>() {
-                new ListItem("Item 01"),
-                new ListItem("Item 02"),
-                new ListItem("Item 03"),
-                new ListItem("Item 04")
-            };
-            scrollingList.SetList(list);
+            Title inventoryTitle = new Title(null, "== Inventory ==", 30 + (GraphicConsole.BufferWidth - 31) / 2, 1, Title.TextAlignModes.Center);
+            RegisterControl(inventoryTitle);
 
-            descriptionBox.Text = "This is a very <color Red>cool<color> and <color Yellow>awesome<color> description box.  <color Blue>Hello I'm blue.<color>";
+            //Control Events
+            scrollingList.Selected += (sender, index) =>
+            {
+                descriptionBox.Text = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem.Description;
+                InterfaceManager.DrawStep();
+            };
+            scrollingList.Deselected += (sender) =>
+            {
+                descriptionBox.Text = string.Empty;
+                InterfaceManager.DrawStep();
+            };
 
             //Titles
             RegisterControl(shipDesignationTitle);
@@ -63,6 +68,24 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(descriptionBox);
         }
 
+        public override void OnEnable()
+        {
+            shipDesignationTitle.Text = GameManager.PlayerShip.Name;
+            shipModelTitle.Text = GameManager.PlayerShip.Model;
+
+            scrollingList.ClearList();
+            List<Game.InventorySlot> inventory = GameManager.PlayerShip.Inventory.GetInventoryList();
+            List<InventoryListItem> listItems = new List<InventoryListItem>();
+
+            foreach (Game.InventorySlot slot in inventory)
+            {
+                listItems.Add(new InventoryListItem(slot));
+            }
+
+            scrollingList.SetList(listItems);
+
+            base.OnEnable();
+        }
         public override void DrawStep()
         {
             GraphicConsole.SetCursor(5, 6);
@@ -85,5 +108,16 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button cockpit, leftWing, rightWing, cargoBay, drive, leftEngine, rightEngine;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;
+
+        public class InventoryListItem : ListItem
+        {
+            public Game.InventorySlot InventorySlot { get; set; }
+
+            public InventoryListItem(Game.InventorySlot slot)
+            {
+                this.InventorySlot = slot;
+                this.ListText = string.Format("{0} - {1}", slot.InventoryItem.Name, slot.Quantity);
+            }
+        }
     }
 }

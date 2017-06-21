@@ -39,6 +39,7 @@ namespace SpaceTradingGame.Game
                     InventoryItem = item,
                     Quantity = amount
                 };
+                inventorySlots.Add(item, slot);
             }
         }
         public void RemoveItem(Item item, int amount)
@@ -53,11 +54,19 @@ namespace SpaceTradingGame.Game
             if (!HasItem(item)) return;
             inventorySlots.Remove(item);
         }
+        public void ClearInventory()
+        {
+            inventorySlots.Clear();
+        }
         public int GetQuantity(Item item)
         {
             if (!HasItem(item)) return 0;
 
             return inventorySlots[item].Quantity;
+        }
+        public List<InventorySlot> GetInventoryList()
+        {
+            return inventorySlots.Values.ToList();
         }
 
         private int credits;

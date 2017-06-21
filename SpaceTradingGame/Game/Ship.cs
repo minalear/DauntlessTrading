@@ -14,6 +14,8 @@ namespace SpaceTradingGame.Game
         private int cargoCapacity;
         private double baseJumpRadius;
 
+        private Inventory shipInventory;
+
         public Ship()
         {
             this.shipName = "Name";
@@ -21,6 +23,8 @@ namespace SpaceTradingGame.Game
             this.firePower = 10;
             this.cargoCapacity = 100;
             this.baseJumpRadius = 350.0;
+
+            this.shipInventory = new Inventory();
 
             this.ListText = shipModel;
         }
@@ -31,6 +35,8 @@ namespace SpaceTradingGame.Game
             this.firePower = firePower;
             this.cargoCapacity = capacity;
             this.baseJumpRadius = jumpRadius;
+
+            this.shipInventory = new Inventory();
 
             this.ListText = shipModel;
         }
@@ -45,6 +51,7 @@ namespace SpaceTradingGame.Game
         public int FirePower { get { return this.firePower; } set { this.firePower = value; } }
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
         public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
+        public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
 
         public static Ship MaverickMkI = new Ship("Blueprint", "Maverick Mk I", 15, 100, 500);
         public static Ship MaverickMkII = new Ship("Blueprint", "Maverick Mk II", 20, 135, 850);
