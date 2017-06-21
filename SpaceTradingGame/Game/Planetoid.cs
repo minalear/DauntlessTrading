@@ -10,7 +10,7 @@ namespace SpaceTradingGame.Game
         public string Name { get; set; }
         public List<Planetoid> Moons { get; set; }
         public List<Station> Stations { get; set; }
-        public Material PrimeMaterial { get; set; }
+        public Item PrimaryExport { get; set; }
 
         public Planetoid(StarSystem system, string name)
         {

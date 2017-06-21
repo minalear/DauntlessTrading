@@ -41,6 +41,8 @@ namespace SpaceTradingGame.Game
             solSystem.Planetoids.Add(mars);
             solSystem.Planetoids.Add(jupiter);
 
+            solSystem.SystemMarket.UpdateMarket();
+
             systems.Add(solSystem);
             generateRandomSystems();
 
@@ -87,7 +89,7 @@ namespace SpaceTradingGame.Game
             for (int i = 0; i < num; i++)
             {
                 Planetoid planet = new Planetoid(system, string.Format("{0}-{1}", system.Name, i));
-                planet.PrimeMaterial = Material.MaterialList[RNG.Next(0, Material.MaterialList.Length)];
+                planet.PrimaryExport = Item.Hydrogen;
 
                 int numMoons = RNG.Next(0, 5);
                 for (int j = 0; j < numMoons; j++)

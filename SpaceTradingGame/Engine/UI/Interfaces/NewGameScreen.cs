@@ -48,6 +48,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 if (!isValidInputs()) return;
 
                 Ship ship = (Ship)shipSelectionList.GetSelection();
+                ship.Name = shipNameInput.Text.Trim();
+                ship.Inventory.AddItem(Item.Gold, 27);
+                ship.Inventory.AddItem(Item.StarshipFuel, 100);
+
                 GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);
 
                 InterfaceManager.ChangeInterface("Travel");
