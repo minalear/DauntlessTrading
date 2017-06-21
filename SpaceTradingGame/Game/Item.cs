@@ -10,7 +10,7 @@ namespace SpaceTradingGame.Game
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public double BaseValue { get; set; }
+        public int BaseValue { get; set; }
         public double Rarity { get; set; }
         public double Weight { get; set; }
 
@@ -24,7 +24,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Hydrogen",
             Description = "Used for synthesizing various products.",
-            BaseValue = 1.0,
+            BaseValue = 1,
             Weight = 1.0,
             Rarity = 100.0
         };
@@ -32,7 +32,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Gold",
             Description = "Used for backing credits.",
-            BaseValue = 140.0,
+            BaseValue = 140,
             Weight = 70.0,
             Rarity = 7.0
         };
@@ -40,7 +40,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Copper",
             Description = "Used for creating computer components.",
-            BaseValue = 13.0,
+            BaseValue = 13,
             Weight = 10.0,
             Rarity = 2
         };
@@ -48,7 +48,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Helium",
             Description = "Used for ion-based weaponry.",
-            BaseValue = 10.0,
+            BaseValue = 10,
             Weight = 6.0,
             Rarity = 1
         };
@@ -56,7 +56,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Oxygen",
             Description = "Used for life support systems and fuel mixtures.",
-            BaseValue = 10.0,
+            BaseValue = 10,
             Weight = 5.0,
             Rarity = 2
         };
@@ -64,7 +64,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Iron",
             Description = "Used for ship construction.",
-            BaseValue = 8.0,
+            BaseValue = 8,
             Weight = 12.0,
             Rarity = 2
         };
@@ -72,7 +72,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Cesium",
             Description = "Used for warp drive syncing systems.",
-            BaseValue = 115.0,
+            BaseValue = 115,
             Weight = 85.0,
             Rarity = 10
         };
@@ -80,7 +80,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Silver",
             Description = "Used for quantum computing and warp drive systems.",
-            BaseValue = 70.0,
+            BaseValue = 70,
             Weight = 45.0,
             Rarity = 5
         };
@@ -88,7 +88,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Platinum",
             Description = "Used for warp drive cases.",
-            BaseValue = 212.0,
+            BaseValue = 212,
             Weight = 69.0,
             Rarity = 12
         };
@@ -96,7 +96,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Plutonium",
             Description = "Used for warp fuel.",
-            BaseValue = 140.0,
+            BaseValue = 140,
             Weight = 500.0,
             Rarity = 15
         };
@@ -106,7 +106,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Fuel",
             Description = "Universal fuel source for all modern starships.",
-            BaseValue = 100.0,
+            BaseValue = 100,
             Weight = 10.0,
             Rarity = 1.0
         };

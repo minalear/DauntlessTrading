@@ -17,6 +17,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             computerValueTitle = new Title(null, "Computer Value", 51, GraphicConsole.BufferHeight - 11, Title.TextAlignModes.Center);
             differenceValueTitle = new Title(null, "Difference Value", GraphicConsole.BufferWidth / 2, GraphicConsole.BufferHeight / 2, Title.TextAlignModes.Center);
 
+            playerCreditsTitle = new Title(null, "Player Credits", 1, 1, Title.TextAlignModes.Left);
+            computerCreditsTitle = new Title(null, "Computer Credits", GraphicConsole.BufferWidth - 26, 1, Title.TextAlignModes.Left);
+
             backButton = new Button(null, "Back", 0, 0, 6, 1);
             backButton.Click += (sender, e) =>
             {
@@ -92,6 +95,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(screenTitle);
             RegisterControl(playerValueTitle);
             RegisterControl(computerValueTitle);
+            RegisterControl(playerCreditsTitle);
+            RegisterControl(computerCreditsTitle);
             RegisterControl(differenceValueTitle);
             RegisterControl(inventoryList);
             RegisterControl(availableItemsList);
@@ -117,6 +122,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public override void OnEnable()
         {
             computerInventory = GameManager.CurrentSystem.SystemMarket.MarketInventory;
+            updateScreenInformation();
             updateLists();
 
             base.OnEnable();
@@ -246,28 +252,53 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private void makeOffer()
         {
-            double playerValue = 0.0;
+            int playerValue = 0;
             foreach (TradingListItem item in offeredList.Items)
             {
                 playerValue += item.Quantity * item.Item.BaseValue;
             }
 
-            double computerValue = 0.0;
+            int computerValue = 0;
             foreach (TradingListItem item in interestedList.Items)
             {
                 computerValue += item.Quantity * item.Item.BaseValue;
             }
 
-            double diff = playerValue - computerValue;
+            int diff = playerValue - computerValue;
 
-            if (diff >= 0.0)
+            if (diff < 0) //Player pays credits
             {
-                differenceValueTitle.Text = "Good deal!";
-                makeTrade();
+                if (GameManager.PlayerShip.Inventory.Credits >= diff)
+                {
+                    differenceValueTitle.Text = "Good deal!";
+                    makeTrade();
+                    GameManager.PlayerShip.Inventory.Credits -= diff;
+                    computerInventory.Credits += diff;
+                }
+                else
+                {
+                    differenceValueTitle.Text = "Not enough player credits.";
+                }
             }
-            else
-                differenceValueTitle.Text = "Bad deal...";
+            else //AI pays credit
+            {
+                if (computerInventory.Credits >= diff)
+                {
+                    differenceValueTitle.Text = "Good deal!";
+                    makeTrade();
 
+                    //Diff will be a negative number, so add instead of subtract
+                    computerInventory.Credits += diff;
+                    GameManager.PlayerShip.Inventory.Credits -= diff;
+                }
+                else
+                {
+                    differenceValueTitle.Text = "Not enough computer credits.";
+                }
+            }
+
+            updateScreenInformation();
+            updateLists();
             InterfaceManager.DrawStep();
         }
         private void makeTrade()
@@ -288,10 +319,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             offeredList.ClearList();
             interestedList.ClearList();
-
-            updateScreenInformation();
-            updateLists();
-            InterfaceManager.DrawStep();
         }
 
         private bool hasItem(ScrollingList list, TradingListItem item, out TradingListItem offeredItem)
@@ -340,6 +367,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 differenceValueTitle.TextColor = Color4.Green;
                 differenceValueTitle.Text = Math.Abs(diff).ToString() + "δ ►";
             }
+
+            playerCreditsTitle.Text = string.Format("Credits: {0}δ", GameManager.PlayerShip.Inventory.Credits);
+            computerCreditsTitle.Text = string.Format("Credits: {0}δ", computerInventory.Credits);
         }
         private void updateLists()
         {
@@ -359,7 +389,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             }
         }
 
-        private Title screenTitle;
+        private Title screenTitle, playerCreditsTitle, computerCreditsTitle;
         private Title playerValueTitle, computerValueTitle, differenceValueTitle;
         private ScrollingList inventoryList, availableItemsList;
         private ScrollingList offeredList, interestedList;

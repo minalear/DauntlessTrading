@@ -48,6 +48,10 @@ namespace SpaceTradingGame.Game
 
             int quantity = inventorySlots[item].Quantity;
             inventorySlots[item].Quantity = (quantity > amount) ? quantity - amount : 0;
+
+            //Remove items that have zero quantity
+            if (inventorySlots[item].Quantity <= 0)
+                ClearItem(item);
         }
         public void ClearItem(Item item)
         {
