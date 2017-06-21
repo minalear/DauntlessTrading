@@ -89,7 +89,7 @@ namespace SpaceTradingGame.Game
             for (int i = 0; i < num; i++)
             {
                 Planetoid planet = new Planetoid(system, string.Format("{0}-{1}", system.Name, i));
-                planet.PrimaryExport = Item.Hydrogen;
+                planet.PrimaryExport = Item.MaterialsList[RNG.Next(0, Item.MaterialsList.Length)];
 
                 int numMoons = RNG.Next(0, 5);
                 for (int j = 0; j < numMoons; j++)

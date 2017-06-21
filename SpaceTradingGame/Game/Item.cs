@@ -34,7 +34,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for backing credits.",
             BaseValue = 140,
             Weight = 70.0,
-            Rarity = 7.0
+            Rarity = 65
         };
         public static Item Copper = new Item()
         {
@@ -42,7 +42,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for creating computer components.",
             BaseValue = 13,
             Weight = 10.0,
-            Rarity = 2
+            Rarity = 80
         };
         public static Item Helium = new Item()
         {
@@ -50,7 +50,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for ion-based weaponry.",
             BaseValue = 10,
             Weight = 6.0,
-            Rarity = 1
+            Rarity = 95
         };
         public static Item Oxygen = new Item()
         {
@@ -58,7 +58,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for life support systems and fuel mixtures.",
             BaseValue = 10,
             Weight = 5.0,
-            Rarity = 2
+            Rarity = 80
         };
         public static Item Iron = new Item()
         {
@@ -66,7 +66,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for ship construction.",
             BaseValue = 8,
             Weight = 12.0,
-            Rarity = 2
+            Rarity = 70
         };
         public static Item Cesium = new Item()
         {
@@ -74,7 +74,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for warp drive syncing systems.",
             BaseValue = 115,
             Weight = 85.0,
-            Rarity = 10
+            Rarity = 40
         };
         public static Item Silver = new Item()
         {
@@ -82,7 +82,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for quantum computing and warp drive systems.",
             BaseValue = 70,
             Weight = 45.0,
-            Rarity = 5
+            Rarity = 65
         };
         public static Item Platinum = new Item()
         {
@@ -90,7 +90,7 @@ namespace SpaceTradingGame.Game
             Description = "Used for warp drive cases.",
             BaseValue = 212,
             Weight = 69.0,
-            Rarity = 12
+            Rarity = 35
         };
         public static Item Plutonium = new Item()
         {
@@ -98,8 +98,10 @@ namespace SpaceTradingGame.Game
             Description = "Used for warp fuel.",
             BaseValue = 140,
             Weight = 500.0,
-            Rarity = 15
+            Rarity = 10
         };
+
+        public static Item[] MaterialsList = new Item[] { Hydrogen, Gold, Helium, Copper, Oxygen, Iron, Cesium, Silver, Platinum, Plutonium };
         #endregion
         #region Refined Goods
         public static Item StarshipFuel = new Item()

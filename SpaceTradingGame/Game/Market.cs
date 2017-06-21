@@ -40,7 +40,9 @@ namespace SpaceTradingGame.Game
             foreach (Planetoid planet in starSystem.Planetoids)
             {
                 if (planet.PrimaryExport == null) continue;
-                int amount = RNG.Next(50, 500);
+
+                double rarity = planet.PrimaryExport.Rarity / 100.0;
+                int amount = RNG.Next((int)(50 * rarity), (int)(500 * rarity));
                 MarketInventory.AddItem(planet.PrimaryExport, amount);
             }
         }
