@@ -70,11 +70,6 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
             base.DrawStep();
         }
-        public override void UpdateFrame(GameTime gameTime)
-        {
-            /*if (InputManager.KeyWasReleased(this.KeyShortcut))
-                onButtonPress(MouseButton.Left);*/
-        }
 
         public override void MouseEnter()
         {
@@ -106,6 +101,13 @@ namespace SpaceTradingGame.Engine.UI.Controls
             InterfaceManager.DrawStep();
 
             base.MouseUp(e);
+        }
+        public override void KeyUp(KeyboardKeyEventArgs e)
+        {
+            if (this.KeyShortcut == e.Key)
+                Press();
+
+            base.KeyUp(e);
         }
 
         //Event Methods

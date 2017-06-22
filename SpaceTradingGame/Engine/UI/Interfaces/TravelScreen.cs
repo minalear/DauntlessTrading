@@ -31,6 +31,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             travelButton = new Button(null, "Travel", 76, 30);
             cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
 
+            travelManager = new TravelManager(starMap);
+
+            clock = new Clock(null, 10, 5);
+            clock.Position = new System.Drawing.Point(63, 1);
+
+            playButton = new Button(null, "►", 74, 1, 1, 1);
+
             //UI Events
             up.Click += (sender, e) =>
             {
@@ -77,7 +84,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.DrawStep();
             };
 
-            travelManager = new TravelManager(starMap);
+            playButton.Click += (sender, e) =>
+            {
+                playButton.Text = (playButton.Text == "■") ? "►" : "■";
+                clock.Toggle();
+
+                InterfaceManager.DrawStep();
+            };
 
             RegisterControl(screenTitle);
             RegisterControl(systemTitle);
@@ -87,9 +100,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(down);
             RegisterControl(left);
             RegisterControl(right);
+            RegisterControl(playButton);
             RegisterControl(travelButton);
             RegisterControl(systemButton);
             RegisterControl(cargoButton);
+            RegisterControl(clock);
         }
 
         public override void OnEnable()
@@ -164,8 +179,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Title screenTitle, systemTitle;
         private TextBox systemDesc;
         private Button up, down, left, right;
+        private Button playButton;
         private Button travelButton, systemButton, cargoButton;
         private StarMap starMap;
+        private Clock clock;
     }
 
     public class TravelManager
