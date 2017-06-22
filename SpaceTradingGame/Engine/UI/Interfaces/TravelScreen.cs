@@ -14,13 +14,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public TravelScreen(InterfaceManager manager)
             : base(manager)
         {
-            screenTitle = new Title(null, "Star Map", GraphicConsole.BufferWidth / 2, 1, Title.TextAlignModes.Center);
+            screenTitle = new Title(null, "Star Map", GraphicConsole.BufferWidth / 2 - 11, 1, Title.TextAlignModes.Center);
             starMap = new StarMap();
             starMap.Position = new System.Drawing.Point(1, 2);
             starMap.Size = new System.Drawing.Point(74, 33);
 
-            systemTitle = new Title(null, "Current System", 87, 2, Title.TextAlignModes.Center);
-            systemDesc = new TextBox(null, 76, 4, 23, 10);
+            systemTitle = new Title(null, "Current System", 87, 1, Title.TextAlignModes.Center);
+            systemDesc = new TextBox(null, 76, 3, 23, 15);
+            systemDesc.FillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
 
             up = new Button(null, "▲", 87, 30);
             down = new Button(null, "▼", 87, 34);
@@ -32,6 +33,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
 
             travelManager = new TravelManager(starMap);
+            galacticDate = new DateTime(2347, 1, 1);
+            screenTitle.Text = galacticDate.ToShortDateString();
 
             clock = new Clock(null, 10, 5);
             clock.Position = new System.Drawing.Point(63, 1);
@@ -84,6 +87,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.DrawStep();
             };
 
+            clock.TimerLapse += (sender, e) =>
+            {
+                galacticDate = galacticDate.AddDays(1);
+                screenTitle.Text = galacticDate.ToShortDateString();
+            };
             playButton.Click += (sender, e) =>
             {
                 playButton.Text = (playButton.Text == "■") ? "►" : "■";
@@ -183,6 +191,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button travelButton, systemButton, cargoButton;
         private StarMap starMap;
         private Clock clock;
+        private DateTime galacticDate;
     }
 
     public class TravelManager
