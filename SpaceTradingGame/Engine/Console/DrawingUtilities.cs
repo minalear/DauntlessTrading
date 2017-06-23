@@ -88,6 +88,23 @@ namespace SpaceTradingGame.Engine.Console
                 }
             }
         }
+        public void FillCircle(int xp, int yp, int r, char token)
+        {
+            int y0 = yp - r;
+            int y1 = yp + r;
+            int x0 = xp - r;
+            int x1 = xp + r;
+
+            OpenTK.Vector2 center = new OpenTK.Vector2(xp, yp);
+            for (int y = y0; y <= y1; y++)
+            {
+                for (int x = x0; x <= x1; x++)
+                {
+                    if (center.Distance(new OpenTK.Vector2(x, y)) < r)
+                        console.Put(token, x, y);
+                }
+            }
+        }
 
         public Color BlendColor(Color one, Color two)
         {
