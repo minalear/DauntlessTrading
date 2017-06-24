@@ -68,6 +68,14 @@ namespace SpaceTradingGame.Game
             Weight = 12.0,
             Rarity = 70
         };
+        public static Item Carbon = new Item()
+        {
+            Name = "Carbon",
+            Description = "HUMANS ARE MADE OUT OF THIS SHIT... and water.",
+            BaseValue = 5,
+            Weight = 8.0,
+            Rarity = 75
+        };
         public static Item Cesium = new Item()
         {
             Name = "Cesium",
