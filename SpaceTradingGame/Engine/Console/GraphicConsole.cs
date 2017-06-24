@@ -138,6 +138,21 @@ namespace SpaceTradingGame.Engine.Console
             this.foregroundColor = foreground;
             this.backgroundColor = background;
         }
+        public void SetColor(int x, int y)
+        {
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
+            {
+                put(this.characterMatrix[x, y].Token, x, y);
+            }
+        }
+        public void SetColor(Color4 foreground, Color4 background, int x, int y)
+        {
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
+            {
+                this.characterMatrix[x, y].ForegroundColor = foreground;
+                this.characterMatrix[x, y].BackgroundColor = background;
+            }
+        }
         public void SetCursor(Point position)
         {
             this.Left = position.X;
@@ -183,6 +198,12 @@ namespace SpaceTradingGame.Engine.Console
         public void ClearBounds()
         {
             this.drawingBounds = new Rectangle(0, 0, bufferWidth, bufferHeight);
+        }
+        public CharToken GetCharacterInformation(int x, int y)
+        {
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
+                return this.characterMatrix[x, y];
+            return this.characterMatrix[0, 0];
         }
 
         public Point GetTilePosition(Point position)

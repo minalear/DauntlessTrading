@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Drawing;
+using OpenTK;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Engine.Console
 {
     public class DrawingUtilities
     {
         private GraphicConsole console;
+
         public DrawingUtilities(GraphicConsole console)
         {
             this.console = console;
+            this.PaintMode = PaintModes.Default;
         }
 
         public void Rect(int x0, int y0, int width, int height, char token, bool solid)
@@ -18,20 +22,20 @@ namespace SpaceTradingGame.Engine.Console
                 for (int y = y0; y < y0 + height; y++)
                 {
                     for (int x = x0; x < x0 + width; x++)
-                        console.Put(token, x, y);
+                        Draw(x, y, token);
                 }
             }
             else
             {
                 for (int y = y0; y < y0 + height; y++)
                 {
-                    console.Put(token, x0, y);
-                    console.Put(token, x0 + width - 1, y);
+                    Draw(x0, y, token);
+                    Draw(x0 + width - 1, y, token);
                 }
                 for (int x = x0; x < x0 + width; x++)
                 {
-                    console.Put(token, x, y0);
-                    console.Put(token, x, y0 + height - 1);
+                    Draw(x, y0, token);
+                    Draw(x, y0 + height - 1, token);
                 }
             }
         }
@@ -68,14 +72,15 @@ namespace SpaceTradingGame.Engine.Console
 
             while (x >= y)
             {
-                console.Put(token, x + xp, y + yp);
-                console.Put(token, y + xp, x + yp);
-                console.Put(token, -x + xp, y + yp);
-                console.Put(token, -y + xp, x + yp);
-                console.Put(token, -x + xp, -y + yp);
-                console.Put(token, -y + xp, -x + yp);
-                console.Put(token, x + xp, -y + yp);
-                console.Put(token, y + xp, -x + yp);
+                Draw(x + xp, y + yp, token);
+                Draw(y + xp, x + yp, token);
+                Draw(-x + xp, y + yp, token);
+                Draw(-y + xp, x + yp, token);
+                Draw(-x + xp, -y + yp, token);
+                Draw(-y + xp, -x + yp, token);
+                Draw(x + xp, -y + yp, token);
+                Draw(y + xp, -x + yp, token);
+
                 y++;
                 if (radiusError < 0)
                 {
@@ -100,15 +105,44 @@ namespace SpaceTradingGame.Engine.Console
             {
                 for (int x = x0; x <= x1; x++)
                 {
-                    if (center.Distance(new OpenTK.Vector2(x, y)) < r)
-                        console.Put(token, x, y);
+                    if (center.DistanceSqr(new OpenTK.Vector2(x, y)) < r * r)
+                        Draw(x, y, token);
                 }
             }
         }
 
-        public Color BlendColor(Color one, Color two)
+        public Color4 BlendColor(Color4 one, Color4 two)
         {
-            return Color.FromArgb((one.A + two.A) / 2, (one.R + two.R) / 2, (one.G + two.G) / 2, (one.B + two.B) / 2);
+            float r = MathHelper.Clamp((one.R + two.R) / 2, 0f, 1f);
+            float g = MathHelper.Clamp((one.G + two.G) / 2, 0f, 1f);
+            float b = MathHelper.Clamp((one.B + two.B) / 2, 0f, 1f);
+            float a = MathHelper.Clamp((one.A + two.A) / 2, 0f, 1f);
+
+            return new Color4(r, g, b, a);
         }
+        public void Draw(int x, int y, char token)
+        {
+            if (PaintMode == PaintModes.Default)
+            {
+                console.Put(token, x, y);
+                console.SetColor(x, y);
+            }
+            else if (PaintMode == PaintModes.Add)
+            {
+                CharToken info = console.GetCharacterInformation(x, y);
+                Color4 blendedForegroundColor = BlendColor(info.ForegroundColor, console.ForegroundColor);
+                Color4 blendedBackgroundColor = BlendColor(info.BackgroundColor, console.BackgroundColor);
+
+                console.SetColor(blendedForegroundColor, blendedBackgroundColor, x, y);
+            }
+            else
+            {
+                console.Put(token, x, y);
+            }
+        }
+
+        public PaintModes PaintMode { get; set; }
     }
+
+    public enum PaintModes { Default, Fill, Add }
 }

@@ -140,6 +140,10 @@ namespace SpaceTradingGame.Engine
         {
             return (float)Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
         }
+        public static float DistanceSqr(this Vector2 a, Vector2 b)
+        {
+            return (float)(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
+        }
     }
 
     /// <summary>

@@ -38,8 +38,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
 
-            drawFactions();
-
             double travelRadius = Interface.GameManager.PlayerShip.BaseJumpRadius;
             int r = (int)(travelRadius / GraphicConsole.BufferWidth);
 
@@ -52,6 +50,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             drawSystems();
             GraphicConsole.ClearBounds();
             drawBorder(mapBounds);
+
+            //drawFactions();
 
             if (DrawPlayerPosition)
             {
@@ -144,15 +144,15 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawFactions()
         {
+            GraphicConsole.Draw.PaintMode = Console.PaintModes.Add;
             foreach (StarSystem system in systemList)
             {
                 Point relativePos = getScreenPosFromCoord(system.MapCoord);
                 GraphicConsole.SetColor(Color4.Transparent, Color4.Red);
                 GraphicConsole.Draw.Circle(relativePos.X, relativePos.Y, 8, ' ');
                 GraphicConsole.Draw.FillCircle(relativePos.X, relativePos.Y, 8, ' ');
-
-                break;
             }
+            GraphicConsole.Draw.PaintMode = Console.PaintModes.Default;
         }
         private void drawSystems()
         {
