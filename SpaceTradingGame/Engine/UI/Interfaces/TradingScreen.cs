@@ -121,11 +121,21 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         public override void OnEnable()
         {
+            computerMarket = GameManager.CurrentSystem.SystemMarket;
             computerInventory = GameManager.CurrentSystem.SystemMarket.MarketInventory;
             updateScreenInformation();
             updateLists();
 
             base.OnEnable();
+        }
+        public override void OnDisable()
+        {
+            inventoryList.ClearList();
+            availableItemsList.ClearList();
+            interestedList.ClearList();
+            offeredList.ClearList();
+
+            base.OnDisable();
         }
 
         public void AddPlayerItem(ListItem item, int number)
@@ -151,6 +161,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 offeredItem.Quantity += number;
 
                 //Update displays
+                updatePrices();
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
                 updateScreenInformation();
@@ -181,6 +192,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 offeredItem.Quantity += number;
 
                 //Update displays
+                updatePrices();
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
                 updateScreenInformation();
@@ -212,6 +224,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 offeredItem.Quantity += number;
 
                 //Update displays
+                updatePrices();
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
                 updateScreenInformation();
@@ -242,6 +255,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 offeredItem.Quantity += number;
 
                 //Update displays
+                updatePrices();
                 tradingItem.UpdateDisplayInformation();
                 offeredItem.UpdateDisplayInformation();
                 updateScreenInformation();
@@ -255,19 +269,20 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             int playerValue = 0;
             foreach (TradingListItem item in offeredList.Items)
             {
-                playerValue += item.Quantity * item.Item.BaseValue;
+                playerValue += item.PriceTotal;
             }
 
             int computerValue = 0;
             foreach (TradingListItem item in interestedList.Items)
             {
-                computerValue += item.Quantity * item.Item.BaseValue;
+                computerValue += item.PriceTotal;
             }
 
             int diff = playerValue - computerValue;
 
             if (diff < 0) //Player pays credits
             {
+                diff = Math.Abs(diff);
                 if (GameManager.PlayerShip.Inventory.Credits >= diff)
                 {
                     differenceValueTitle.Text = "Good deal!";
@@ -282,14 +297,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             }
             else //AI pays credit
             {
+                diff = Math.Abs(diff);
                 if (computerInventory.Credits >= diff)
                 {
                     differenceValueTitle.Text = "Good deal!";
                     makeTrade();
-
-                    //Diff will be a negative number, so add instead of subtract
-                    computerInventory.Credits += diff;
-                    GameManager.PlayerShip.Inventory.Credits -= diff;
+                    
+                    GameManager.PlayerShip.Inventory.Credits += diff;
+                    computerInventory.Credits -= diff;
                 }
                 else
                 {
@@ -335,19 +350,30 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             offeredItem = null;
             return false;
         }
+        private void updatePrices()
+        {
+            foreach (TradingListItem item in interestedList.Items)
+            {
+                item.PriceTotal = computerMarket.CalculateSellPrice(item.Item, item.Quantity);
+            }
+            foreach (TradingListItem item in offeredList.Items)
+            {
+                item.PriceTotal = computerMarket.CalculateBuyPrice(item.Item, item.Quantity);
+            }
+        }
         private void updateScreenInformation()
         {
             double playerValue = 0.0;
             foreach (TradingListItem item in offeredList.Items)
             {
-                playerValue += item.Quantity * item.Item.BaseValue;
+                playerValue += item.PriceTotal;
             }
             playerValueTitle.Text = playerValue.ToString();
 
             double computerValue = 0.0;
             foreach (TradingListItem item in interestedList.Items)
             {
-                computerValue += item.Quantity * item.Item.BaseValue;
+                computerValue += item.PriceTotal;
             }
             computerValueTitle.Text = computerValue.ToString();
 
@@ -400,6 +426,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button makeOfferButton;
         private Button backButton;
 
+        private Market computerMarket;
         private Inventory computerInventory; //Temporary
 
         public class TradingListItem : ListItem
@@ -407,6 +434,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             public static int BufferWidth = 25;
             public Item Item;
             public int Quantity;
+            public int PriceTotal;
 
             public TradingListItem(Item item, int quantity)
             {
@@ -420,7 +448,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 //MaterialName     Price      xQuantity
                 string name = Item.Name;
-                string price = Item.BaseValue.ToString();
+                string price = PriceTotal.ToString();
                 string quantity = "x" + Quantity.ToString();
 
                 int bufferLeft = BufferWidth - (name.Length + price.Length + quantity.Length);
