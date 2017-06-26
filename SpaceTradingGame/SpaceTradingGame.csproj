@@ -89,6 +89,7 @@
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Planetoid.cs" />
     <Compile Include="Game\Ship.cs" />
+    <Compile Include="Game\ShipMod.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\StarSystem.cs" />
     <Compile Include="Program.cs" />

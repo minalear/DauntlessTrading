@@ -15,6 +15,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipModelTitle = new Title(null, "Disney Gummi mk1*", 1, 2, Title.TextAlignModes.Left);
             shipModelTitle.TextColor = Color4.Gray;
 
+            backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
+            backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
+
             cockpit = new Button(null, " ", 9, 6, 3, 2);
             cockpit.FillColor = new Color4(50, 50, 50, 255);
             leftWing = new Button(null, " ", 4, 9, 3, 2);
@@ -64,6 +67,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(rightEngine);
 
             //Other
+            RegisterControl(backButton);
             RegisterControl(scrollingList);
             RegisterControl(descriptionBox);
         }
@@ -105,6 +109,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
 
         private Title shipDesignationTitle, shipModelTitle;
+        private Button backButton;
         private Button cockpit, leftWing, rightWing, cargoBay, drive, leftEngine, rightEngine;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;

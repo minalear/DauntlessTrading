@@ -13,6 +13,7 @@ namespace SpaceTradingGame.Game
         public int BaseValue { get; set; }
         public double Rarity { get; set; }
         public double Weight { get; set; }
+        public ItemTypes ItemType { get; set; }
 
         public override string ToString()
         {
@@ -122,4 +123,6 @@ namespace SpaceTradingGame.Game
         };
         #endregion
     }
+
+    public enum ItemTypes { RawMaterial, ShipMod, Other }
 }

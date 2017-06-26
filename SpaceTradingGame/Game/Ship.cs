@@ -11,6 +11,7 @@ namespace SpaceTradingGame.Game
         private string shipName;
         private string shipModel;
         private int firePower;
+        private int defenseRating;
         private int cargoCapacity;
         private double baseJumpRadius;
 
@@ -28,11 +29,12 @@ namespace SpaceTradingGame.Game
 
             this.ListText = shipModel;
         }
-        public Ship(string name, string model, int firePower, int capacity, double jumpRadius)
+        public Ship(string name, string model, int firePower, int defenseRating, int capacity, double jumpRadius)
         {
             this.shipName = name;
             this.shipModel = model;
             this.firePower = firePower;
+            this.defenseRating = defenseRating;
             this.cargoCapacity = capacity;
             this.baseJumpRadius = jumpRadius;
 
@@ -43,22 +45,24 @@ namespace SpaceTradingGame.Game
 
         public override string ToString()
         {
-            return string.Format("== {0} ==\nFire: {1}\nCargo: {2}\nJump: {3}", shipModel, firePower, cargoCapacity, baseJumpRadius);
+            return string.Format("== {0} ==\nFire: {1}\nDfns: {2}\nCargo: {3}\nJump: {4}", 
+                shipModel, firePower, defenseRating, cargoCapacity, baseJumpRadius);
         }
 
         public string Name { get { return shipName; } set { shipName = value; } }
         public string Model { get { return shipModel; } set { shipModel = value; } }
         public int FirePower { get { return this.firePower; } set { this.firePower = value; } }
+        public int DefenseRating { get { return this.defenseRating; } set { this.defenseRating = value; } }
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
         public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
 
-        public static Ship MaverickMkI = new Ship("Blueprint", "Maverick Mk I", 15, 100, 500);
-        public static Ship MaverickMkII = new Ship("Blueprint", "Maverick Mk II", 20, 135, 850);
-        public static Ship DelpheneI = new Ship("Blueprint", "Delphene I", 8, 140, 550);
-        public static Ship DelpheneII = new Ship("Blueprint", "Delphene II", 12, 220, 850);
-        public static Ship Dauntless = new Ship("Blueprint", "Dauntless Class", 25, 800, 1350);
-        public static Ship Exodia = new Ship("Blueprint", "Exodia Class", 80, 2400, 2500);
+        public static Ship MaverickMkI = new Ship("Blueprint", "Maverick Mk I", 15, 10, 100, 500);
+        public static Ship MaverickMkII = new Ship("Blueprint", "Maverick Mk II", 20, 15, 135, 850);
+        public static Ship DelpheneI = new Ship("Blueprint", "Delphene I", 8, 12, 140, 550);
+        public static Ship DelpheneII = new Ship("Blueprint", "Delphene II", 12, 20, 220, 850);
+        public static Ship Dauntless = new Ship("Blueprint", "Dauntless Class", 25, 50, 800, 1350);
+        public static Ship Exodia = new Ship("Blueprint", "Exodia Class", 80, 100, 2400, 2500);
 
         public static Ship[] ShipBlueprints = new Ship[] { MaverickMkI, MaverickMkII, DelpheneI, DelpheneII, Dauntless, Exodia };
     }
