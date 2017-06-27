@@ -22,6 +22,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipLayout = new ShipLayout(null);
             shipLayout.Position = new System.Drawing.Point(1, 10);
             shipLayout.Size = new System.Drawing.Point(35, 35);
+            shipLayout.NodeSelect += (sender, e) =>
+            {
+                if (e.SelectedShipNode == null)
+                {
+
+                }
+            };
 
             cockpit = new Button(null, " ", 9, 6, 3, 2);
             cockpit.FillColor = new Color4(50, 50, 50, 255);
