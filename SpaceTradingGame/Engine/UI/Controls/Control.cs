@@ -24,10 +24,16 @@ namespace SpaceTradingGame.Engine.UI.Controls
         {
             get
             {
-                return (isAbsolute) ? Interface.InterfaceManager.Console : parent.Interface.InterfaceManager.Console;
+                return InterfaceManager.Console;
             }
         }
-        protected InterfaceManager InterfaceManager { get { return Interface.InterfaceManager; } }
+        protected InterfaceManager InterfaceManager
+        {
+            get
+            {
+                return (isAbsolute) ? Interface.InterfaceManager : parent.Interface.InterfaceManager;
+            }
+        }
 
         public Control()
         {

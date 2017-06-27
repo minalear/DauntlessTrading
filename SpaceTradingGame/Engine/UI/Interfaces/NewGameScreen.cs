@@ -32,7 +32,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             shipSelectionList = new ScrollingList(null, 1, 9, 22, 19);
             shipSelectionList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
-            shipSelectionList.SetList(Ship.ShipBlueprints);
+            shipSelectionList.SetList(Game.Factories.ShipFactory.ShipBlueprints);
             shipSelectionList.Selected += (sender, e) =>
             {
                 shipDescriptionBox.Text = ((Ship)shipSelectionList.GetSelection()).ToString();

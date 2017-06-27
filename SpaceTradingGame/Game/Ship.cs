@@ -17,6 +17,8 @@ namespace SpaceTradingGame.Game
 
         private Inventory shipInventory;
 
+        private List<ShipNode> nodes;
+
         public Ship()
         {
             this.shipName = "Name";
@@ -26,6 +28,7 @@ namespace SpaceTradingGame.Game
             this.baseJumpRadius = 350.0;
 
             this.shipInventory = new Inventory();
+            this.nodes = new List<ShipNode>();
 
             this.ListText = shipModel;
         }
@@ -39,6 +42,7 @@ namespace SpaceTradingGame.Game
             this.baseJumpRadius = jumpRadius;
 
             this.shipInventory = new Inventory();
+            this.nodes = new List<ShipNode>();
 
             this.ListText = shipModel;
         }
@@ -56,14 +60,6 @@ namespace SpaceTradingGame.Game
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
         public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
-
-        public static Ship MaverickMkI = new Ship("Blueprint", "Maverick Mk I", 15, 10, 100, 500);
-        public static Ship MaverickMkII = new Ship("Blueprint", "Maverick Mk II", 20, 15, 135, 850);
-        public static Ship DelpheneI = new Ship("Blueprint", "Delphene I", 8, 12, 140, 550);
-        public static Ship DelpheneII = new Ship("Blueprint", "Delphene II", 12, 20, 220, 850);
-        public static Ship Dauntless = new Ship("Blueprint", "Dauntless Class", 25, 50, 800, 1350);
-        public static Ship Exodia = new Ship("Blueprint", "Exodia Class", 80, 100, 2400, 2500);
-
-        public static Ship[] ShipBlueprints = new Ship[] { MaverickMkI, MaverickMkII, DelpheneI, DelpheneII, Dauntless, Exodia };
+        public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
     }
 }

@@ -64,6 +64,7 @@
     <Compile Include="Engine\UI\Controls\CheckBoxGroup.cs" />
     <Compile Include="Engine\UI\Controls\Control.cs" />
     <Compile Include="Engine\UI\Controls\Custom\Clock.cs" />
+    <Compile Include="Engine\UI\Controls\Custom\ShipLayout.cs" />
     <Compile Include="Engine\UI\Controls\InputBox.cs" />
     <Compile Include="Engine\UI\Controls\Custom\StarMap.cs" />
     <Compile Include="Engine\UI\Controls\Popup.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Engine\UI\Interfaces\TradingScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
+    <Compile Include="Game\Factories\ShipFactory.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\Inventory.cs" />
     <Compile Include="Game\Item.cs" />
@@ -90,15 +92,14 @@
     <Compile Include="Game\Planetoid.cs" />
     <Compile Include="Game\Ship.cs" />
     <Compile Include="Game\ShipMod.cs" />
+    <Compile Include="Game\ShipNode.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\StarSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TradingGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Game\Factories\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\charset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

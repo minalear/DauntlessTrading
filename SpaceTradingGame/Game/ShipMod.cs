@@ -8,6 +8,7 @@ namespace SpaceTradingGame.Game
 {
     public class ShipMod : Item
     {
+        public int Grade { get; set; }
         public int FirePowerMod { get; set; }
         public int CargoMod { get; set; }
         public int DefenseMod { get; set; }

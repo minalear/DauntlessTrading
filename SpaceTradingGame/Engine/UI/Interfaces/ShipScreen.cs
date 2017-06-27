@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
+using SpaceTradingGame.Engine.UI.Controls.Custom;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
 {
@@ -17,6 +18,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
             backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
+
+            shipLayout = new ShipLayout(null);
+            shipLayout.Position = new System.Drawing.Point(1, 10);
+            shipLayout.Size = new System.Drawing.Point(35, 35);
 
             cockpit = new Button(null, " ", 9, 6, 3, 2);
             cockpit.FillColor = new Color4(50, 50, 50, 255);
@@ -58,18 +63,19 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(shipModelTitle);
 
             //Modules
-            RegisterControl(cockpit);
+            /*RegisterControl(cockpit);
             RegisterControl(leftWing);
             RegisterControl(cargoBay);
             RegisterControl(rightWing);
             RegisterControl(drive);
             RegisterControl(leftEngine);
-            RegisterControl(rightEngine);
+            RegisterControl(rightEngine);*/
 
             //Other
             RegisterControl(backButton);
             RegisterControl(scrollingList);
             RegisterControl(descriptionBox);
+            RegisterControl(shipLayout);
         }
 
         public override void OnEnable()
@@ -88,11 +94,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             scrollingList.SetList(listItems);
 
+            shipLayout.SetShip(GameManager.PlayerShip);
+
             base.OnEnable();
         }
         public override void DrawStep()
         {
-            GraphicConsole.SetCursor(5, 6);
+            /*GraphicConsole.SetCursor(5, 6);
             GraphicConsole.Write("   ╔   ╗");
             GraphicConsole.SetCursor(5, 7);
             GraphicConsole.Write("   ║   ║");
@@ -103,7 +111,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             GraphicConsole.SetCursor(5, 12);
             GraphicConsole.Write("  ║     ║");
             GraphicConsole.SetCursor(5, 13);
-            GraphicConsole.Write("╔═╝     ╚═╗");
+            GraphicConsole.Write("╔═╝     ╚═╗");*/
 
             base.DrawStep();
         }
@@ -113,6 +121,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private Button cockpit, leftWing, rightWing, cargoBay, drive, leftEngine, rightEngine;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;
+        private ShipLayout shipLayout;
 
         public class InventoryListItem : ListItem
         {
