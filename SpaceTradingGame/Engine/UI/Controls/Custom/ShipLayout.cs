@@ -24,8 +24,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 nodeButton.FillColor = Color4.Red;
 
                 nodeButton.Click += (sender, e) => nodeClick(node);
-
-                this.Children.Add(nodeButton);
             }
 
             InterfaceManager.DrawStep();

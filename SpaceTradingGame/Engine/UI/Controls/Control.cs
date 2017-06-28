@@ -89,8 +89,9 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
         public virtual bool Contains(Point point)
         {
-            return (point.X >= position.X && point.Y >= position.Y && 
-                    point.X < position.X + size.X && point.Y < position.Y + size.Y);
+            Point relativePosition = this.Position;
+            return (point.X >= relativePosition.X && point.Y >= relativePosition.Y && 
+                    point.X < relativePosition.X + size.X && point.Y < relativePosition.Y + size.Y);
         }
 
         public virtual void MouseDown(MouseButtonEventArgs e)
