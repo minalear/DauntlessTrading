@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
 using SpaceTradingGame.Engine.UI.Controls.Custom;
+using SpaceTradingGame.Game;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
 {
@@ -23,10 +24,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipLayout.Position = new System.Drawing.Point(1, 4);
             shipLayout.NodeSelect += (sender, e) =>
             {
-                if (e.SelectedShipNode == null)
-                {
-
-                }
+                ShipNode node = e.SelectedShipNode;
+                descriptionBox.Text = node.ModType.ToString();
             };
 
             cockpit = new Button(null, " ", 9, 6, 3, 2);
