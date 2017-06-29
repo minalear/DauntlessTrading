@@ -19,9 +19,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
             backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
 
-            shipLayout = new ShipLayout(null);
-            shipLayout.Position = new System.Drawing.Point(1, 10);
-            shipLayout.Size = new System.Drawing.Point(35, 35);
+            shipLayout = new ShipLayout(null, 25, 20);
+            shipLayout.Position = new System.Drawing.Point(1, 4);
             shipLayout.NodeSelect += (sender, e) =>
             {
                 if (e.SelectedShipNode == null)

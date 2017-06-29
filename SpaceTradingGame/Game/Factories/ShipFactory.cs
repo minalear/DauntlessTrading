@@ -20,6 +20,17 @@ namespace SpaceTradingGame.Game.Factories
             Ship DelpheneI = new Ship("Blueprint", "Delphene I", 8, 12, 140, 550);
             Ship DelpheneII = new Ship("Blueprint", "Delphene II", 12, 20, 220, 850);
             Ship Dauntless = new Ship("Blueprint", "Dauntless Class", 25, 50, 800, 1350);
+            Dauntless.Nodes.Add(new ShipNode(2, 0));
+            Dauntless.Nodes.Add(new ShipNode(0, 2));
+            Dauntless.Nodes.Add(new ShipNode(2, 2));
+            Dauntless.Nodes.Add(new ShipNode(4, 2));
+            Dauntless.Nodes.Add(new ShipNode(2, 4));
+            Dauntless.Nodes.Add(new ShipNode(0, 6));
+            Dauntless.Nodes.Add(new ShipNode(2, 6));
+            Dauntless.Nodes.Add(new ShipNode(4, 6));
+            Dauntless.Nodes.Add(new ShipNode(0, 8));
+            Dauntless.Nodes.Add(new ShipNode(4, 8));
+
             Ship Exodia = new Ship("Blueprint", "Exodia Class", 80, 100, 2400, 2500);
 
             ShipBlueprints = new Ship[] { MaverickMkI, MaverickMkII, DelpheneI, DelpheneII, Dauntless, Exodia };
