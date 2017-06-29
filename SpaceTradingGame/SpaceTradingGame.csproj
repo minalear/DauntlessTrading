@@ -80,10 +80,10 @@
     <Compile Include="Engine\UI\Interfaces\ShipScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\SystemScreen.cs" />
-    <Compile Include="Engine\UI\Interfaces\TestInterface.cs" />
     <Compile Include="Engine\UI\Interfaces\TradingScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
+    <Compile Include="Game\Factories\ModFactory.cs" />
     <Compile Include="Game\Factories\ShipFactory.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\Inventory.cs" />

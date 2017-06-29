@@ -67,15 +67,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(shipDesignationTitle);
             RegisterControl(shipModelTitle);
 
-            //Modules
-            /*RegisterControl(cockpit);
-            RegisterControl(leftWing);
-            RegisterControl(cargoBay);
-            RegisterControl(rightWing);
-            RegisterControl(drive);
-            RegisterControl(leftEngine);
-            RegisterControl(rightEngine);*/
-
             //Other
             RegisterControl(backButton);
             RegisterControl(scrollingList);
@@ -89,7 +80,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipModelTitle.Text = GameManager.PlayerShip.Model;
 
             scrollingList.ClearList();
-            List<Game.InventorySlot> inventory = GameManager.PlayerShip.Inventory.GetInventoryList();
+            List<InventorySlot> inventory = GameManager.PlayerShip.Inventory.GetInventoryList();
             List<InventoryListItem> listItems = new List<InventoryListItem>();
 
             foreach (Game.InventorySlot slot in inventory)
@@ -103,23 +94,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             base.OnEnable();
         }
-        public override void DrawStep()
-        {
-            /*GraphicConsole.SetCursor(5, 6);
-            GraphicConsole.Write("   ╔   ╗");
-            GraphicConsole.SetCursor(5, 7);
-            GraphicConsole.Write("   ║   ║");
-            GraphicConsole.SetCursor(5, 8);
-            GraphicConsole.Write("╔══╝   ╚══╗");
-            GraphicConsole.SetCursor(5, 11);
-            GraphicConsole.Write("╚═╗     ╔═╝");
-            GraphicConsole.SetCursor(5, 12);
-            GraphicConsole.Write("  ║     ║");
-            GraphicConsole.SetCursor(5, 13);
-            GraphicConsole.Write("╔═╝     ╚═╗");*/
-
-            base.DrawStep();
-        }
 
         private Title shipDesignationTitle, shipModelTitle;
         private Button backButton;
@@ -130,9 +104,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         public class InventoryListItem : ListItem
         {
-            public Game.InventorySlot InventorySlot { get; set; }
+            public InventorySlot InventorySlot { get; set; }
 
-            public InventoryListItem(Game.InventorySlot slot)
+            public InventoryListItem(InventorySlot slot)
             {
                 this.InventorySlot = slot;
                 this.ListText = string.Format("{0} - {1}", slot.InventoryItem.Name, slot.Quantity);
