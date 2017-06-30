@@ -20,7 +20,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
             backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
 
-            shipLayout = new ShipLayout(null, 25, 20);
+            shipLayout = new ShipLayout(null, 28, 19);
             shipLayout.Position = new System.Drawing.Point(1, 4);
 
             scrollingList = new ScrollingList(null, 30, 2, GraphicConsole.BufferWidth - 31, 21);

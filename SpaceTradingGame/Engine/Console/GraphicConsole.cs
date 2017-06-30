@@ -48,6 +48,7 @@ namespace SpaceTradingGame.Engine.Console
             this.charset = new Charset(game.Content, 8, 12);
 
             this.initShader();
+            this.consoleShader.Use();
 
             this.characterMatrix = new CharToken[this.bufferWidth, this.bufferHeight];
             for (int y = 0; y < this.bufferHeight; y++)
@@ -217,7 +218,7 @@ namespace SpaceTradingGame.Engine.Console
 
         public void RenderFrame()
         {
-            this.consoleShader.Use();
+            //this.consoleShader.Use();
 
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, charset.TextureID);
