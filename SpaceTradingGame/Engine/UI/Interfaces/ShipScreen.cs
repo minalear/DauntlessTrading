@@ -31,7 +31,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             Title inventoryTitle = new Title(null, "== Inventory ==", 30 + (GraphicConsole.BufferWidth - 31) / 2, 1, Title.TextAlignModes.Center);
             RegisterControl(inventoryTitle);
 
-            filterReset = new Button(null, "@", 30, 1, 1, 1);
+            filterReset = new Button(null, "Rst", 30, 1, 3, 1);
+            materialFilter = new Button(null, "Min", 34, 1, 3, 1);
+            modFilter = new Button(null, "Mod", 38, 1, 3, 1);
 
             //Control Events
             scrollingList.Selected += (sender, index) =>
@@ -55,6 +57,16 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
                 inventoryTitle.Text = "== Inventory ==";
             };
+            materialFilter.Click += (sender, e) =>
+            {
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.RawMaterial));
+                inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.RawMaterial);
+            };
+            modFilter.Click += (sender, e) =>
+            {
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.ShipMod));
+                inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.ShipMod);
+            };
 
             //Titles
             RegisterControl(shipDesignationTitle);
@@ -63,6 +75,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             //Buttons
             RegisterControl(backButton);
             RegisterControl(filterReset);
+            RegisterControl(materialFilter);
+            RegisterControl(modFilter);
 
             //Other
             RegisterControl(scrollingList);
@@ -97,7 +111,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private Title shipDesignationTitle, shipModelTitle;
         private Button backButton;
-        private Button filterReset;
+        private Button filterReset, materialFilter, modFilter;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;
         private ShipLayout shipLayout;
