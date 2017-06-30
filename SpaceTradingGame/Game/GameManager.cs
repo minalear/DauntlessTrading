@@ -17,7 +17,10 @@ namespace SpaceTradingGame.Game
 
         public GameManager()
         {
-            Game.Factories.ShipFactory.Init();
+            //Init Factories
+            Factories.ShipFactory.Init();
+            Factories.ModFactory.Init();
+
             galacticDate = new DateTime(2347, 1, 1);
 
             systems = new List<StarSystem>();

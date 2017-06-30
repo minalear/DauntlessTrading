@@ -38,6 +38,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 int x = (node.X * 3 - 1) + this.Size.X / 2 - layoutWidth / 2;
                 int y = (node.Y * 2 - 1) + this.Size.Y / 2 - layoutHeight / 2;
 
+                string buttonText = (node.Empty) ? " " : "X";
                 Button nodeButton = new Button(this, " ", x, y, 3, 2);
                 nodeButton.FillColor = new Color4(0.3f, 0.3f, 0.3f, 1f);
 

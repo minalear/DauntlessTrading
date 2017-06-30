@@ -22,26 +22,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             shipLayout = new ShipLayout(null, 25, 20);
             shipLayout.Position = new System.Drawing.Point(1, 4);
-            shipLayout.NodeSelect += (sender, e) =>
-            {
-                ShipNode node = e.SelectedShipNode;
-                descriptionBox.Text = node.ModType.ToString();
-            };
-
-            cockpit = new Button(null, " ", 9, 6, 3, 2);
-            cockpit.FillColor = new Color4(50, 50, 50, 255);
-            leftWing = new Button(null, " ", 4, 9, 3, 2);
-            leftWing.FillColor = new Color4(50, 50, 50, 255);
-            cargoBay = new Button(null, " ", 9, 9, 3, 2);
-            cargoBay.FillColor = new Color4(50, 50, 50, 255);
-            rightWing = new Button(null, " ", 14, 9, 3, 2);
-            rightWing.FillColor = new Color4(50, 50, 50, 255);
-            drive = new Button(null, " ", 9, 12, 3, 2);
-            drive.FillColor = new Color4(50, 50, 50, 255);
-            leftEngine = new Button(null, " ", 5, 14, 3, 2);
-            leftEngine.FillColor = new Color4(50, 50, 50, 255);
-            rightEngine = new Button(null, " ", 13, 14, 3, 2);
-            rightEngine.FillColor = new Color4(50, 50, 50, 255);
 
             scrollingList = new ScrollingList(null, 30, 2, GraphicConsole.BufferWidth - 31, 21);
             scrollingList.FillColor = new Color4(50, 50, 50, 255);
@@ -50,6 +30,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             Title inventoryTitle = new Title(null, "== Inventory ==", 30 + (GraphicConsole.BufferWidth - 31) / 2, 1, Title.TextAlignModes.Center);
             RegisterControl(inventoryTitle);
+
+            filterReset = new Button(null, "@", 30, 1, 1, 1);
 
             //Control Events
             scrollingList.Selected += (sender, index) =>
@@ -62,13 +44,27 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 descriptionBox.Text = string.Empty;
                 InterfaceManager.DrawStep();
             };
+            shipLayout.NodeSelect += (sender, e) =>
+            {
+                ShipNode node = e.SelectedShipNode;
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(node.ModType));
+                inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", node.ModType);
+            };
+            filterReset.Click += (sender, e) =>
+            {
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+                inventoryTitle.Text = "== Inventory ==";
+            };
 
             //Titles
             RegisterControl(shipDesignationTitle);
             RegisterControl(shipModelTitle);
 
-            //Other
+            //Buttons
             RegisterControl(backButton);
+            RegisterControl(filterReset);
+
+            //Other
             RegisterControl(scrollingList);
             RegisterControl(descriptionBox);
             RegisterControl(shipLayout);
@@ -81,23 +77,27 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             scrollingList.ClearList();
             List<InventorySlot> inventory = GameManager.PlayerShip.Inventory.GetInventoryList();
-            List<InventoryListItem> listItems = new List<InventoryListItem>();
-
-            foreach (Game.InventorySlot slot in inventory)
-            {
-                listItems.Add(new InventoryListItem(slot));
-            }
-
-            scrollingList.SetList(listItems);
+            setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
 
             shipLayout.SetShip(GameManager.PlayerShip);
 
             base.OnEnable();
         }
+        private void setItemList(List<InventorySlot> list)
+        {
+            List<InventoryListItem> listItems = new List<InventoryListItem>();
+
+            foreach (InventorySlot slot in list)
+            {
+                listItems.Add(new InventoryListItem(slot));
+            }
+
+            scrollingList.SetList(listItems);
+        }
 
         private Title shipDesignationTitle, shipModelTitle;
         private Button backButton;
-        private Button cockpit, leftWing, rightWing, cargoBay, drive, leftEngine, rightEngine;
+        private Button filterReset;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;
         private ShipLayout shipLayout;

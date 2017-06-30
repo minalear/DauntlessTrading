@@ -51,6 +51,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 ship.Name = shipNameInput.Text.Trim();
                 ship.Inventory.AddItem(Item.Gold, 27);
                 ship.Inventory.AddItem(Item.StarshipFuel, 100);
+                ship.Inventory.AddItem(Game.Factories.ModFactory.MaverickCockpitI, 1);
                 ship.Inventory.Credits = 50000;
 
                 GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);
