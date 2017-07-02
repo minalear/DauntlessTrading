@@ -17,6 +17,7 @@ namespace SpaceTradingGame.Game.Factories
             EuripidesWarpCore.Grade = 3;
             EuripidesWarpCore.BaseValue = 10000;
             EuripidesWarpCore.Description = "Advanced Warp Core produced by Dauntless Inc.";
+            EuripidesWarpCore.JumpMod = 1000;
 
             BasicCockpit = new ShipMod(ShipMod.ShipModTypes.Cockpit);
             BasicCockpit.Name = "Terra Dynamics Cockpit";

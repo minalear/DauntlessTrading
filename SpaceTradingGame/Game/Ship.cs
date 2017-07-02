@@ -23,23 +23,16 @@ namespace SpaceTradingGame.Game
         {
             this.shipName = "Name";
             this.shipModel = "Maverick Class I";
-            this.firePower = 10;
-            this.cargoCapacity = 100;
-            this.baseJumpRadius = 350.0;
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
 
             this.ListText = shipModel;
         }
-        public Ship(string name, string model, int firePower, int defenseRating, int capacity, double jumpRadius)
+        public Ship(string name, string model)
         {
             this.shipName = name;
             this.shipModel = model;
-            this.firePower = firePower;
-            this.defenseRating = defenseRating;
-            this.cargoCapacity = capacity;
-            this.baseJumpRadius = jumpRadius;
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
@@ -59,6 +52,8 @@ namespace SpaceTradingGame.Game
                     nodes[i].Empty = false;
                     nodes[i].Modification = mod;
 
+                    UpdateShipStats();
+
                     return;
                 }
             }
@@ -72,6 +67,8 @@ namespace SpaceTradingGame.Game
 
                 node.Empty = false;
                 node.Modification = mod;
+
+                UpdateShipStats();
             }
         }
         public void UpdateShipStats()
@@ -83,10 +80,13 @@ namespace SpaceTradingGame.Game
 
             foreach (ShipNode node in nodes)
             {
-                firePower += node.Modification.FirePowerMod;
-                defenseRating += node.Modification.DefenseMod;
-                cargoCapacity += node.Modification.CargoMod;
-                baseJumpRadius += node.Modification.JumpMod;
+                if (!node.Empty)
+                {
+                    firePower += node.Modification.FirePowerMod;
+                    defenseRating += node.Modification.DefenseMod;
+                    cargoCapacity += node.Modification.CargoMod;
+                    baseJumpRadius += node.Modification.JumpMod;
+                }
             }
         }
 

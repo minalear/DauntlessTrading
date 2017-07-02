@@ -8,8 +8,10 @@ namespace SpaceTradingGame.Game
 {
     public class Item
     {
+        protected string baseDescription;
+
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Description { get { return GetDescription(); } set { baseDescription = value; } }
         public int BaseValue { get; set; }
         public double Rarity { get; set; }
         public double Weight { get; set; }
@@ -18,6 +20,10 @@ namespace SpaceTradingGame.Game
         public override string ToString()
         {
             return this.Name;
+        }
+        public virtual string GetDescription()
+        {
+            return this.baseDescription;
         }
 
         #region Raw Materials

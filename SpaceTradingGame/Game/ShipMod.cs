@@ -21,6 +21,12 @@ namespace SpaceTradingGame.Game
             this.ModType = type;
         }
 
+        public override string GetDescription()
+        {
+            return string.Format("{0}\n-\nGrade: {1}\nAttack: {2}\nCargo: {3}\nDefense: {4}\nJump: {5}",
+                baseDescription, Grade, FirePowerMod, CargoMod, DefenseMod, JumpMod);
+        }
+
         public enum ShipModTypes
         {
             Cockpit, //Determines max grade of any ship modification

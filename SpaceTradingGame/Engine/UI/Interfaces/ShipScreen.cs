@@ -20,10 +20,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
             backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
 
-            equipButton = new Button(null, "Equip", 1, 23);
+            equipButton = new Button(null, "Equip", 23, GraphicConsole.BufferHeight - 3);
 
             shipLayout = new ShipLayout(null, 28, 19);
-            shipLayout.Position = new System.Drawing.Point(1, 4);
+            shipLayout.Position = new System.Drawing.Point(1, GraphicConsole.BufferHeight - shipLayout.Size.Y - 3);
 
             scrollingList = new ScrollingList(null, 30, 2, GraphicConsole.BufferWidth - 31, 21);
             scrollingList.FillColor = new Color4(50, 50, 50, 255);
@@ -32,6 +32,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             Title inventoryTitle = new Title(null, "== Inventory ==", 30 + (GraphicConsole.BufferWidth - 31) / 2, 1, Title.TextAlignModes.Center);
             RegisterControl(inventoryTitle);
+
+            shipAttackTitle =  new Title(null, " Attack: 0", 1, 4, Title.TextAlignModes.Left);
+            shipDefenseTitle = new Title(null, "Defense: 0", 1, 5, Title.TextAlignModes.Left);
+            shipCargoTitle =   new Title(null, "  Cargo: 0", 1, 6, Title.TextAlignModes.Left);
+            shipJumpTitle =    new Title(null, "   Jump: 0", 1, 7, Title.TextAlignModes.Left);
 
             filterReset = new Button(null, "Rst", 30, 1, 3, 1);
             materialFilter = new Button(null, "Min", 34, 1, 3, 1);
@@ -67,14 +72,18 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             };
             equipButton.Click += (sender, e) =>
             {
-                if (!shipLayout.HasNodeSelected || !scrollingList.HasSelection) return;
+                if (!scrollingList.HasSelection) return;
                 InventorySlot selectedItem = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot;
                 if (selectedItem.InventoryItem.ItemType != ItemTypes.ShipMod) return;
 
-                GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
-                shipLayout.UpdateButtons();
+                if (shipLayout.HasNodeSelected)
+                    GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
+                else
+                    GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.InventoryItem, true);
 
+                updateDisplayInfo();
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+                inventoryTitle.Text = "== Inventory ==";
 
                 InterfaceManager.DrawStep();
             };
@@ -95,9 +104,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             };
             #endregion
 
+            #region Control Registration
             //Titles
             RegisterControl(shipDesignationTitle);
             RegisterControl(shipModelTitle);
+            RegisterControl(shipAttackTitle);
+            RegisterControl(shipDefenseTitle);
+            RegisterControl(shipCargoTitle);
+            RegisterControl(shipJumpTitle);
 
             //Buttons
             RegisterControl(backButton);
@@ -110,6 +124,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(scrollingList);
             RegisterControl(descriptionBox);
             RegisterControl(shipLayout);
+            #endregion
         }
 
         public override void OnEnable()
@@ -123,8 +138,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             shipLayout.SetShip(GameManager.PlayerShip);
 
+            updateDisplayInfo();
+
             base.OnEnable();
         }
+
         private void setItemList(List<InventorySlot> list)
         {
             List<InventoryListItem> listItems = new List<InventoryListItem>();
@@ -136,8 +154,18 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             scrollingList.SetList(listItems);
         }
+        private void updateDisplayInfo()
+        {
+            shipLayout.UpdateButtons();
+
+            shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
+            shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);
+            shipCargoTitle.Text = string.Format("  Cargo: {0}", GameManager.PlayerShip.CargoCapacity);
+            shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.BaseJumpRadius);
+        }
 
         private Title shipDesignationTitle, shipModelTitle;
+        private Title shipAttackTitle, shipDefenseTitle, shipCargoTitle, shipJumpTitle;
         private Button backButton, equipButton;
         private Button filterReset, materialFilter, modFilter;
         private ScrollingList scrollingList;
