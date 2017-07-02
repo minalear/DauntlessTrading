@@ -1,10 +1,43 @@
 ﻿using System;
+using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
     public class Station
     {
-        public Planetoid Parent { get; set; }
-        public string Name { get; set; }
+        public Planetoid Parent { get; private set; }
+        public int Level { get; private set; }
+        public double DrillRate { get; private set; }
+
+        public Station(Planetoid parent, int level)
+        {
+            Parent = parent;
+            DrillRate = 1.0;
+
+            for (int i = 0; i < level; i++)
+                LevelUp();
+        }
+
+        public void UpdateSpaceStation()
+        {
+            if (!Parent.System.HasMarket) return;
+
+            foreach (MaterialDeposit deposit in Parent.MaterialDeposits)
+            {
+                double var = RNG.NextDouble(0.9, 1.1);
+
+                int amount = (int)(deposit.Density * var * DrillRate) * 100;
+                Parent.System.SystemMarket.MarketInventory.AddItem(deposit.Material, amount);
+            }
+        }
+        public void LevelUp()
+        {
+            Level++;
+            DrillRate *= 1.1;
+        }
+        public int LevelUpCost()
+        {
+            return (Level + 1) * (Level + 1) * 5000;
+        }
     }
 }

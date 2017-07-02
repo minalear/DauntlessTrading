@@ -34,8 +34,6 @@ namespace SpaceTradingGame.Game.Factories
                 system.Planetoids.Add(GenerateRandomPlanet(system));
             }
 
-            system.SystemMarket.UpdateMarket(10.0);
-
             return system;
         }
         public static Planetoid GenerateRandomPlanet(StarSystem parentSystem)

@@ -55,25 +55,6 @@ namespace SpaceTradingGame.Game
             int price = (int)((item.BaseValue * amount) * existingMod);
             return MathHelper.Clamp(price, 1, price);
         }
-        public void UpdateMarket(double days)
-        {
-            foreach (Planetoid planet in starSystem.Planetoids)
-            {
-                if (planet.PrimaryExport == null) continue;
-
-                int nDays = (int)MathHelper.Clamp(days, 1.0, days);
-                for (int i = 0; i < nDays; i++)
-                {
-                    double variance = RNG.NextDouble(0.7, 1.2);
-                    double stockCap = planet.PrimaryExport.Rarity * 100.0;
-                    double stockMod = -(1.0 / stockCap) * MarketInventory.GetQuantity(planet.PrimaryExport) + 1.0;
-                    double mod = variance * stockMod;
-
-                    int amount = (int)(100 * mod);
-                    MarketInventory.AddItem(planet.PrimaryExport, amount);
-                }
-            }
-        }
 
         private StarSystem starSystem;
     }

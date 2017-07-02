@@ -47,6 +47,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 controlGroup.Children.Add(title);
             }
 
+            marketButton.IsVisible = GameManager.CurrentSystem.HasMarket;
+
             base.OnEnable();
         }
         public override void DrawStep()

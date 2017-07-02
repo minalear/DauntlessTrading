@@ -20,6 +20,7 @@ namespace SpaceTradingGame.Game
         public Point MapCoord { get; set; }
 
         public Market SystemMarket { get; set; }
+        public bool HasMarket { get; set; }
 
         public StarSystem(string name)
         {
@@ -30,9 +31,13 @@ namespace SpaceTradingGame.Game
             Coordinates = Vector2.Zero;
             StarColor = colors[RNG.Next(0, colors.Length)];
 
-            SystemMarket = new Market(this);
-
             this.ListText = Name;
+        }
+
+        public void UpdateStarSystem()
+        {
+            foreach (Planetoid planet in Planetoids)
+                planet.UpdatePlanetoid();
         }
 
         public override bool Equals(object obj)

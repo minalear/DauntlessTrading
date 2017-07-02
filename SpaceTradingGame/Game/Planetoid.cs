@@ -10,7 +10,6 @@ namespace SpaceTradingGame.Game
         public string Name { get; set; }
         public List<Planetoid> Moons { get; set; }
         public List<Station> Stations { get; set; }
-        public Item PrimaryExport { get; set; }
 
         public List<MaterialDeposit> MaterialDeposits { get; set; }
 
@@ -40,6 +39,17 @@ namespace SpaceTradingGame.Game
             ListText = Name;
         }
 
+        public void UpdatePlanetoid()
+        {
+            foreach (Station station in Stations)
+            {
+                station.UpdateSpaceStation();
+            }
+            foreach (Planetoid moon in Moons)
+            {
+                moon.UpdatePlanetoid();
+            }
+        }
         public void AddMaterialDeposit(MaterialDeposit deposit)
         {
             for (int i = 0; i < MaterialDeposits.Count; i++)

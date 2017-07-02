@@ -34,13 +34,11 @@ namespace SpaceTradingGame.Game
             //Terra
             Planetoid terra = new Planetoid(solSystem, "Terra");
             Planetoid luna = new Planetoid(solSystem, "Luna", terra);
-            terra.PrimaryExport = Item.Hydrogen;
 
             //Mars
             Planetoid mars = new Planetoid(solSystem, "Mars");
             Planetoid phobos = new Planetoid(solSystem, "Phobos", mars);
             Planetoid deimos = new Planetoid(solSystem, "Deimos", mars);
-            mars.PrimaryExport = Item.Plutonium;
 
             //Jupiter
             Planetoid jupiter = new Planetoid(solSystem, "Jupiter");
@@ -48,13 +46,10 @@ namespace SpaceTradingGame.Game
             Planetoid europa = new Planetoid(solSystem, "Europa", jupiter);
             Planetoid ganymede = new Planetoid(solSystem, "Ganymede", jupiter);
             Planetoid callisto = new Planetoid(solSystem, "Callisto", jupiter);
-            jupiter.PrimaryExport = Item.Iron;
 
             solSystem.Planetoids.Add(terra);
             solSystem.Planetoids.Add(mars);
             solSystem.Planetoids.Add(jupiter);
-
-            solSystem.SystemMarket.UpdateMarket(10.0);
 
             systems.Add(solSystem);
             systems.AddRange(Factories.GalaxyFactory.GenerateGalaxy(250, 500));
@@ -71,9 +66,12 @@ namespace SpaceTradingGame.Game
         public void SimulateGame(double days)
         {
             galacticDate = galacticDate.AddDays(days);
+
+            int _days = (int)OpenTK.MathHelper.Clamp(days, 1.0, days);
             foreach (StarSystem system in Systems)
             {
-                system.SystemMarket.UpdateMarket(days);
+                for (int i = 0; i < _days; i++)
+                    system.UpdateStarSystem();
             }
         }
 
