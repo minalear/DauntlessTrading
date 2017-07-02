@@ -18,7 +18,6 @@ namespace SpaceTradingGame.Engine
                 string[] words = groups[group].Split(' ');
 
                 string line = "";
-                int lineLength = 0;
                 int wordLength = 0;
 
                 for (int word = 0; word < words.Length; word++)
@@ -29,19 +28,15 @@ namespace SpaceTradingGame.Engine
                         wordLength = 0;
                     }
 
-                    if (lineLength + words[word].Length <= width)
+                    if (line.Length + words[word].Length <= width)
                     {
                         returnString += words[word] + " ";
                         line += words[word] + " ";
-
-                        lineLength += wordLength;
                     }
                     else
                     {
                         returnString += "\n" + words[word] + " ";
                         line = words[word] + " ";
-
-                        lineLength = wordLength;
                     }
                 }
 
