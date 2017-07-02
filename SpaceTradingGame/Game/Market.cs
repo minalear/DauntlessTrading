@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using OpenTK;
 using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
@@ -16,11 +16,14 @@ namespace SpaceTradingGame.Game
             MarketInventory.Credits = 10000000;
         }
 
-        public double Buy(Item item, int amount)
+        /// <summary>
+        /// Market sells to someone.
+        /// </summary>
+        public double MarketSell(Item item, int amount)
         {
             if (amount > 0 && amount <= MarketInventory.GetQuantity(item))
             {
-                double total = item.BaseValue * amount;
+                double total = CalculateSellPrice(item, amount);
                 MarketInventory.RemoveItem(item, amount);
 
                 return total;
@@ -28,22 +31,47 @@ namespace SpaceTradingGame.Game
 
             return 0.0;
         }
-        public double Sell(Item item, int amount)
+
+        /// <summary>
+        /// Market buys from someone.
+        /// </summary>
+        public double MarketBuy(Item item, int amount)
         {
-            double total = item.BaseValue * amount;
+            double total = CalculateBuyPrice(item, amount);
             MarketInventory.AddItem(item, amount);
 
             return total;
         }
-        public void UpdateMarket()
+        public int CalculateBuyPrice(Item offeredItem, int amount)
+        {
+            int price = (int)(CalculateSellPrice(offeredItem, amount) * 0.9);
+            return MathHelper.Clamp(price, 1, price);
+        }
+        public int CalculateSellPrice(Item item, int amount)
+        {
+            int existingQuantity = MarketInventory.GetQuantity(item);
+            double existingMod = MathHelper.Clamp(1.0 - existingQuantity / (item.Rarity * 100.0), 0.05, 1.0);
+
+            int price = (int)((item.BaseValue * amount) * existingMod);
+            return MathHelper.Clamp(price, 1, price);
+        }
+        public void UpdateMarket(double days)
         {
             foreach (Planetoid planet in starSystem.Planetoids)
             {
                 if (planet.PrimaryExport == null) continue;
 
-                double rarity = planet.PrimaryExport.Rarity / 100.0;
-                int amount = RNG.Next((int)(50 * rarity), (int)(500 * rarity));
-                MarketInventory.AddItem(planet.PrimaryExport, amount);
+                int nDays = (int)MathHelper.Clamp(days, 1.0, days);
+                for (int i = 0; i < nDays; i++)
+                {
+                    double variance = RNG.NextDouble(0.7, 1.2);
+                    double stockCap = planet.PrimaryExport.Rarity * 100.0;
+                    double stockMod = -(1.0 / stockCap) * MarketInventory.GetQuantity(planet.PrimaryExport) + 1.0;
+                    double mod = variance * stockMod;
+
+                    int amount = (int)(100 * mod);
+                    MarketInventory.AddItem(planet.PrimaryExport, amount);
+                }
             }
         }
 

@@ -18,6 +18,9 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             Paused = false;
             ForeColor = Color4.White;
             FillColor = Color4.Black;
+
+            this.MinimumTickRate = 0.5;
+            this.MaximumTickRate = 3.0;
         }
 
         public override void UpdateFrame(GameTime gameTime)
@@ -31,11 +34,14 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                     timer = 0.0;
                     fill = 0;
 
+                    this.TimerTick?.Invoke(this, EventArgs.Empty);
                     this.TimerLapse?.Invoke(this, EventArgs.Empty);
                 }
                 else if (timer >= subTick * fill)
                 {
                     fill++;
+
+                    this.TimerTick?.Invoke(this, EventArgs.Empty);
                     InterfaceManager.DrawStep();
                 }
             }
@@ -66,14 +72,26 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         {
             Paused = !Paused;
         }
+        private void UpdateTickRate(double rate)
+        {
+            this.tickRate = OpenTK.MathHelper.Clamp(rate, MinimumTickRate, MaximumTickRate);
+            this.subTick = this.tickRate / Size.X;
+        }
 
         public Color4 FillColor { get; set; }
         public Color4 ForeColor { get; set; }
         public bool Paused { get; set; }
 
-        public double TickRate { get { return tickRate; } set { tickRate = value; } }
+        public double MinimumTickRate { get; set; }
+        public double MaximumTickRate { get; set; }
+
+        public double TickRate { get { return tickRate; } set { UpdateTickRate(value); } }
+        public double SubTickRate { get { return subTick; } }
 
         public delegate void TimerLapseEvent(object sender, EventArgs e);
+        public delegate void TimerTickEvent(object sender, EventArgs e);
+
         public event TimerLapseEvent TimerLapse;
+        public event TimerTickEvent TimerTick;
     }
 }

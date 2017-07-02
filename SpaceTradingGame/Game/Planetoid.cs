@@ -12,6 +12,8 @@ namespace SpaceTradingGame.Game
         public List<Station> Stations { get; set; }
         public Item PrimaryExport { get; set; }
 
+        //Add various materials that can be extracted from planets with different densities, affecting the generation rate
+
         public Planetoid(StarSystem system, string name)
         {
             System = system;
@@ -34,6 +36,11 @@ namespace SpaceTradingGame.Game
             Parent.Moons.Add(this);
 
             ListText = Name;
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
         }
     }
 }

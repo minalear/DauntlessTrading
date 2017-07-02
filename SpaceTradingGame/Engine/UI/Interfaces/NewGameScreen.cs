@@ -32,7 +32,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             shipSelectionList = new ScrollingList(null, 1, 9, 22, 19);
             shipSelectionList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
-            shipSelectionList.SetList(Ship.ShipBlueprints);
+            shipSelectionList.SetList(Game.Factories.ShipFactory.ShipBlueprints);
             shipSelectionList.Selected += (sender, e) =>
             {
                 shipDescriptionBox.Text = ((Ship)shipSelectionList.GetSelection()).ToString();
@@ -51,6 +51,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 ship.Name = shipNameInput.Text.Trim();
                 ship.Inventory.AddItem(Item.Gold, 27);
                 ship.Inventory.AddItem(Item.StarshipFuel, 100);
+                ship.Inventory.AddItem(Game.Factories.ModFactory.MaverickCockpitI, 1);
+                ship.Inventory.AddItem(Game.Factories.ModFactory.EuripidesWarpCore, 1);
                 ship.Inventory.Credits = 50000;
 
                 GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);

@@ -33,13 +33,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
 
             travelManager = new TravelManager(starMap);
-            galacticDate = new DateTime(2347, 1, 1);
-            screenTitle.Text = galacticDate.ToShortDateString();
+            screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
 
             clock = new Clock(null, 10, 5);
             clock.Position = new System.Drawing.Point(63, 1);
 
             playButton = new Button(null, "►", 74, 1, 1, 1);
+            fasterButton = new Button(null, "+", 61, 1, 1, 1);
+            slowerButton = new Button(null, "-", 62, 1, 1, 1);
 
             //UI Events
             up.Click += (sender, e) =>
@@ -89,9 +90,17 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             clock.TimerLapse += (sender, e) =>
             {
-                galacticDate = galacticDate.AddDays(1);
-                screenTitle.Text = galacticDate.ToShortDateString();
+                GameManager.SimulateGame(1.0);
+                screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
             };
+            clock.TimerTick += (sender, e) =>
+            {
+                if (travelManager.IsTraveling)
+                {
+                    travelManager.SimulateTravel(0.1);
+                }
+            };
+
             playButton.Click += (sender, e) =>
             {
                 playButton.Text = (playButton.Text == "■") ? "►" : "■";
@@ -99,7 +108,16 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
                 InterfaceManager.DrawStep();
             };
+            fasterButton.Click += (sender, e) =>
+            {
+                clock.TickRate -= 0.5;
+            };
+            slowerButton.Click += (sender, e) =>
+            {
+                clock.TickRate += 0.5;
+            };
 
+            #region ControlRegister
             RegisterControl(screenTitle);
             RegisterControl(systemTitle);
             RegisterControl(systemDesc);
@@ -109,10 +127,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(left);
             RegisterControl(right);
             RegisterControl(playButton);
+            RegisterControl(fasterButton);
+            RegisterControl(slowerButton);
             RegisterControl(travelButton);
             RegisterControl(systemButton);
             RegisterControl(cargoButton);
             RegisterControl(clock);
+            #endregion
         }
 
         public override void OnEnable()
@@ -123,28 +144,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             updateScreenInformation();
 
             base.OnEnable();
-        }
-
-        public override void DrawStep()
-        {
-            base.DrawStep();
-        }
-        public override void UpdateFrame(GameTime gameTime)
-        {
-            if (travelManager.IsTraveling)
-            {
-                travelManager.UpdateFrame(gameTime);
-
-                //Used to draw the interface ever 1 second while traveling
-                drawTimer += gameTime.ElapsedTime.TotalSeconds;
-                if (drawTimer >= 1)
-                {
-                    drawTimer = 0.0;
-                    InterfaceManager.DrawStep();
-                }
-            }
-
-            base.UpdateFrame(gameTime);
         }
         public override void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
         {
@@ -182,16 +181,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
 
         private TravelManager travelManager;
-        private double drawTimer = 0.0;
 
         private Title screenTitle, systemTitle;
         private TextBox systemDesc;
         private Button up, down, left, right;
-        private Button playButton;
+        private Button playButton, fasterButton, slowerButton;
         private Button travelButton, systemButton, cargoButton;
         private StarMap starMap;
         private Clock clock;
-        private DateTime galacticDate;
     }
 
     public class TravelManager
@@ -206,7 +203,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private float timeToNextNode;
         private double timer;
 
-        public float MoveSpeed = 200.0f;
+        public float MoveSpeed = 450.0f;
         public bool IsTraveling = false;
 
         public TravelManager(StarMap map)
@@ -227,11 +224,12 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             starMap.DrawPlayerPosition = true;
             IsTraveling = true;
         }
-        public void UpdateFrame(GameTime gameTime)
-        {
-            UpdatePlayerPosition((float)gameTime.ElapsedTime.TotalSeconds);
 
-            timer += gameTime.ElapsedTime.TotalSeconds;
+        public void SimulateTravel(double days)
+        {
+            UpdatePlayerPosition((float)days);
+
+            timer += days;
             if (timer >= timeToNextNode)
             {
                 //Travel finished
@@ -248,6 +246,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     timer = 0.0;
                     currentNode++;
                     nextNode = (nextNode + 1 != travelPath.Length) ? nextNode + 1 : nextNode;
+                    playerPosition = travelPath[currentNode].Coordinates;
 
                     updateVectors();
                 }

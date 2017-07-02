@@ -9,12 +9,20 @@ namespace SpaceTradingGame.Game
         private List<StarSystem> systems;
         private StarSystem currentSystem;
 
+        private DateTime galacticDate;
+
         private string playerName;
         private string companyName;
         private Ship playerShip;
 
         public GameManager()
         {
+            //Init Factories
+            Factories.ModFactory.Init();
+            Factories.ShipFactory.Init();
+
+            galacticDate = new DateTime(2347, 1, 1);
+
             systems = new List<StarSystem>();
 
             //Sol System
@@ -24,11 +32,13 @@ namespace SpaceTradingGame.Game
             //Terra
             Planetoid terra = new Planetoid(solSystem, "Terra");
             Planetoid luna = new Planetoid(solSystem, "Luna", terra);
+            terra.PrimaryExport = Item.Hydrogen;
 
             //Mars
             Planetoid mars = new Planetoid(solSystem, "Mars");
             Planetoid phobos = new Planetoid(solSystem, "Phobos", mars);
             Planetoid deimos = new Planetoid(solSystem, "Deimos", mars);
+            mars.PrimaryExport = Item.Plutonium;
 
             //Jupiter
             Planetoid jupiter = new Planetoid(solSystem, "Jupiter");
@@ -36,12 +46,13 @@ namespace SpaceTradingGame.Game
             Planetoid europa = new Planetoid(solSystem, "Europa", jupiter);
             Planetoid ganymede = new Planetoid(solSystem, "Ganymede", jupiter);
             Planetoid callisto = new Planetoid(solSystem, "Callisto", jupiter);
+            jupiter.PrimaryExport = Item.Iron;
 
             solSystem.Planetoids.Add(terra);
             solSystem.Planetoids.Add(mars);
             solSystem.Planetoids.Add(jupiter);
 
-            solSystem.SystemMarket.UpdateMarket();
+            solSystem.SystemMarket.UpdateMarket(10.0);
 
             systems.Add(solSystem);
             generateRandomSystems();
@@ -54,6 +65,14 @@ namespace SpaceTradingGame.Game
             this.playerName = playerName;
             this.companyName = companyName;
             this.playerShip = ship;
+        }
+        public void SimulateGame(double days)
+        {
+            galacticDate = galacticDate.AddDays(days);
+            foreach (StarSystem system in Systems)
+            {
+                system.SystemMarket.UpdateMarket(days);
+            }
         }
 
         private void generateRandomSystems()
@@ -68,7 +87,7 @@ namespace SpaceTradingGame.Game
                 );
 
                 system.Planetoids = generateRandomPlanets(system);
-                system.SystemMarket.UpdateMarket();
+                system.SystemMarket.UpdateMarket(10.0);
 
                 systems.Add(system);
             }
@@ -108,5 +127,6 @@ namespace SpaceTradingGame.Game
         public string PlayerName { get { return this.playerName; } set { this.playerName = value; } }
         public string CompanyName { get { return this.companyName; } set { this.companyName = value; } }
         public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }
+        public DateTime GalacticDate { get { return galacticDate; } set { galacticDate = value; } }
     }
 }

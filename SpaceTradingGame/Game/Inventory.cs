@@ -72,6 +72,31 @@ namespace SpaceTradingGame.Game
         {
             return inventorySlots.Values.ToList();
         }
+        public List<InventorySlot> GetInventoryList(ItemTypes itemType)
+        {
+            List<InventorySlot> filteredList = new List<InventorySlot>();
+            foreach (KeyValuePair<Item, InventorySlot> slot in inventorySlots)
+            {
+                if (slot.Value.InventoryItem.ItemType == itemType)
+                    filteredList.Add(slot.Value);
+            }
+
+            return filteredList;
+        }
+        public List<InventorySlot> GetInventoryList(ShipMod.ShipModTypes modType)
+        {
+            List<InventorySlot> modList = GetInventoryList(ItemTypes.ShipMod);
+            if (modType == ShipMod.ShipModTypes.Any) return modList; //Return all mods if Any
+
+            //Remove any mod that doesn't match the type
+            for (int i = 0; i < modList.Count; i++)
+            {
+                if ((modList[i].InventoryItem as ShipMod).ModType != modType)
+                    modList.RemoveAt(i--);
+            }
+
+            return modList;
+        }
 
         private int credits;
         private Dictionary<Item, InventorySlot> inventorySlots;

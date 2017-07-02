@@ -48,6 +48,7 @@ namespace SpaceTradingGame.Engine.Console
             this.charset = new Charset(game.Content, 8, 12);
 
             this.initShader();
+            this.consoleShader.Use();
 
             this.characterMatrix = new CharToken[this.bufferWidth, this.bufferHeight];
             for (int y = 0; y < this.bufferHeight; y++)
@@ -138,6 +139,21 @@ namespace SpaceTradingGame.Engine.Console
             this.foregroundColor = foreground;
             this.backgroundColor = background;
         }
+        public void SetColor(int x, int y)
+        {
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
+            {
+                put(this.characterMatrix[x, y].Token, x, y);
+            }
+        }
+        public void SetColor(Color4 foreground, Color4 background, int x, int y)
+        {
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
+            {
+                this.characterMatrix[x, y].ForegroundColor = foreground;
+                this.characterMatrix[x, y].BackgroundColor = background;
+            }
+        }
         public void SetCursor(Point position)
         {
             this.Left = position.X;
@@ -184,6 +200,12 @@ namespace SpaceTradingGame.Engine.Console
         {
             this.drawingBounds = new Rectangle(0, 0, bufferWidth, bufferHeight);
         }
+        public CharToken GetCharacterInformation(int x, int y)
+        {
+            if (x >= drawingBounds.Left && x < drawingBounds.Right && y >= drawingBounds.Top && y < drawingBounds.Bottom)
+                return this.characterMatrix[x, y];
+            return this.characterMatrix[0, 0];
+        }
 
         public Point GetTilePosition(Point position)
         {
@@ -196,7 +218,7 @@ namespace SpaceTradingGame.Engine.Console
 
         public void RenderFrame()
         {
-            this.consoleShader.Use();
+            //this.consoleShader.Use();
 
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, charset.TextureID);

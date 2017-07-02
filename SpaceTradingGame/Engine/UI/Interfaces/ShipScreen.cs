@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
+using SpaceTradingGame.Engine.UI.Controls.Custom;
+using SpaceTradingGame.Game;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
 {
@@ -15,20 +17,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipModelTitle = new Title(null, "Disney Gummi mk1*", 1, 2, Title.TextAlignModes.Left);
             shipModelTitle.TextColor = Color4.Gray;
 
-            cockpit = new Button(null, " ", 9, 6, 3, 2);
-            cockpit.FillColor = new Color4(50, 50, 50, 255);
-            leftWing = new Button(null, " ", 4, 9, 3, 2);
-            leftWing.FillColor = new Color4(50, 50, 50, 255);
-            cargoBay = new Button(null, " ", 9, 9, 3, 2);
-            cargoBay.FillColor = new Color4(50, 50, 50, 255);
-            rightWing = new Button(null, " ", 14, 9, 3, 2);
-            rightWing.FillColor = new Color4(50, 50, 50, 255);
-            drive = new Button(null, " ", 9, 12, 3, 2);
-            drive.FillColor = new Color4(50, 50, 50, 255);
-            leftEngine = new Button(null, " ", 5, 14, 3, 2);
-            leftEngine.FillColor = new Color4(50, 50, 50, 255);
-            rightEngine = new Button(null, " ", 13, 14, 3, 2);
-            rightEngine.FillColor = new Color4(50, 50, 50, 255);
+            backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
+            backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
+
+            equipButton = new Button(null, "Equip", 23, GraphicConsole.BufferHeight - 3);
+
+            shipLayout = new ShipLayout(null, 28, 19);
+            shipLayout.Position = new System.Drawing.Point(1, GraphicConsole.BufferHeight - shipLayout.Size.Y - 3);
 
             scrollingList = new ScrollingList(null, 30, 2, GraphicConsole.BufferWidth - 31, 21);
             scrollingList.FillColor = new Color4(50, 50, 50, 255);
@@ -38,10 +33,20 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             Title inventoryTitle = new Title(null, "== Inventory ==", 30 + (GraphicConsole.BufferWidth - 31) / 2, 1, Title.TextAlignModes.Center);
             RegisterControl(inventoryTitle);
 
-            //Control Events
+            shipAttackTitle =  new Title(null, " Attack: 0", 1, 4, Title.TextAlignModes.Left);
+            shipDefenseTitle = new Title(null, "Defense: 0", 1, 5, Title.TextAlignModes.Left);
+            shipCargoTitle =   new Title(null, "  Cargo: 0", 1, 6, Title.TextAlignModes.Left);
+            shipJumpTitle =    new Title(null, "   Jump: 0", 1, 7, Title.TextAlignModes.Left);
+
+            filterReset = new Button(null, "Rst", 30, 1, 3, 1);
+            materialFilter = new Button(null, "Min", 34, 1, 3, 1);
+            modFilter = new Button(null, "Mod", 38, 1, 3, 1);
+
+            #region Control Events
             scrollingList.Selected += (sender, index) =>
             {
-                descriptionBox.Text = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem.Description;
+                Item item = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem;
+                descriptionBox.Text = string.Format("-{0}-\n{1}", item.Name, item.Description);
                 InterfaceManager.DrawStep();
             };
             scrollingList.Deselected += (sender) =>
@@ -49,23 +54,77 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 descriptionBox.Text = string.Empty;
                 InterfaceManager.DrawStep();
             };
+            shipLayout.NodeSelect += (sender, e) =>
+            {
+                ShipNode node = e.SelectedShipNode;
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(node.ModType));
+                inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", node.ModType);
 
+                //Display equipped Mod's description
+                if (!node.Empty)
+                {
+                    descriptionBox.Text = string.Format("-{0}-\n{1}", node.Modification.Name, node.Modification.Description);
+                }
+                else
+                {
+                    descriptionBox.Text = string.Empty;
+                }
+            };
+            equipButton.Click += (sender, e) =>
+            {
+                if (!scrollingList.HasSelection) return;
+                InventorySlot selectedItem = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot;
+                if (selectedItem.InventoryItem.ItemType != ItemTypes.ShipMod) return;
+
+                if (shipLayout.HasNodeSelected)
+                    GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
+                else
+                    GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.InventoryItem, true);
+
+                updateDisplayInfo();
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+                inventoryTitle.Text = "== Inventory ==";
+
+                InterfaceManager.DrawStep();
+            };
+            filterReset.Click += (sender, e) =>
+            {
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+                inventoryTitle.Text = "== Inventory ==";
+            };
+            materialFilter.Click += (sender, e) =>
+            {
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.RawMaterial));
+                inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.RawMaterial);
+            };
+            modFilter.Click += (sender, e) =>
+            {
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.ShipMod));
+                inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.ShipMod);
+            };
+            #endregion
+
+            #region Control Registration
             //Titles
             RegisterControl(shipDesignationTitle);
             RegisterControl(shipModelTitle);
+            RegisterControl(shipAttackTitle);
+            RegisterControl(shipDefenseTitle);
+            RegisterControl(shipCargoTitle);
+            RegisterControl(shipJumpTitle);
 
-            //Modules
-            RegisterControl(cockpit);
-            RegisterControl(leftWing);
-            RegisterControl(cargoBay);
-            RegisterControl(rightWing);
-            RegisterControl(drive);
-            RegisterControl(leftEngine);
-            RegisterControl(rightEngine);
+            //Buttons
+            RegisterControl(backButton);
+            RegisterControl(equipButton);
+            RegisterControl(filterReset);
+            RegisterControl(materialFilter);
+            RegisterControl(modFilter);
 
             //Other
             RegisterControl(scrollingList);
             RegisterControl(descriptionBox);
+            RegisterControl(shipLayout);
+            #endregion
         }
 
         public override void OnEnable()
@@ -74,46 +133,50 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipModelTitle.Text = GameManager.PlayerShip.Model;
 
             scrollingList.ClearList();
-            List<Game.InventorySlot> inventory = GameManager.PlayerShip.Inventory.GetInventoryList();
+            List<InventorySlot> inventory = GameManager.PlayerShip.Inventory.GetInventoryList();
+            setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+
+            shipLayout.SetShip(GameManager.PlayerShip);
+
+            updateDisplayInfo();
+
+            base.OnEnable();
+        }
+
+        private void setItemList(List<InventorySlot> list)
+        {
             List<InventoryListItem> listItems = new List<InventoryListItem>();
 
-            foreach (Game.InventorySlot slot in inventory)
+            foreach (InventorySlot slot in list)
             {
                 listItems.Add(new InventoryListItem(slot));
             }
 
             scrollingList.SetList(listItems);
-
-            base.OnEnable();
         }
-        public override void DrawStep()
+        private void updateDisplayInfo()
         {
-            GraphicConsole.SetCursor(5, 6);
-            GraphicConsole.Write("   ╔   ╗");
-            GraphicConsole.SetCursor(5, 7);
-            GraphicConsole.Write("   ║   ║");
-            GraphicConsole.SetCursor(5, 8);
-            GraphicConsole.Write("╔══╝   ╚══╗");
-            GraphicConsole.SetCursor(5, 11);
-            GraphicConsole.Write("╚═╗     ╔═╝");
-            GraphicConsole.SetCursor(5, 12);
-            GraphicConsole.Write("  ║     ║");
-            GraphicConsole.SetCursor(5, 13);
-            GraphicConsole.Write("╔═╝     ╚═╗");
+            shipLayout.UpdateButtons();
 
-            base.DrawStep();
+            shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
+            shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);
+            shipCargoTitle.Text = string.Format("  Cargo: {0}", GameManager.PlayerShip.CargoCapacity);
+            shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.BaseJumpRadius);
         }
 
         private Title shipDesignationTitle, shipModelTitle;
-        private Button cockpit, leftWing, rightWing, cargoBay, drive, leftEngine, rightEngine;
+        private Title shipAttackTitle, shipDefenseTitle, shipCargoTitle, shipJumpTitle;
+        private Button backButton, equipButton;
+        private Button filterReset, materialFilter, modFilter;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;
+        private ShipLayout shipLayout;
 
         public class InventoryListItem : ListItem
         {
-            public Game.InventorySlot InventorySlot { get; set; }
+            public InventorySlot InventorySlot { get; set; }
 
-            public InventoryListItem(Game.InventorySlot slot)
+            public InventoryListItem(InventorySlot slot)
             {
                 this.InventorySlot = slot;
                 this.ListText = string.Format("{0} - {1}", slot.InventoryItem.Name, slot.Quantity);

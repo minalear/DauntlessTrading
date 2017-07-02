@@ -8,3 +8,5 @@ Functional stock market listing all businesses
 Gathering favor with different factions will result in better trade deals
   * They will accept lower margins on trades and may even accept negative trades
 Character creation and galaxy creation are separate, allowing players to play different people similar to Dwarf Fortress Adventure Mode
+
+Planets will have various materials that can be extracted via Space Stations.  Materials won't be depleted, but will have a "strength" value, determining how much can be generated.
