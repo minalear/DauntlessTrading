@@ -26,17 +26,26 @@ namespace SpaceTradingGame.Engine.UI
         public virtual void UpdateFrame(GameTime gameTime)
         {
             foreach (Control control in controls)
-                control.UpdateFrame(gameTime);
+            {
+                if (control.IsVisible)
+                    control.UpdateFrame(gameTime);
+            }
         }
         public virtual void DrawStep()
         {
             foreach (Control control in controls)
-                control.DrawStep();
+            {
+                if (control.IsVisible)
+                    control.DrawStep();
+            }
         }
         public virtual void UpdateStep()
         {
             foreach (Control control in controls)
-                control.UpdateStep();
+            {
+                if (control.IsVisible)
+                    control.UpdateStep();
+            }
         }
 
         public virtual void OnEnable()
@@ -62,6 +71,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                     control.MouseDown(e);
             }
@@ -70,6 +81,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                     control.MouseUp(e);
                 else
@@ -82,6 +95,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                 {
                     if (!control.Contains(InterfaceManager.PreviousCursorPosition))
@@ -96,6 +111,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 if (control.Contains(InterfaceManager.CurrentCursorPosition))
                     control.MouseWheel(e);
             }
@@ -104,6 +121,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 control.KeyPress(e);
             }
         }
@@ -111,6 +130,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 control.KeyUp(e);
             }
         }
@@ -118,6 +139,8 @@ namespace SpaceTradingGame.Engine.UI
         {
             foreach (Control control in controls)
             {
+                if (!control.IsVisible) continue;
+
                 control.KeyDown(e);
             }
         }
