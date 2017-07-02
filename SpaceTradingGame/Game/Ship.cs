@@ -14,8 +14,6 @@ namespace SpaceTradingGame.Game
         private int defenseRating;
         private int cargoCapacity;
         private double baseJumpRadius;
-        
-        private int baseDefenseRating;
 
         private Inventory shipInventory;
 
@@ -78,7 +76,18 @@ namespace SpaceTradingGame.Game
         }
         public void UpdateShipStats()
         {
+            firePower = 0;
+            defenseRating = 0;
+            cargoCapacity = 0;
+            baseJumpRadius = 0;
 
+            foreach (ShipNode node in nodes)
+            {
+                firePower += node.Modification.FirePowerMod;
+                defenseRating += node.Modification.DefenseMod;
+                cargoCapacity += node.Modification.CargoMod;
+                baseJumpRadius += node.Modification.JumpMod;
+            }
         }
 
         public override string ToString()
