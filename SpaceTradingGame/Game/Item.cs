@@ -25,6 +25,17 @@ namespace SpaceTradingGame.Game
         {
             return this.baseDescription;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() == typeof(Item))
+                return ((Item)obj).Name == Name;
+
+            return base.Equals(obj);
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         #region Raw Materials
         public static Item Hydrogen = new Item()

@@ -29,6 +29,8 @@ namespace SpaceTradingGame.Game
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
             solSystem.StarColor = OpenTK.Graphics.Color4.Yellow;
 
+            Planetoid planet = Factories.GalaxyFactory.GenerateRandomPlanet(solSystem);
+
             //Terra
             Planetoid terra = new Planetoid(solSystem, "Terra");
             Planetoid luna = new Planetoid(solSystem, "Luna", terra);
@@ -55,7 +57,7 @@ namespace SpaceTradingGame.Game
             solSystem.SystemMarket.UpdateMarket(10.0);
 
             systems.Add(solSystem);
-            generateRandomSystems();
+            systems.AddRange(Factories.GalaxyFactory.GenerateGalaxy(250, 500));
 
             CurrentSystem = solSystem;
         }
@@ -73,53 +75,6 @@ namespace SpaceTradingGame.Game
             {
                 system.SystemMarket.UpdateMarket(days);
             }
-        }
-
-        private void generateRandomSystems()
-        {
-            int numSystems = RNG.Next(250, 500);
-            for (int i = 0; i < numSystems; i++)
-            {
-                StarSystem system = new StarSystem(randomSystemName());
-                system.Coordinates = new OpenTK.Vector2(
-                    RNG.NextFloat(-10000.0f, 10000.0f),
-                    RNG.NextFloat(-10000.0f, 10000.0f)
-                );
-
-                system.Planetoids = generateRandomPlanets(system);
-                system.SystemMarket.UpdateMarket(10.0);
-
-                systems.Add(system);
-            }
-        }
-        private string randomSystemName()
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string name = chars[RNG.Next(0, chars.Length)].ToString() + chars[RNG.Next(0, chars.Length)].ToString() + "-";
-            name += RNG.Next(0, 10).ToString() + RNG.Next(0, 10).ToString() + RNG.Next(0, 10).ToString() + RNG.Next(0, 10).ToString();
-
-            return name;
-        }
-        private List<Planetoid> generateRandomPlanets(StarSystem system)
-        {
-            List<Planetoid> planets = new List<Planetoid>();
-            int num = RNG.Next(0, 8);
-
-            for (int i = 0; i < num; i++)
-            {
-                Planetoid planet = new Planetoid(system, string.Format("{0}-{1}", system.Name, i));
-                planet.PrimaryExport = Item.MaterialsList[RNG.Next(0, Item.MaterialsList.Length)];
-
-                int numMoons = RNG.Next(0, 5);
-                for (int j = 0; j < numMoons; j++)
-                {
-                    Planetoid moon = new Planetoid(system, "Moon", planet);
-                }
-
-                planets.Add(planet);
-            }
-
-            return planets;
         }
 
         public List<StarSystem> Systems { get { return this.systems; } }

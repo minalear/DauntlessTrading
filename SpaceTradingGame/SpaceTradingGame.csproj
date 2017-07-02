@@ -84,6 +84,7 @@
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
     <Compile Include="Game\Factories\ModFactory.cs" />
+    <Compile Include="Game\Factories\GalaxyFactory.cs" />
     <Compile Include="Game\Factories\ShipFactory.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\Inventory.cs" />

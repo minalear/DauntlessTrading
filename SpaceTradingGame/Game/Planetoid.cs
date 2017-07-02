@@ -12,7 +12,7 @@ namespace SpaceTradingGame.Game
         public List<Station> Stations { get; set; }
         public Item PrimaryExport { get; set; }
 
-        //Add various materials that can be extracted from planets with different densities, affecting the generation rate
+        public List<MaterialDeposit> MaterialDeposits { get; set; }
 
         public Planetoid(StarSystem system, string name)
         {
@@ -21,6 +21,7 @@ namespace SpaceTradingGame.Game
 
             Moons = new List<Planetoid>();
             Stations = new List<Station>();
+            MaterialDeposits = new List<MaterialDeposit>();
 
             ListText = Name;
         }
@@ -32,15 +33,44 @@ namespace SpaceTradingGame.Game
 
             Moons = new List<Planetoid>();
             Stations = new List<Station>();
+            MaterialDeposits = new List<MaterialDeposit>();
 
             Parent.Moons.Add(this);
 
             ListText = Name;
         }
 
+        public void AddMaterialDeposit(MaterialDeposit deposit)
+        {
+            for (int i = 0; i < MaterialDeposits.Count; i++)
+            {
+                //Combine similar deposits
+                if (MaterialDeposits[i].Material.Equals(deposit.Material))
+                {
+                    MaterialDeposits[i].Density *= deposit.Density;
+
+                    return;
+                }
+            }
+
+            //Add new deposit
+            MaterialDeposits.Add(deposit);
+        }
+
         public override string ToString()
         {
             return this.Name;
+        }
+    }
+
+    public class MaterialDeposit
+    {
+        public double Density;
+        public Item Material;
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1}", Material.Name, Density);
         }
     }
 }
