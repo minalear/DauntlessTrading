@@ -17,9 +17,26 @@ namespace SpaceTradingGame.Game.Factories
             EuripidesWarpCore.Grade = 3;
             EuripidesWarpCore.BaseValue = 10000;
             EuripidesWarpCore.Description = "Advanced Warp Core produced by Dauntless Inc.";
+
+            BasicCockpit = new ShipMod(ShipMod.ShipModTypes.Cockpit);
+            BasicCockpit.Name = "Terra Dynamics Cockpit";
+            BasicCockpit.Description = "Cockpit designed by Terra Dynamics.  Designed to be mass produced and cheap, it serves as the basis for all entry level starships and is the defacto standard.";
+            BasicCockpit.DefenseMod = 10;
+
+            BasicCargoBay = new ShipMod(ShipMod.ShipModTypes.CargoBay);
+            BasicCargoBay.Name = "Terra Dyanmics Cargo Bay";
+            BasicCargoBay.Description = "Cargo Bay designed by Terra Dynamics.  Designed to be mass produced and cheap, it serves as the basis for all entry level starships and is the defacto standard.";
+            BasicCargoBay.CargoMod = 100;
+
+            BasicWarpCore = new ShipMod(ShipMod.ShipModTypes.WarpCore);
+            BasicWarpCore.Name = "Earl's Warp Core";
+            BasicWarpCore.Description = "Scavenged from Earl's backyard, this Warp Core design is the very basic warp design that provides very minimal jump ranges and poor fuel efficiency.";
+            BasicWarpCore.JumpMod = 650;
         }
 
         public static ShipMod MaverickCockpitI;
         public static ShipMod EuripidesWarpCore;
+
+        public static ShipMod BasicCockpit, BasicCargoBay, BasicWarpCore;
     }
 }

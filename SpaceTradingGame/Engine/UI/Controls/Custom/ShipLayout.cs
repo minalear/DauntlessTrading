@@ -39,7 +39,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 int y = (node.Y * 2 - 1) + this.Size.Y / 2 - layoutHeight / 2;
 
                 string buttonText = (node.Empty) ? " " : "X";
-                Button nodeButton = new Button(this, " ", x, y, 3, 2);
+                Button nodeButton = new Button(this, buttonText, x, y, 3, 2);
                 nodeButton.FillColor = new Color4(0.3f, 0.3f, 0.3f, 1f);
 
                 nodeButton.Click += (sender, e) => nodeClick(node);
@@ -47,9 +47,15 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
             InterfaceManager.DrawStep();
         }
+        public void UpdateButtons()
+        {
+            this.SetShip(ship);
+        }
 
         private void nodeClick(ShipNode node)
         {
+            SelectedNode = node;
+            HasNodeSelected = true;
             this.NodeSelect?.Invoke(this, new NodeSelectEventArgs(node));
         }
 
@@ -57,6 +63,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         public NodeSelectDelegate NodeSelect;
 
         public Color4 FillColor { get; set; }
+        public ShipNode SelectedNode { get; private set; }
+        public bool HasNodeSelected { get; set; }
     }
 
     public class NodeSelectEventArgs : EventArgs

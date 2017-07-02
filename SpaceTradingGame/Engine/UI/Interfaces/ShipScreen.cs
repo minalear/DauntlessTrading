@@ -20,6 +20,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
             backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
 
+            equipButton = new Button(null, "Equip", 1, 23);
+
             shipLayout = new ShipLayout(null, 28, 19);
             shipLayout.Position = new System.Drawing.Point(1, 4);
 
@@ -35,7 +37,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             materialFilter = new Button(null, "Min", 34, 1, 3, 1);
             modFilter = new Button(null, "Mod", 38, 1, 3, 1);
 
-            //Control Events
+            #region Control Events
             scrollingList.Selected += (sender, index) =>
             {
                 descriptionBox.Text = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem.Description;
@@ -51,6 +53,29 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 ShipNode node = e.SelectedShipNode;
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(node.ModType));
                 inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", node.ModType);
+
+                //Display equipped Mod's description
+                if (!node.Empty)
+                {
+                    descriptionBox.Text = node.Modification.Description;
+                }
+                else
+                {
+                    descriptionBox.Text = string.Empty;
+                }
+            };
+            equipButton.Click += (sender, e) =>
+            {
+                if (!shipLayout.HasNodeSelected || !scrollingList.HasSelection) return;
+                InventorySlot selectedItem = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot;
+                if (selectedItem.InventoryItem.ItemType != ItemTypes.ShipMod) return;
+
+                GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
+                shipLayout.UpdateButtons();
+
+                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+
+                InterfaceManager.DrawStep();
             };
             filterReset.Click += (sender, e) =>
             {
@@ -67,6 +92,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.ShipMod));
                 inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.ShipMod);
             };
+            #endregion
 
             //Titles
             RegisterControl(shipDesignationTitle);
@@ -74,6 +100,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             //Buttons
             RegisterControl(backButton);
+            RegisterControl(equipButton);
             RegisterControl(filterReset);
             RegisterControl(materialFilter);
             RegisterControl(modFilter);
@@ -110,7 +137,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
 
         private Title shipDesignationTitle, shipModelTitle;
-        private Button backButton;
+        private Button backButton, equipButton;
         private Button filterReset, materialFilter, modFilter;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;

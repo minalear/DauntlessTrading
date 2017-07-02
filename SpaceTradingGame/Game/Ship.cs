@@ -14,6 +14,8 @@ namespace SpaceTradingGame.Game
         private int defenseRating;
         private int cargoCapacity;
         private double baseJumpRadius;
+        
+        private int baseDefenseRating;
 
         private Inventory shipInventory;
 
@@ -45,6 +47,31 @@ namespace SpaceTradingGame.Game
             this.nodes = new List<ShipNode>();
 
             this.ListText = shipModel;
+        }
+
+        public void EquipModification(ShipMod mod, bool removeFromInventory)
+        {
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i].ModType == mod.ModType)
+                {
+                    nodes[i].Empty = false;
+                    nodes[i].Modification = mod;
+                }
+            }
+        }
+        public void EquipModification(ShipNode node, ShipMod mod, bool removeFromInventory)
+        {
+            if (node.ModType == mod.ModType || node.ModType == ShipMod.ShipModTypes.Any)
+            {
+                if (removeFromInventory) shipInventory.RemoveItem(mod, 1);
+                node.Empty = false;
+                node.Modification = mod;
+            }
+        }
+        public void UpdateShipStats()
+        {
+
         }
 
         public override string ToString()

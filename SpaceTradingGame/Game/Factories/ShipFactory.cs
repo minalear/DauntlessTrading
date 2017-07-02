@@ -31,6 +31,8 @@ namespace SpaceTradingGame.Game.Factories
             Dauntless.Nodes.Add(new ShipNode(0, 8, ShipMod.ShipModTypes.Any));
             Dauntless.Nodes.Add(new ShipNode(4, 8, ShipMod.ShipModTypes.Any));
 
+            
+
             Ship Exodia = new Ship("Blueprint", "Exodia Class", 80, 100, 2400, 2500);
 
             ShipBlueprints = new Ship[] { MaverickMkI, MaverickMkII, DelpheneI, DelpheneII, Dauntless, Exodia };
