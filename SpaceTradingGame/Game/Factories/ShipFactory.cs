@@ -31,7 +31,9 @@ namespace SpaceTradingGame.Game.Factories
             Dauntless.Nodes.Add(new ShipNode(0, 8, ShipMod.ShipModTypes.Any));
             Dauntless.Nodes.Add(new ShipNode(4, 8, ShipMod.ShipModTypes.Any));
 
-            
+            MaverickMkI.EquipModification(ModFactory.BasicCockpit, false);
+            MaverickMkI.EquipModification(ModFactory.BasicCargoBay, false);
+            MaverickMkI.EquipModification(ModFactory.BasicWarpCore, false);
 
             Ship Exodia = new Ship("Blueprint", "Exodia Class", 80, 100, 2400, 2500);
 

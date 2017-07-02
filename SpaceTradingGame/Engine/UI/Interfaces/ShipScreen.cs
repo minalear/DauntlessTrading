@@ -40,7 +40,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             #region Control Events
             scrollingList.Selected += (sender, index) =>
             {
-                descriptionBox.Text = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem.Description;
+                Item item = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem;
+                descriptionBox.Text = string.Format("-{0}-\n{1}", item.Name, item.Description);
                 InterfaceManager.DrawStep();
             };
             scrollingList.Deselected += (sender) =>
@@ -57,7 +58,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Display equipped Mod's description
                 if (!node.Empty)
                 {
-                    descriptionBox.Text = node.Modification.Description;
+                    descriptionBox.Text = string.Format("-{0}-\n{1}", node.Modification.Name, node.Modification.Description);
                 }
                 else
                 {

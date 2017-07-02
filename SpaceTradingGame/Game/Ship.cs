@@ -55,8 +55,13 @@ namespace SpaceTradingGame.Game
             {
                 if (nodes[i].ModType == mod.ModType)
                 {
+                    if (removeFromInventory) shipInventory.RemoveItem(mod, 1);
+                    if (!nodes[i].Empty) shipInventory.AddItem(nodes[i].Modification, 1);
+
                     nodes[i].Empty = false;
                     nodes[i].Modification = mod;
+
+                    return;
                 }
             }
         }
@@ -65,6 +70,8 @@ namespace SpaceTradingGame.Game
             if (node.ModType == mod.ModType || node.ModType == ShipMod.ShipModTypes.Any)
             {
                 if (removeFromInventory) shipInventory.RemoveItem(mod, 1);
+                if (!node.Empty) shipInventory.AddItem(node.Modification, 1);
+
                 node.Empty = false;
                 node.Modification = mod;
             }
