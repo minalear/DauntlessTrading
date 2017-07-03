@@ -28,9 +28,17 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.ChangeInterface("Trading");
             };
 
+            buildButton = new Button(null, "Build", 0, GraphicConsole.BufferHeight - 3);
+            buildButton.Click += (sender, e) =>
+            {
+                GameManager.CurrentSystem.BuildMarket(GameManager.PlayerFaction);
+                InterfaceManager.ChangeInterface("System"); //Hack to trigger OnEnable
+            };
+
             RegisterControl(controlGroup);
             RegisterControl(backButton);
             RegisterControl(marketButton);
+            RegisterControl(buildButton);
         }
 
         public override void OnEnable()
@@ -48,6 +56,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             }
 
             marketButton.IsVisible = GameManager.CurrentSystem.HasMarket;
+            buildButton.IsVisible = !marketButton.IsVisible;
 
             base.OnEnable();
         }
@@ -92,6 +101,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         //For registering and clearing controls between interface loads
         private Control controlGroup;
-        private Button backButton, marketButton;
+        private Button backButton, marketButton, buildButton;
     }
 }

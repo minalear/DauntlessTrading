@@ -39,6 +39,11 @@ namespace SpaceTradingGame.Game
             foreach (Planetoid planet in Planetoids)
                 planet.UpdatePlanetoid();
         }
+        public void BuildMarket(Faction owner)
+        {
+            HasMarket = true;
+            SystemMarket = new Market(this, owner);
+        }
 
         public override bool Equals(object obj)
         {

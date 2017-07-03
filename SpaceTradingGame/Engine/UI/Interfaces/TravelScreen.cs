@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
@@ -20,8 +20,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             starMap.Size = new System.Drawing.Point(74, 33);
 
             systemTitle = new Title(null, "Current System", 87, 1, Title.TextAlignModes.Center);
-            systemDesc = new TextBox(null, 76, 3, 23, 15);
-            systemDesc.FillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
+            systemDescriptionBox = new TextBox(null, 76, 3, 23, 15);
+            systemDescriptionBox.FillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
 
             up = new Button(null, "▲", 87, 30);
             down = new Button(null, "▼", 87, 34);
@@ -120,7 +120,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             #region ControlRegister
             RegisterControl(screenTitle);
             RegisterControl(systemTitle);
-            RegisterControl(systemDesc);
+            RegisterControl(systemDescriptionBox);
             RegisterControl(starMap);
             RegisterControl(up);
             RegisterControl(down);
@@ -171,19 +171,31 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             StarSystem infoSystem = (starMap.HasSystemSelected) ? starMap.SelectedSystem : GameManager.CurrentSystem;
             systemTitle.Text = infoSystem.Name;
 
-            string desc = "";
-            foreach (Game.Planetoid planet in infoSystem.Planetoids)
+            StringBuilder systemDescription = new StringBuilder();
+            if (infoSystem.Planetoids.Count == 0)
+                systemDescription.AppendLine("No planets.");
+            else
             {
-                desc += planet.Name + "\n";
+                foreach (Planetoid planet in infoSystem.Planetoids)
+                {
+                    systemDescription.AppendLine(planet.Name);
+                }
             }
 
-            systemDesc.Text = desc;
+            systemDescription.Append("-\n");
+
+            if (infoSystem.HasMarket)
+                systemDescription.AppendFormat("System market owned by {0}.", infoSystem.SystemMarket.Owner.Name);
+            else
+                systemDescription.Append("No system market.");
+
+            systemDescriptionBox.Text = systemDescription.ToString(); ;
         }
 
         private TravelManager travelManager;
 
         private Title screenTitle, systemTitle;
-        private TextBox systemDesc;
+        private TextBox systemDescriptionBox;
         private Button up, down, left, right;
         private Button playButton, fasterButton, slowerButton;
         private Button travelButton, systemButton, cargoButton;

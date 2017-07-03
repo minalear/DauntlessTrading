@@ -104,5 +104,6 @@ namespace SpaceTradingGame.Game
         public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
+        public Faction Faction { get; set; }
     }
 }

@@ -6,12 +6,14 @@ namespace SpaceTradingGame.Game
 {
     public class Market
     {
-        public Inventory MarketInventory { get; set; }
+        public Inventory MarketInventory { get; private set; }
+        public Faction Owner { get; private set; }
 
-        public Market(StarSystem system)
+        public Market(StarSystem system, Faction owner)
         {
             MarketInventory = new Inventory();
             starSystem = system;
+            Owner = owner;
 
             MarketInventory.Credits = 10000000;
         }

@@ -7,12 +7,13 @@ namespace SpaceTradingGame.Game
     public class GameManager
     {
         private List<StarSystem> systems;
+        private List<Faction> factions;
+
         private StarSystem currentSystem;
 
         private DateTime galacticDate;
 
         private string playerName;
-        private string companyName;
         private Ship playerShip;
 
         public GameManager()
@@ -24,6 +25,7 @@ namespace SpaceTradingGame.Game
             galacticDate = new DateTime(2347, 1, 1);
 
             systems = new List<StarSystem>();
+            factions = new List<Faction>();
 
             //Sol System
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
@@ -60,8 +62,10 @@ namespace SpaceTradingGame.Game
         public void SetupGame(string playerName, string companyName, Ship ship)
         {
             this.playerName = playerName;
-            this.companyName = companyName;
             this.playerShip = ship;
+
+            PlayerFaction = new Faction(companyName, true);
+            factions.Add(PlayerFaction);
         }
         public void SimulateGame(double days)
         {
@@ -78,8 +82,8 @@ namespace SpaceTradingGame.Game
         public List<StarSystem> Systems { get { return this.systems; } }
         public StarSystem CurrentSystem { get { return this.currentSystem; } set { this.currentSystem = value; } }
         public string PlayerName { get { return this.playerName; } set { this.playerName = value; } }
-        public string CompanyName { get { return this.companyName; } set { this.companyName = value; } }
         public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }
         public DateTime GalacticDate { get { return galacticDate; } set { galacticDate = value; } }
+        public Faction PlayerFaction { get; private set; }
     }
 }

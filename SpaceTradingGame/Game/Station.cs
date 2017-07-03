@@ -8,6 +8,7 @@ namespace SpaceTradingGame.Game
         public Planetoid Parent { get; private set; }
         public int Level { get; private set; }
         public double DrillRate { get; private set; }
+        public Faction Owner { get; private set; }
 
         public Station(Planetoid parent, int level)
         {
@@ -38,6 +39,10 @@ namespace SpaceTradingGame.Game
         public int LevelUpCost()
         {
             return (Level + 1) * (Level + 1) * 5000;
+        }
+        public void SetOwner(Faction faction)
+        {
+            Owner = faction;
         }
     }
 }
