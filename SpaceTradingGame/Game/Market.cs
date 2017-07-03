@@ -14,6 +14,7 @@ namespace SpaceTradingGame.Game
             MarketInventory = new Inventory();
             starSystem = system;
             Owner = owner;
+            Owner.OwnedMarkets.Add(this);
 
             MarketInventory.Credits = 10000000;
         }

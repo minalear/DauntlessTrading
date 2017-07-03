@@ -66,6 +66,11 @@ namespace SpaceTradingGame.Game
             //Add new deposit
             MaterialDeposits.Add(deposit);
         }
+        public void BuildStation(Faction owner)
+        {
+            Station station = new Station(this, owner, 1);
+            Stations.Add(station);
+        }
 
         public override string ToString()
         {

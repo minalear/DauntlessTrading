@@ -10,13 +10,15 @@ namespace SpaceTradingGame.Game
         public double DrillRate { get; private set; }
         public Faction Owner { get; private set; }
 
-        public Station(Planetoid parent, int level)
+        public Station(Planetoid parent, Faction owner, int level)
         {
             Parent = parent;
             DrillRate = 1.0;
 
             for (int i = 0; i < level; i++)
                 LevelUp();
+
+            SetOwner(owner);
         }
 
         public void UpdateSpaceStation()
@@ -27,7 +29,7 @@ namespace SpaceTradingGame.Game
             {
                 double var = RNG.NextDouble(0.9, 1.1);
 
-                int amount = (int)(deposit.Density * var * DrillRate) * 100;
+                int amount = (int)(deposit.Density * var * DrillRate * 100.0);
                 Parent.System.SystemMarket.MarketInventory.AddItem(deposit.Material, amount);
             }
         }
@@ -43,6 +45,7 @@ namespace SpaceTradingGame.Game
         public void SetOwner(Faction faction)
         {
             Owner = faction;
+            Owner.OwnedStations.Add(this);
         }
     }
 }

@@ -31,8 +31,6 @@ namespace SpaceTradingGame.Game
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
             solSystem.StarColor = OpenTK.Graphics.Color4.Yellow;
 
-            Planetoid planet = Factories.GalaxyFactory.GenerateRandomPlanet(solSystem);
-
             //Terra
             Planetoid terra = new Planetoid(solSystem, "Terra");
             Planetoid luna = new Planetoid(solSystem, "Luna", terra);
@@ -57,6 +55,35 @@ namespace SpaceTradingGame.Game
             systems.AddRange(Factories.GalaxyFactory.GenerateGalaxy(250, 500));
 
             CurrentSystem = solSystem;
+
+            //Generate Factions
+            int numFactions = RNG.Next(5, 10);
+            for (int i = 0; i < numFactions; i++)
+            {
+                Faction faction = Factories.FactionFactory.GenerateRandomFaction();
+
+                //Build markets and stations
+                int numSystems = RNG.Next(3, 6);
+                for (int k = 0; k < numSystems; k++)
+                {
+                    StarSystem system = systems[RNG.Next(0, systems.Count)];
+
+                    //Ensure planets exist in the system
+                    while (system.Planetoids.Count == 0 || system.HasMarket)
+                        system = systems[RNG.Next(0, systems.Count)];
+
+                    system.BuildMarket(faction);
+
+                    foreach (Planetoid planet in system.Planetoids)
+                    {
+                        planet.BuildStation(faction);
+                    }
+                }
+
+                factions.Add(faction);
+            }
+
+            return;
         }
 
         public void SetupGame(string playerName, string companyName, Ship ship)

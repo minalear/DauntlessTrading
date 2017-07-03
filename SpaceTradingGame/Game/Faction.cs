@@ -8,6 +8,8 @@ namespace SpaceTradingGame.Game
         public string Name { get; private set; }
         public bool PlayerOwned { get; private set; }
 
+        public int Capital { get; set; }
+
         public List<Ship> OwnedShips { get; private set; }
         public List<Market> OwnedMarkets { get; private set; }
         public List<Station> OwnedStations { get; private set; }
@@ -16,11 +18,19 @@ namespace SpaceTradingGame.Game
         {
             Name = name;
             PlayerOwned = false;
+
+            OwnedShips = new List<Ship>();
+            OwnedMarkets = new List<Market>();
+            OwnedStations = new List<Station>();
         }
         public Faction(string name, bool playerOwned)
         {
             Name = name;
             PlayerOwned = playerOwned;
+
+            OwnedShips = new List<Ship>();
+            OwnedMarkets = new List<Market>();
+            OwnedStations = new List<Station>();
         }
 
         public void MergeFactions(Faction owner, Faction subsidiary)
@@ -33,6 +43,11 @@ namespace SpaceTradingGame.Game
 
             foreach (Station station in subsidiary.OwnedStations)
                 owner.OwnedStations.Add(station);
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
         }
     }
 }
