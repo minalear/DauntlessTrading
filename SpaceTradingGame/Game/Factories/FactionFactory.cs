@@ -35,7 +35,7 @@ namespace SpaceTradingGame.Game.Factories
             "Newport", "Koch", "Comcast", "New Harrier", "New Terran", "Baltic", "Horizon"
         };
         private static string[] Titles = {
-            "Industries", "Inc.", "Shipping", "and Sons", "Company", "Trading", "Exports"
+            "Industries", "Inc", "Shipping", "and Sons", "Company", "Trading", "Exports"
         };
         private static Color4[] FactionColors = {
             Color4.Red,
