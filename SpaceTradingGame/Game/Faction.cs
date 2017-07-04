@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Game
 {
@@ -9,6 +10,7 @@ namespace SpaceTradingGame.Game
         public bool PlayerOwned { get; private set; }
 
         public int Capital { get; set; }
+        public Color4 RegionColor { get; set; }
 
         public List<Ship> OwnedShips { get; private set; }
         public List<Market> OwnedMarkets { get; private set; }

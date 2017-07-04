@@ -48,10 +48,12 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             if (drawSelectedSystem)
                 drawPaths();
             drawSystems();
-            GraphicConsole.ClearBounds();
-            drawBorder(mapBounds);
+            drawFactions();
 
-            //drawFactions();
+            GraphicConsole.ClearBounds();
+            GraphicConsole.ClearColor();
+
+            drawBorder(mapBounds);
 
             if (DrawPlayerPosition)
             {
@@ -144,13 +146,26 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawFactions()
         {
-            GraphicConsole.Draw.PaintMode = Console.PaintModes.Add;
+            /*GraphicConsole.Draw.PaintMode = Console.PaintModes.Add;
             foreach (StarSystem system in systemList)
             {
                 Point relativePos = getScreenPosFromCoord(system.MapCoord);
                 GraphicConsole.SetColor(Color4.Transparent, Color4.Red);
                 GraphicConsole.Draw.Circle(relativePos.X, relativePos.Y, 8, ' ');
                 GraphicConsole.Draw.FillCircle(relativePos.X, relativePos.Y, 8, ' ');
+            }
+            GraphicConsole.Draw.PaintMode = Console.PaintModes.Default;*/
+
+            GraphicConsole.Draw.PaintMode = Console.PaintModes.Add;
+            foreach (Faction faction in Interface.GameManager.Factions)
+            {
+                foreach (Market market in faction.OwnedMarkets)
+                {
+                    Point relativePos = getScreenPosFromCoord(market.System.MapCoord);
+                    GraphicConsole.SetColor(Color4.Transparent, faction.RegionColor);
+                    //GraphicConsole.Draw.Circle(relativePos.X, relativePos.Y, 8, ' ');
+                    GraphicConsole.Draw.FillCircle(relativePos.X, relativePos.Y, 8, ' ');
+                }
             }
             GraphicConsole.Draw.PaintMode = Console.PaintModes.Default;
         }

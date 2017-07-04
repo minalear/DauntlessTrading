@@ -82,8 +82,6 @@ namespace SpaceTradingGame.Game
 
                 factions.Add(faction);
             }
-
-            return;
         }
 
         public void SetupGame(string playerName, string companyName, Ship ship)
@@ -92,6 +90,7 @@ namespace SpaceTradingGame.Game
             this.playerShip = ship;
 
             PlayerFaction = new Faction(companyName, true);
+            PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
             factions.Add(PlayerFaction);
         }
         public void SimulateGame(double days)
@@ -107,6 +106,7 @@ namespace SpaceTradingGame.Game
         }
 
         public List<StarSystem> Systems { get { return this.systems; } }
+        public List<Faction> Factions { get { return this.factions; } }
         public StarSystem CurrentSystem { get { return this.currentSystem; } set { this.currentSystem = value; } }
         public string PlayerName { get { return this.playerName; } set { this.playerName = value; } }
         public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }

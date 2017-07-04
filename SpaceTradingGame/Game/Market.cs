@@ -8,6 +8,7 @@ namespace SpaceTradingGame.Game
     {
         public Inventory MarketInventory { get; private set; }
         public Faction Owner { get; private set; }
+        public StarSystem System { get { return starSystem; } }
 
         public Market(StarSystem system, Faction owner)
         {

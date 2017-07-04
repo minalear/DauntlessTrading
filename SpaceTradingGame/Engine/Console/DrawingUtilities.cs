@@ -95,17 +95,11 @@ namespace SpaceTradingGame.Engine.Console
         }
         public void FillCircle(int xp, int yp, int r, char token)
         {
-            int y0 = yp - r;
-            int y1 = yp + r;
-            int x0 = xp - r;
-            int x1 = xp + r;
-
-            OpenTK.Vector2 center = new OpenTK.Vector2(xp, yp);
-            for (int y = y0; y <= y1; y++)
+            for (int x = xp - r; x < xp + r; x++)
             {
-                for (int x = x0; x <= x1; x++)
+                for (int y = yp - r; y < yp + r; y++)
                 {
-                    if (center.DistanceSqr(new OpenTK.Vector2(x, y)) < r * r)
+                    if ((x - xp) * (x - xp) + (y - yp) * (y - yp) < r * r)
                         Draw(x, y, token);
                 }
             }
