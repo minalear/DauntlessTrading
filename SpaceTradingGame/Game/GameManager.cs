@@ -19,6 +19,7 @@ namespace SpaceTradingGame.Game
         public GameManager()
         {
             //Init Factories
+            Factories.ProductFactory.Init();
             Factories.ModFactory.Init();
             Factories.ShipFactory.Init();
 
@@ -62,7 +63,7 @@ namespace SpaceTradingGame.Game
             {
                 Faction faction = Factories.FactionFactory.GenerateRandomFaction();
 
-                //Build markets and stations
+                //Build markets, stations, and factories
                 int numSystems = RNG.Next(3, 6);
                 for (int k = 0; k < numSystems; k++)
                 {
@@ -77,6 +78,10 @@ namespace SpaceTradingGame.Game
                     foreach (Planetoid planet in system.Planetoids)
                     {
                         planet.BuildStation(faction);
+
+                        //Try to build a factory
+                        Product product = Factories.ProductFactory.ProductList[RNG.Next(0, Factories.ProductFactory.ProductList.Length)];
+                        planet.BuildFactory(faction, product);
                     }
                 }
 
@@ -92,6 +97,8 @@ namespace SpaceTradingGame.Game
             PlayerFaction = new Faction(companyName, true);
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
             factions.Add(PlayerFaction);
+
+            SimulateGame(10.0);
         }
         public void SimulateGame(double days)
         {

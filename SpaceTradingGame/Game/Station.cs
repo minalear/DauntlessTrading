@@ -15,7 +15,7 @@ namespace SpaceTradingGame.Game
             Parent = parent;
             DrillRate = 1.0;
 
-            for (int i = 0; i < level; i++)
+            for (int i = 1; i < level; i++)
                 LevelUp();
 
             SetOwner(owner);
@@ -29,8 +29,15 @@ namespace SpaceTradingGame.Game
             {
                 double var = RNG.NextDouble(0.9, 1.1);
 
-                int amount = (int)(deposit.Density * var * DrillRate * 100.0);
-                Parent.System.SystemMarket.MarketInventory.AddItem(deposit.Material, amount);
+                double amount = (int)(deposit.Density * var * DrillRate * 100.0);
+
+                //Limit production based on existing resources at the market
+                double softCap = (int)(deposit.Material.Rarity * 100.0);
+                double stockMod = -(1.0 / softCap) * 
+                    (Parent.System.SystemMarket.MarketInventory.GetQuantity(deposit.Material) + amount) + 1.0;
+                amount = amount * stockMod;
+
+                Parent.System.SystemMarket.MarketInventory.AddItem(deposit.Material, (int)amount);
             }
         }
         public void LevelUp()

@@ -87,12 +87,15 @@
     <Compile Include="Game\Factories\FactionFactory.cs" />
     <Compile Include="Game\Factories\ModFactory.cs" />
     <Compile Include="Game\Factories\GalaxyFactory.cs" />
+    <Compile Include="Game\Factories\ProductFactory.cs" />
     <Compile Include="Game\Factories\ShipFactory.cs" />
+    <Compile Include="Game\Factory.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\Inventory.cs" />
     <Compile Include="Game\Item.cs" />
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Planetoid.cs" />
+    <Compile Include="Game\Product.cs" />
     <Compile Include="Game\Ship.cs" />
     <Compile Include="Game\ShipMod.cs" />
     <Compile Include="Game\ShipNode.cs" />

@@ -141,5 +141,5 @@ namespace SpaceTradingGame.Game
         #endregion
     }
 
-    public enum ItemTypes { RawMaterial, ShipMod, Other }
+    public enum ItemTypes { RawMaterial, ShipMod, Product, Other }
 }
