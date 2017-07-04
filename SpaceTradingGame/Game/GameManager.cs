@@ -80,8 +80,16 @@ namespace SpaceTradingGame.Game
                         planet.BuildStation(faction);
 
                         //Try to build a factory
-                        Product product = Factories.ProductFactory.ProductList[RNG.Next(0, Factories.ProductFactory.ProductList.Length)];
-                        planet.BuildFactory(faction, product);
+                        if (RNG.Next(0, 100) < 50)
+                        {
+                            Product product = Factories.ProductFactory.ProductList[RNG.Next(0, Factories.ProductFactory.ProductList.Length)];
+                            planet.BuildFactory(faction, product);
+                        }
+                        else
+                        {
+                            Blueprint blueprint = new Blueprint(Factories.ModFactory.ModList[RNG.Next(0, Factories.ModFactory.ModList.Length)]);
+                            planet.BuildFactory(faction, blueprint);
+                        }
                     }
                 }
 

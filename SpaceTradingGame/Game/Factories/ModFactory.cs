@@ -33,11 +33,17 @@ namespace SpaceTradingGame.Game.Factories
             BasicWarpCore.Name = "Earl's Warp Core";
             BasicWarpCore.Description = "Scavenged from Earl's backyard, this Warp Core design is the very basic warp design that provides very minimal jump ranges and poor fuel efficiency.";
             BasicWarpCore.JumpMod = 650;
+
+            ModList = new ShipMod[] {
+                MaverickCockpitI, EuripidesWarpCore, BasicCockpit, BasicCargoBay, BasicWarpCore
+            };
         }
 
         public static ShipMod MaverickCockpitI;
         public static ShipMod EuripidesWarpCore;
 
         public static ShipMod BasicCockpit, BasicCargoBay, BasicWarpCore;
+
+        public static ShipMod[] ModList;
     }
 }

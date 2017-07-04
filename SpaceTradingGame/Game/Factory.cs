@@ -36,7 +36,7 @@ namespace SpaceTradingGame.Game
             }
 
             //Build product
-            market.MarketInventory.AddItem(MainProduction, MainProduction.UnitsProducted);
+            market.MarketInventory.AddItem(MainProduction.Produces(), MainProduction.UnitsProducted);
         }
 
         public void SetOwner(Faction owner)

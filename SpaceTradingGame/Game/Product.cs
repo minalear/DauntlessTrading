@@ -58,6 +58,8 @@ namespace SpaceTradingGame.Game
             return true;
         }
 
+        public virtual Item Produces() { return this; }
+
         public struct RequirementInfo
         {
             public Item Item { get; set; }
