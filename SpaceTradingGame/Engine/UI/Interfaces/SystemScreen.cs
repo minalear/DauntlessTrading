@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
-using SpaceTradingGame.Engine.UI.Controls.Custom;
 using SpaceTradingGame.Game;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
@@ -28,11 +26,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.ChangeInterface("Trading");
             };
 
-            buildButton = new Button(null, "Build", 0, GraphicConsole.BufferHeight - 3);
+            buildButton = new Button(null, "Build", 9, GraphicConsole.BufferHeight - 3);
             buildButton.Click += (sender, e) =>
             {
-                GameManager.CurrentSystem.BuildMarket(GameManager.PlayerFaction);
-                InterfaceManager.ChangeInterface("System"); //Hack to trigger OnEnable
+                //GameManager.CurrentSystem.BuildMarket(GameManager.PlayerFaction);
+                //InterfaceManager.ChangeInterface("System"); //Hack to trigger OnEnable
+
+                InterfaceManager.ChangeInterface("Build");
             };
 
             RegisterControl(controlGroup);
@@ -56,7 +56,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             }
 
             marketButton.IsVisible = GameManager.CurrentSystem.HasMarket;
-            buildButton.IsVisible = !marketButton.IsVisible;
+            //buildButton.IsVisible = !marketButton.IsVisible;
 
             base.OnEnable();
         }
