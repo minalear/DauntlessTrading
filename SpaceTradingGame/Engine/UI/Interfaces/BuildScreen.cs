@@ -100,7 +100,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             foreach (Factory factory in planet.Factories)
             {
-                description.AppendFormat("Has a factory owned by {0}.  It produces {1}.", 
+                description.AppendFormat("Has a factory owned by {0}.  It produces {1}.\n", 
                     factory.Owner.Name, factory.MainProduction.Name);
             }
 

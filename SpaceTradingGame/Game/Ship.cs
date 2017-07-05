@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK;
 
 namespace SpaceTradingGame.Game
 {
@@ -26,6 +24,7 @@ namespace SpaceTradingGame.Game
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
+            this.WorldPosition = Vector2.Zero;
 
             this.ListText = shipModel;
         }
@@ -36,6 +35,7 @@ namespace SpaceTradingGame.Game
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
+            this.WorldPosition = Vector2.Zero;
 
             this.ListText = shipModel;
         }
@@ -105,5 +105,6 @@ namespace SpaceTradingGame.Game
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
         public Faction Faction { get; set; }
+        public Vector2 WorldPosition { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace SpaceTradingGame.Game
 
             systems = new List<StarSystem>();
             factions = new List<Faction>();
+            Ships = new List<Ship>();
 
             //Sol System
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
@@ -63,7 +64,7 @@ namespace SpaceTradingGame.Game
             {
                 Faction faction = Factories.FactionFactory.GenerateRandomFaction();
 
-                //Build markets, stations, and factories
+                //Build markets, stations, and factories.  Add ships.
                 int numSystems = RNG.Next(3, 6);
                 for (int k = 0; k < numSystems; k++)
                 {
@@ -93,6 +94,14 @@ namespace SpaceTradingGame.Game
                     }
                 }
 
+                //Add a number of ships
+                int numShips = RNG.Next(4, 8);
+                for (int k = 0; i < numShips; i++)
+                {
+                    Ship ship = new Ship(Factories.GalaxyFactory.GetRandomPlanetName(7), "Template");
+                    faction.OwnedShips.Add(ship); //They all appear at Sol atm
+                }
+
                 factions.Add(faction);
             }
         }
@@ -104,6 +113,7 @@ namespace SpaceTradingGame.Game
 
             PlayerFaction = new Faction(companyName, true);
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
+            PlayerFaction.OwnedShips.Add(playerShip);
             factions.Add(PlayerFaction);
 
             SimulateGame(10.0);
@@ -122,6 +132,7 @@ namespace SpaceTradingGame.Game
 
         public List<StarSystem> Systems { get { return this.systems; } }
         public List<Faction> Factions { get { return this.factions; } }
+        public List<Ship> Ships { get; private set; }
         public StarSystem CurrentSystem { get { return this.currentSystem; } set { this.currentSystem = value; } }
         public string PlayerName { get { return this.playerName; } set { this.playerName = value; } }
         public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }

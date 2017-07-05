@@ -4,7 +4,7 @@ using OpenTK.Graphics;
 
 namespace SpaceTradingGame.Game
 {
-    public class Faction
+    public class Faction : SpaceTradingGame.Engine.UI.Controls.ListItem
     {
         public string Name { get; private set; }
         public bool PlayerOwned { get; private set; }
@@ -26,6 +26,8 @@ namespace SpaceTradingGame.Game
             OwnedMarkets = new List<Market>();
             OwnedStations = new List<Station>();
             OwnedFactories = new List<Factory>();
+
+            ListText = Name;
         }
         public Faction(string name, bool playerOwned)
         {
@@ -36,6 +38,8 @@ namespace SpaceTradingGame.Game
             OwnedMarkets = new List<Market>();
             OwnedStations = new List<Station>();
             OwnedFactories = new List<Factory>();
+
+            ListText = Name;
         }
 
         public void MergeFactions(Faction owner, Faction subsidiary)

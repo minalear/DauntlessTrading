@@ -48,6 +48,7 @@ namespace SpaceTradingGame.Engine.UI
             this.interfaces.Add("System", new SystemScreen(this));
             this.interfaces.Add("Trading", new TradingScreen(this));
             this.interfaces.Add("Build", new BuildScreen(this));
+            this.interfaces.Add("Stock", new StockMarketScreen(this));
             
             ChangeInterface("NewGame");
         }

@@ -80,6 +80,7 @@
     <Compile Include="Engine\UI\Interfaces\NewGameScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\ShipScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
+    <Compile Include="Engine\UI\Interfaces\StockMarketScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\SystemScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TradingScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />

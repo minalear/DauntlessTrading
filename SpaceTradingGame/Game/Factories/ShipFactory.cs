@@ -4,6 +4,9 @@ namespace SpaceTradingGame.Game.Factories
 {
     public static class ShipFactory
     {
+        //FIX: Need to make it so new ships are "built" rather than reference these objects
+        //So not everyone is flying the same ship...
+
         public static void Init()
         {
             //Basic ship setup
