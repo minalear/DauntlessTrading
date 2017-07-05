@@ -19,7 +19,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             factionList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
 
             //Textboxes
-            descriptionBox = new TextBox(null, 23, 3, 55, 23);
+            descriptionBox = new TextBox(null, 23, 3, 65, 23);
             descriptionBox.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
 
             //Buttons

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace SpaceTradingGame.Game
 {
-    public class ShipNode
+    public class ShipNode : ICloneable
     {
         public Point Location { get; set; }
         public ShipMod Modification { get; set; }
@@ -23,6 +23,12 @@ namespace SpaceTradingGame.Game
         {
             Empty = false;
             Modification = mod;
+        }
+
+        public object Clone()
+        {
+            if (Empty) return new ShipNode(X, Y, ModType);
+            return new ShipNode(X, Y, Modification);
         }
     }
 }

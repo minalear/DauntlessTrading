@@ -96,9 +96,10 @@ namespace SpaceTradingGame.Game
 
                 //Add a number of ships
                 int numShips = RNG.Next(4, 8);
-                for (int k = 0; i < numShips; i++)
+                for (int k = 0; k < numShips; k++)
                 {
-                    Ship ship = new Ship(Factories.GalaxyFactory.GetRandomPlanetName(7), "Template");
+                    Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
+                    ship.Name = Factories.ShipFactory.GenerateRandomShipName();
                     faction.OwnedShips.Add(ship); //They all appear at Sol atm
                 }
 

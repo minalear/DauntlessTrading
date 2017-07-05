@@ -4,7 +4,7 @@ using OpenTK;
 
 namespace SpaceTradingGame.Game
 {
-    public class Ship : Engine.UI.Controls.ListItem
+    public class Ship : Engine.UI.Controls.ListItem, ICloneable
     {
         private string shipName;
         private string shipModel;
@@ -94,6 +94,22 @@ namespace SpaceTradingGame.Game
         {
             return string.Format("== {0} ==\nFire: {1}\nDfns: {2}\nCargo: {3}\nJump: {4}", 
                 shipModel, firePower, defenseRating, cargoCapacity, baseJumpRadius);
+        }
+
+        public object Clone()
+        {
+            Ship newShip = new Ship(Name, Model);
+            foreach (ShipNode node in Nodes)
+            {
+                ShipNode newNode = (ShipNode)node.Clone();
+                newNode.Empty = false;
+                newNode.Modification = node.Modification;
+
+                newShip.Nodes.Add(newNode);
+            }
+
+            newShip.UpdateShipStats();
+            return newShip;
         }
 
         public string Name { get { return shipName; } set { shipName = value; } }
