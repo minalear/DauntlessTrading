@@ -90,6 +90,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             starMap.Selected += (sender, e) =>
             {
+                starMap.SetPath(GameManager.Pathfinder.FindPath(GameManager.CurrentSystem, e, GameManager.PlayerShip));
                 updateScreenInformation();
                 InterfaceManager.DrawStep();
             };

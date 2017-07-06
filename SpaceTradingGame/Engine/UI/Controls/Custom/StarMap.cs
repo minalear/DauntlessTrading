@@ -88,6 +88,10 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             mapOffset.X += x;
             mapOffset.Y += y;
         }
+        public void SetPath(List<StarSystem> path)
+        {
+            this.path = path;
+        }
         public StarSystem[] GetTravelPath()
         {
             return path.ToArray();
@@ -124,7 +128,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             HasSystemSelected = systemFound;
             if (drawSelectedSystem)
             {
-                plotPath();
                 this.Selected?.Invoke(this, SelectedSystem);
             }
 
@@ -146,16 +149,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawFactions()
         {
-            /*GraphicConsole.Draw.PaintMode = Console.PaintModes.Add;
-            foreach (StarSystem system in systemList)
-            {
-                Point relativePos = getScreenPosFromCoord(system.MapCoord);
-                GraphicConsole.SetColor(Color4.Transparent, Color4.Red);
-                GraphicConsole.Draw.Circle(relativePos.X, relativePos.Y, 8, ' ');
-                GraphicConsole.Draw.FillCircle(relativePos.X, relativePos.Y, 8, ' ');
-            }
-            GraphicConsole.Draw.PaintMode = Console.PaintModes.Default;*/
-
             GraphicConsole.Draw.PaintMode = Console.PaintModes.Add;
             foreach (Faction faction in Interface.GameManager.Factions)
             {
@@ -163,7 +156,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 {
                     Point relativePos = getScreenPosFromCoord(market.System.MapCoord);
                     GraphicConsole.SetColor(Color4.Transparent, faction.RegionColor);
-                    //GraphicConsole.Draw.Circle(relativePos.X, relativePos.Y, 8, ' ');
                     GraphicConsole.Draw.FillCircle(relativePos.X, relativePos.Y, 8, ' ');
                 }
             }
@@ -212,99 +204,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
                 GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '∙');
             }
-
-            GraphicConsole.SetColor(Color4.Blue, Color4.Black);
-            for (int i = 0; i < newPath.Count - 1; i++)
-            {
-                Point a = getScreenPosFromCoord(newPath[i].MapCoord);
-                Point b = getScreenPosFromCoord(newPath[i + 1].MapCoord);
-
-                GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '∙');
-            }
-
             GraphicConsole.ClearColor();
-        }
-        private void plotPath()
-        {
-            if (!drawSelectedSystem)
-            {
-                path.Clear();
-            }
-            else
-            {
-                path.Clear();
-                path.Add(currentSystem);
-
-                StarSystem currentNode = currentSystem;
-                StarSystem testNode = selectedSystem;
-                StarSystem target = selectedSystem;
-
-                List<StarSystem> ignoredSystems = new List<StarSystem>();
-
-                bool final = false;
-                while (!final)
-                {
-                    //Find closest system
-                    for (int i = 0; i < systemList.Count; i++)
-                    {
-                        if (systemList[i].Equals(currentNode)) continue;
-                        if (ignoredSystems.Contains(systemList[i])) continue;
-
-                        if (currentNode.Coordinates.Distance(systemList[i].Coordinates) <
-                            currentNode.Coordinates.Distance(testNode.Coordinates))
-                        {
-                            testNode = systemList[i];
-                        }
-                    }
-
-                    //Check if closest node is target
-                    if (testNode.Equals(target))
-                        break;
-
-                    //Check if node gets closer to target
-                    if (testNode.Coordinates.Distance(target.Coordinates) <
-                        currentNode.Coordinates.Distance(target.Coordinates))
-                    {
-                        path.Add(testNode);
-                        currentNode = testNode;
-
-                        ignoredSystems.Clear();
-                    }
-                    else
-                    {
-                        ignoredSystems.Add(testNode);
-                        testNode = target;
-                    }
-                }
-
-                path.Add(target);
-            }
-
-            //Optimize Path
-            List<StarSystem> optimalPath = new List<StarSystem>();
-
-            double jumpRange = Interface.GameManager.PlayerShip.BaseJumpRadius;
-            optimalPath.Add(path[0]);
-
-            for (int i = 0; i < path.Count; i++)
-            {
-                for (int j = path.Count - 1; j >= 0; j--)
-                {
-                    double dist = path[i].Coordinates.Distance(path[j].Coordinates);
-                    if (path[i].Coordinates.Distance(path[j].Coordinates) <= jumpRange)
-                    {
-                        i = j;
-                        optimalPath.Add(path[i]);
-
-                        break;
-                    }
-                }
-            }
-
-            path.Clear();
-            path = optimalPath;
-
-            newPath = Interface.GameManager.Pathfinder.FindPath(currentSystem, selectedSystem, Interface.GameManager.PlayerShip);
         }
 
         private Point getScreenPosFromCoord(Point coord)
