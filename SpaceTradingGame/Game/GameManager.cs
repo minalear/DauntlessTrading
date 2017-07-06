@@ -91,7 +91,7 @@ namespace SpaceTradingGame.Game
                 }
 
                 //Add a number of ships
-                int numShips = /*RNG.Next(4, 8);*/ 0;
+                int numShips = RNG.Next(100, 120);
                 for (int k = 0; k < numShips; k++)
                 {
                     Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
