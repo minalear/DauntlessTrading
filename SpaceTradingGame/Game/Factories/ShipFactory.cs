@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game.Factories
 {
@@ -51,6 +53,43 @@ namespace SpaceTradingGame.Game.Factories
             for (int i = 0; i < ShipBlueprints.Length; i++)
                 ShipBlueprints[i].UpdateShipStats();
         }
+        public static Ship ConstructNewShip(string model)
+        {
+            foreach (Ship ship in ShipBlueprints)
+            {
+                if (ship.Model == model)
+                {
+                    return (Ship)ship.Clone();
+                }
+            }
+
+            throw new ArgumentException(string.Format("Invalid model type: {0}.", model));
+        }
+        public static string GenerateRandomShipName()
+        {
+            StringBuilder name = new StringBuilder();
+            if (RNG.Next(0, 100) < 90) name.Append("The ");
+
+            if (RNG.Next(0, 100) < 75)
+            {
+                name.Append(Adjectives[RNG.Next(0, Adjectives.Length)]);
+                name.Append(" ");
+            }
+            name.Append(Nouns[RNG.Next(0, Nouns.Length)]);
+
+            return name.ToString();
+        }
+
+        private static string[] Adjectives = new string[] {
+            "Angry", "Marvelous", "Miserly", "Watchman's", "Official", "Fearful", "Ravenous", "Dystopian",
+            "Mad", "Enchanted", "Dishonorable", "Corporeal", "Incorporeal", "Enchanted", "Traveling",
+            "Philosophical", "Harmonios", "Boisterous", "Grim", "Boastful", "Impossible", "Possible"
+        };
+        private static string[] Nouns = new string[] {
+            "Disease", "Federation", "Enterprise", "Summoner", "Forest", "Wench", "Imposter", "Sojourner",
+            "Beastmaster", "Ghost", "Panda", "Paladin", "Archmage", "Saint", "Valkyrie", "Knight",
+            "Seraphim", "Raider", "Blacksmith", "Horizon", "Murderer", "Cleric", "Hoard", "Boat"
+        };
 
         public static Ship MaverickMkI;
         public static Ship MaverickMkII;

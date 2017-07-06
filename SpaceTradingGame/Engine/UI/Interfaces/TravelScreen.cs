@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
@@ -20,8 +20,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             starMap.Size = new System.Drawing.Point(74, 33);
 
             systemTitle = new Title(null, "Current System", 87, 1, Title.TextAlignModes.Center);
-            systemDesc = new TextBox(null, 76, 3, 23, 15);
-            systemDesc.FillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
+            systemDescriptionBox = new TextBox(null, 76, 3, 23, 15);
+            systemDescriptionBox.FillColor = new Color4(0.15f, 0.15f, 0.15f, 1f);
 
             up = new Button(null, "▲", 87, 30);
             down = new Button(null, "▼", 87, 34);
@@ -31,8 +31,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             systemButton = new Button(null, "System", 76, 27);
             travelButton = new Button(null, "Travel", 76, 30);
             cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
+            stockButton = new Button(null, "Stock", GraphicConsole.BufferWidth - 7, 30);
 
-            travelManager = new TravelManager(starMap);
+            travelManager = new TravelManager(GameManager, starMap);
             screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
 
             clock = new Clock(null, 10, 5);
@@ -81,9 +82,15 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 if (!travelManager.IsTraveling)
                     InterfaceManager.ChangeInterface("Ship");
             };
+            stockButton.Click += (sender, e) =>
+            {
+                if (!travelManager.IsTraveling)
+                    InterfaceManager.ChangeInterface("Stock");
+            };
 
             starMap.Selected += (sender, e) =>
             {
+                starMap.SetPath(GameManager.Pathfinder.FindPath(GameManager.CurrentSystem, e, GameManager.PlayerShip));
                 updateScreenInformation();
                 InterfaceManager.DrawStep();
             };
@@ -120,7 +127,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             #region ControlRegister
             RegisterControl(screenTitle);
             RegisterControl(systemTitle);
-            RegisterControl(systemDesc);
+            RegisterControl(systemDescriptionBox);
             RegisterControl(starMap);
             RegisterControl(up);
             RegisterControl(down);
@@ -132,6 +139,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(travelButton);
             RegisterControl(systemButton);
             RegisterControl(cargoButton);
+            RegisterControl(stockButton);
             RegisterControl(clock);
             #endregion
         }
@@ -171,32 +179,45 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             StarSystem infoSystem = (starMap.HasSystemSelected) ? starMap.SelectedSystem : GameManager.CurrentSystem;
             systemTitle.Text = infoSystem.Name;
 
-            string desc = "";
-            foreach (Game.Planetoid planet in infoSystem.Planetoids)
+            StringBuilder systemDescription = new StringBuilder();
+            if (infoSystem.Planetoids.Count == 0)
+                systemDescription.AppendLine("No planets.");
+            else
             {
-                desc += planet.Name + "\n";
+                foreach (Planetoid planet in infoSystem.Planetoids)
+                {
+                    systemDescription.AppendLine(planet.Name);
+                }
             }
 
-            systemDesc.Text = desc;
+            systemDescription.Append("-\n");
+
+            if (infoSystem.HasMarket)
+                systemDescription.AppendFormat("System market owned by {0}.", infoSystem.SystemMarket.Owner.Name);
+            else
+                systemDescription.Append("No system market.");
+
+            systemDescriptionBox.Text = systemDescription.ToString(); ;
         }
 
         private TravelManager travelManager;
 
         private Title screenTitle, systemTitle;
-        private TextBox systemDesc;
+        private TextBox systemDescriptionBox;
         private Button up, down, left, right;
         private Button playButton, fasterButton, slowerButton;
-        private Button travelButton, systemButton, cargoButton;
+        private Button travelButton, systemButton, cargoButton, stockButton;
         private StarMap starMap;
         private Clock clock;
     }
 
     public class TravelManager
     {
+        private GameManager gameManager;
+
         private StarMap starMap;
         private StarSystem[] travelPath;
-
-        private Vector2 playerPosition;
+        
         private int currentNode, nextNode;
         private Vector2 travelVector;
 
@@ -206,15 +227,16 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public float MoveSpeed = 450.0f;
         public bool IsTraveling = false;
 
-        public TravelManager(StarMap map)
+        public TravelManager(GameManager manager, StarMap map)
         {
+            gameManager = manager;
             starMap = map;
         }
 
         public void SetTravelPath(StarSystem[] systemPath)
         {
             travelPath = systemPath;
-            playerPosition = systemPath[0].Coordinates;
+            gameManager.PlayerShip.WorldPosition = systemPath[0].Coordinates;
 
             currentNode = 0;
             nextNode = 1;
@@ -246,7 +268,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     timer = 0.0;
                     currentNode++;
                     nextNode = (nextNode + 1 != travelPath.Length) ? nextNode + 1 : nextNode;
-                    playerPosition = travelPath[currentNode].Coordinates;
+                    gameManager.PlayerShip.WorldPosition = travelPath[currentNode].Coordinates;
 
                     updateVectors();
                 }
@@ -254,8 +276,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         }
         public void UpdatePlayerPosition(float elapsed)
         {
-            playerPosition += Vector2.Multiply(travelVector, MoveSpeed * elapsed);
-            starMap.SetPlayerPosition(playerPosition);
+            gameManager.PlayerShip.WorldPosition += Vector2.Multiply(travelVector, MoveSpeed * elapsed);
+            starMap.SetPlayerPosition(gameManager.PlayerShip.WorldPosition);
         }
 
         private void updateVectors()

@@ -28,7 +28,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             companyNameInput = new InputBox(null, 12, 6, 20);
             companyNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
-            companyNameInput.Text = "Comey Shipping Inc.";
+            companyNameInput.Text = "Comey Shipping Inc";
 
             shipSelectionList = new ScrollingList(null, 1, 9, 22, 19);
             shipSelectionList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);

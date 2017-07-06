@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK;
 
 namespace SpaceTradingGame.Game
 {
-    public class Ship : Engine.UI.Controls.ListItem
+    public class Ship : Engine.UI.Controls.ListItem, ICloneable
     {
         private string shipName;
         private string shipModel;
@@ -26,6 +24,7 @@ namespace SpaceTradingGame.Game
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
+            this.WorldPosition = Vector2.Zero;
 
             this.ListText = shipModel;
         }
@@ -36,6 +35,7 @@ namespace SpaceTradingGame.Game
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
+            this.WorldPosition = Vector2.Zero;
 
             this.ListText = shipModel;
         }
@@ -96,6 +96,22 @@ namespace SpaceTradingGame.Game
                 shipModel, firePower, defenseRating, cargoCapacity, baseJumpRadius);
         }
 
+        public object Clone()
+        {
+            Ship newShip = new Ship(Name, Model);
+            foreach (ShipNode node in Nodes)
+            {
+                ShipNode newNode = (ShipNode)node.Clone();
+                newNode.Empty = false;
+                newNode.Modification = node.Modification;
+
+                newShip.Nodes.Add(newNode);
+            }
+
+            newShip.UpdateShipStats();
+            return newShip;
+        }
+
         public string Name { get { return shipName; } set { shipName = value; } }
         public string Model { get { return shipModel; } set { shipModel = value; } }
         public int FirePower { get { return this.firePower; } set { this.firePower = value; } }
@@ -104,5 +120,7 @@ namespace SpaceTradingGame.Game
         public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
+        public Faction Faction { get; set; }
+        public Vector2 WorldPosition { get; set; }
     }
 }
