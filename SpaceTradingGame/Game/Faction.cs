@@ -68,9 +68,10 @@ namespace SpaceTradingGame.Game
             {
                 if (!ship.Pilot.IsTraveling)
                 {
-                    ship.Pilot.MoveTo(ship.Pilot.GameManager.Systems[RNG.Next(0, ship.Pilot.GameManager.Systems.Count)]);
+                    if (!ship.Pilot.IsPlayer)
+                        ship.Pilot.MoveTo(ship.Pilot.GameManager.Systems[RNG.Next(0, ship.Pilot.GameManager.Systems.Count)]);
                 }
-                else if (!ship.Pilot.IsPlayer)
+                else
                 {
                     ship.Pilot.Update(days);
                 }

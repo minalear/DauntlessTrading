@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OpenTK;
 using SpaceTradingGame.Engine;
 
@@ -40,6 +41,7 @@ namespace SpaceTradingGame.Game
                 if (currentNode == nextNode)
                 {
                     IsTraveling = false;
+                    Finished?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
@@ -53,7 +55,11 @@ namespace SpaceTradingGame.Game
         }
         public void MoveTo(StarSystem system)
         {
-            flightPath = GameManager.Pathfinder.FindPath(Ship.CurrentSystem, system, Ship);
+            MoveAlongPath(GameManager.Pathfinder.FindPath(Ship.CurrentSystem, system, Ship));
+        }
+        public void MoveAlongPath(List<StarSystem> path)
+        {
+            flightPath = path;
             IsTraveling = true;
             timer = 0.0;
 
@@ -61,6 +67,10 @@ namespace SpaceTradingGame.Game
             nextNode = 1;
 
             updateVectors();
+        }
+        public StarSystem[] GetTravelPath()
+        {
+            return flightPath.ToArray();
         }
 
         private void updateVectors()
@@ -71,6 +81,9 @@ namespace SpaceTradingGame.Game
             float dist = flightPath[currentNode].Coordinates.Distance(flightPath[nextNode].Coordinates);
             timeToNextNode = dist / Ship.MoveSpeed;
         }
+
+        public delegate void FinishedTravelingEvent(object sender, EventArgs e);
+        public event FinishedTravelingEvent Finished;
 
         private List<StarSystem> flightPath;
         private int currentNode = 0, nextNode = 1;
