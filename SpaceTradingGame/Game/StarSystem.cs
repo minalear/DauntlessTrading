@@ -35,10 +35,10 @@ namespace SpaceTradingGame.Game
             this.ListText = Name;
         }
 
-        public void UpdateStarSystem()
+        public void UpdateStarSystem(double days)
         {
             foreach (Planetoid planet in Planetoids)
-                planet.UpdatePlanetoid();
+                planet.UpdatePlanetoid(days);
         }
         public void BuildMarket(Faction owner)
         {

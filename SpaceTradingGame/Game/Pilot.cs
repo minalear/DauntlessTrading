@@ -35,7 +35,6 @@ namespace SpaceTradingGame.Game
             if (timer >= timeToNextNode)
             {
                 Ship.SetCurrentSystem(flightPath[nextNode]);
-                updateVectors();
 
                 //Travel finished
                 if (currentNode == nextNode)
@@ -47,6 +46,8 @@ namespace SpaceTradingGame.Game
                     timer = 0.0;
                     currentNode++;
                     nextNode = (nextNode + 1 != flightPath.Count) ? nextNode + 1 : nextNode;
+
+                    updateVectors();
                 }
             }
         }
@@ -55,6 +56,9 @@ namespace SpaceTradingGame.Game
             flightPath = GameManager.Pathfinder.FindPath(Ship.CurrentSystem, system, Ship);
             IsTraveling = true;
             timer = 0.0;
+
+            currentNode = 0;
+            nextNode = 1;
 
             updateVectors();
         }

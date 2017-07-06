@@ -22,21 +22,29 @@ namespace SpaceTradingGame.Game
             SetProduct(product);
         }
 
-        public void UpdateFactory()
+        public void UpdateFactory(double days)
         {
-            Market market = Paret.System.SystemMarket;
+            dayTimer += days;
 
-            if (!Paret.System.HasMarket) return;
-            if (!MainProduction.CanProduce(market.MarketInventory, true)) return;
-
-            foreach (Product.RequirementInfo req in MainProduction.Requirements)
+            while (dayTimer >= 1.0)
             {
-                //Subtract materials from market inventory (later bill faction)
-                market.MarketInventory.RemoveItem(req.Item, req.Quantity);
-            }
+                Market market = Paret.System.SystemMarket;
 
-            //Build product
-            market.MarketInventory.AddItem(MainProduction.Produces(), MainProduction.UnitsProducted);
+                if (!Paret.System.HasMarket) return;
+                if (!MainProduction.CanProduce(market.MarketInventory, true)) return;
+
+                foreach (Product.RequirementInfo req in MainProduction.Requirements)
+                {
+                    //Subtract materials from market inventory (later bill faction)
+                    market.MarketInventory.RemoveItem(req.Item, req.Quantity);
+                }
+
+                //Build product
+                market.MarketInventory.AddItem(MainProduction.Produces(), MainProduction.UnitsProducted);
+
+                //Subtract 1.0 days
+                dayTimer -= 1.0;
+            }
         }
 
         public void SetOwner(Faction owner)
@@ -53,5 +61,7 @@ namespace SpaceTradingGame.Game
         {
             MainProduction = product;
         }
+
+        private double dayTimer = 0.0;
     }
 }

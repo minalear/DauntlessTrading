@@ -137,7 +137,7 @@ namespace SpaceTradingGame.Game
             foreach (StarSystem system in Systems)
             {
                 for (int i = 0; i < _days; i++)
-                    system.UpdateStarSystem();
+                    system.UpdateStarSystem(days);
             }
             foreach (Faction faction in Factions)
             {

@@ -21,7 +21,7 @@ namespace SpaceTradingGame.Game
             SetOwner(owner);
         }
 
-        public void UpdateSpaceStation()
+        public void UpdateSpaceStation(double days)
         {
             if (!Parent.System.HasMarket) return;
 
@@ -29,7 +29,7 @@ namespace SpaceTradingGame.Game
             {
                 double var = RNG.NextDouble(0.9, 1.1);
 
-                double amount = (int)(deposit.Density * var * DrillRate * 100.0);
+                double amount = deposit.Density * var * DrillRate * days * 100.0;
 
                 //Limit production based on existing resources at the market
                 double softCap = (int)(deposit.Material.Rarity * 100.0);
