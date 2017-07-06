@@ -97,11 +97,12 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             clock.TimerLapse += (sender, e) =>
             {
-                GameManager.SimulateGame(1.0);
+                //GameManager.SimulateGame(1.0);
                 screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
             };
             clock.TimerTick += (sender, e) =>
             {
+                GameManager.SimulateGame(0.1);
                 if (travelManager.IsTraveling)
                 {
                     travelManager.SimulateTravel(0.1);

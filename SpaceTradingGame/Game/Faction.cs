@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK.Graphics;
+using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
@@ -61,9 +62,19 @@ namespace SpaceTradingGame.Game
             subsidiary.OwnedShips.Clear();
             subsidiary.OwnedFactories.Clear();
         }
-        public void UpdateFaction()
+        public void UpdateFaction(double days)
         {
-
+            foreach (Ship ship in OwnedShips)
+            {
+                if (!ship.Pilot.IsTraveling)
+                {
+                    ship.Pilot.MoveTo(ship.Pilot.GameManager.Systems[RNG.Next(0, ship.Pilot.GameManager.Systems.Count)]);
+                }
+                else
+                {
+                    ship.Pilot.Update(days);
+                }
+            }
         }
 
         public override string ToString()

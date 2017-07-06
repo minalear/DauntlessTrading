@@ -47,6 +47,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
             if (drawSelectedSystem)
                 drawPaths();
+            drawShips();
             drawSystems();
             drawFactions();
 
@@ -205,6 +206,16 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '∙');
             }
             GraphicConsole.ClearColor();
+        }
+        private void drawShips()
+        {
+            foreach (Ship ship in Interface.GameManager.Ships)
+            {
+                Point point = getScreenPosFromCoord(getCoordFromWorldPos(ship.WorldPosition));
+
+                GraphicConsole.SetColor(Color4.Blue, Color4.Black);
+                GraphicConsole.Put('.', point);
+            }
         }
 
         private Point getScreenPosFromCoord(Point coord)

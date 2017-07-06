@@ -22,6 +22,8 @@ namespace SpaceTradingGame.Game
             this.shipName = "Name";
             this.shipModel = "Maverick Class I";
 
+            this.MoveSpeed = 450f;
+
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
             this.WorldPosition = Vector2.Zero;
@@ -32,6 +34,8 @@ namespace SpaceTradingGame.Game
         {
             this.shipName = name;
             this.shipModel = model;
+
+            this.MoveSpeed = 450f;
 
             this.shipInventory = new Inventory();
             this.nodes = new List<ShipNode>();
@@ -89,6 +93,16 @@ namespace SpaceTradingGame.Game
                 }
             }
         }
+        public void SetCurrentSystem(StarSystem system)
+        {
+            WorldPosition = system.Coordinates;
+            CurrentSystem = system;
+        }
+        public void SetPilot(Pilot pilot)
+        {
+            Pilot = pilot;
+            Faction = pilot.Faction;
+        }
 
         public override string ToString()
         {
@@ -118,9 +132,12 @@ namespace SpaceTradingGame.Game
         public int DefenseRating { get { return this.defenseRating; } set { this.defenseRating = value; } }
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
         public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
+        public float MoveSpeed { get; set; }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
+        public Pilot Pilot { get; private set; }
         public Faction Faction { get; set; }
         public Vector2 WorldPosition { get; set; }
+        public StarSystem CurrentSystem { get; private set; }
     }
 }

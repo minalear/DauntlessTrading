@@ -101,7 +101,12 @@ namespace SpaceTradingGame.Game
                 {
                     Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
                     ship.Name = Factories.ShipFactory.GenerateRandomShipName();
+
+                    ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
+                    ship.SetCurrentSystem(Systems[0]);
+
                     faction.OwnedShips.Add(ship); //They all appear at Sol atm
+                    Ships.Add(ship);
                 }
 
                 factions.Add(faction);
@@ -115,10 +120,14 @@ namespace SpaceTradingGame.Game
 
             PlayerFaction = new Faction(companyName, true);
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
+
+            playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
+            PlayerShip.SetCurrentSystem(CurrentSystem);
+
             PlayerFaction.OwnedShips.Add(playerShip);
             factions.Add(PlayerFaction);
 
-            SimulateGame(10.0);
+            //SimulateGame(10.0);
         }
         public void SimulateGame(double days)
         {
@@ -129,6 +138,10 @@ namespace SpaceTradingGame.Game
             {
                 for (int i = 0; i < _days; i++)
                     system.UpdateStarSystem();
+            }
+            foreach (Faction faction in Factions)
+            {
+                faction.UpdateFaction(days);
             }
         }
 

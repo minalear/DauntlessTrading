@@ -1,0 +1,77 @@
+﻿using System.Collections.Generic;
+using OpenTK;
+using SpaceTradingGame.Engine;
+
+namespace SpaceTradingGame.Game
+{
+    public class Pilot
+    {
+        public GameManager GameManager { get; private set; }
+
+        public string Name { get; private set; }
+        public Faction Faction { get; private set; }
+        public Ship Ship { get; private set; }
+        public bool IsPlayer { get; private set; }
+        public bool IsTraveling { get; private set; }
+
+        public Pilot(GameManager manager, string name, Faction faction, Ship ship, bool isPlayer = false)
+        {
+            GameManager = manager;
+
+            Name = name;
+            Faction = faction;
+            Ship = ship;
+            IsPlayer = isPlayer;
+            IsTraveling = false;
+        }
+
+        public void Update(double days)
+        {
+            if (!IsTraveling) return;
+
+            Ship.WorldPosition += Vector2.Multiply(travelVector, (float)days * Ship.MoveSpeed);
+
+            timer += days;
+            if (timer >= timeToNextNode)
+            {
+                Ship.SetCurrentSystem(flightPath[nextNode]);
+                updateVectors();
+
+                //Travel finished
+                if (currentNode == nextNode)
+                {
+                    IsTraveling = false;
+                }
+                else
+                {
+                    timer = 0.0;
+                    currentNode++;
+                    nextNode = (nextNode + 1 != flightPath.Count) ? nextNode + 1 : nextNode;
+                }
+            }
+        }
+        public void MoveTo(StarSystem system)
+        {
+            flightPath = GameManager.Pathfinder.FindPath(Ship.CurrentSystem, system, Ship);
+            IsTraveling = true;
+            timer = 0.0;
+
+            updateVectors();
+        }
+
+        private void updateVectors()
+        {
+            travelVector = flightPath[nextNode].Coordinates - flightPath[currentNode].Coordinates;
+            if (travelVector.Length > 0) travelVector.Normalize();
+
+            float dist = flightPath[currentNode].Coordinates.Distance(flightPath[nextNode].Coordinates);
+            timeToNextNode = dist / Ship.MoveSpeed;
+        }
+
+        private List<StarSystem> flightPath;
+        private int currentNode = 0, nextNode = 1;
+        private Vector2 travelVector;
+        private float timeToNextNode;
+        private double timer = 0.0;
+    }
+}
