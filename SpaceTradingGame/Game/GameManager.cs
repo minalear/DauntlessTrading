@@ -24,6 +24,7 @@ namespace SpaceTradingGame.Game
             Factories.ShipFactory.Init();
 
             galacticDate = new DateTime(2347, 1, 1);
+            Pathfinder = new Pathfinder(this);
 
             systems = new List<StarSystem>();
             factions = new List<Faction>();
@@ -139,5 +140,6 @@ namespace SpaceTradingGame.Game
         public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }
         public DateTime GalacticDate { get { return galacticDate; } set { galacticDate = value; } }
         public Faction PlayerFaction { get; private set; }
+        public Pathfinder Pathfinder { get; private set; }
     }
 }

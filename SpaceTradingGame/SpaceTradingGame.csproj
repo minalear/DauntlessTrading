@@ -97,6 +97,7 @@
     <Compile Include="Game\Inventory.cs" />
     <Compile Include="Game\Item.cs" />
     <Compile Include="Game\Market.cs" />
+    <Compile Include="Game\Pathfinder.cs" />
     <Compile Include="Game\Planetoid.cs" />
     <Compile Include="Game\Product.cs" />
     <Compile Include="Game\Ship.cs" />

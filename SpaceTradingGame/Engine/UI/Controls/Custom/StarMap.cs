@@ -212,6 +212,16 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
                 GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '∙');
             }
+
+            GraphicConsole.SetColor(Color4.Blue, Color4.Black);
+            for (int i = 0; i < newPath.Count - 1; i++)
+            {
+                Point a = getScreenPosFromCoord(newPath[i].MapCoord);
+                Point b = getScreenPosFromCoord(newPath[i + 1].MapCoord);
+
+                GraphicConsole.Draw.Line(a.X, a.Y, b.X, b.Y, '∙');
+            }
+
             GraphicConsole.ClearColor();
         }
         private void plotPath()
@@ -293,6 +303,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
             path.Clear();
             path = optimalPath;
+
+            newPath = Interface.GameManager.Pathfinder.FindPath(currentSystem, selectedSystem, Interface.GameManager.PlayerShip);
         }
 
         private Point getScreenPosFromCoord(Point coord)
@@ -310,7 +322,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
 
         private List<StarSystem> systemList;
-        private List<StarSystem> path;
+        private List<StarSystem> path, newPath;
         private StarSystem selectedSystem, currentSystem;
         private bool drawSelectedSystem = false;
         private Vector2 mapOffset = new Vector2(3700, 1650);
