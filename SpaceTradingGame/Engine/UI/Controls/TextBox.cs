@@ -75,7 +75,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
 
             if (differenceValue != 0)
             {
-                this.scrollValue -= differenceValue / (this.lineCount / 2);
+                this.scrollValue -= differenceValue/* / (this.lineCount / 2)*/;
 
                 if (this.scrollValue < 0f)
                     this.scrollValue = 0f;
