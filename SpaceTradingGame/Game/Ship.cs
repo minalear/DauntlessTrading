@@ -95,8 +95,12 @@ namespace SpaceTradingGame.Game
         }
         public void SetCurrentSystem(StarSystem system)
         {
+            if (CurrentSystem != null)
+                CurrentSystem.VisitingShips.Remove(this);
+
             WorldPosition = system.Coordinates;
             CurrentSystem = system;
+            CurrentSystem.VisitingShips.Add(this);
         }
         public void SetPilot(Pilot pilot)
         {

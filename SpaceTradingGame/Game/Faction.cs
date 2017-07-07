@@ -77,6 +77,16 @@ namespace SpaceTradingGame.Game
                 }
             }
         }
+        public void RegisterShip(Ship ship)
+        {
+            ship.Faction = this;
+            ship.Pilot.Finished += PilotFinishedJourney;
+        }
+
+        private void PilotFinishedJourney(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         public override string ToString()
         {

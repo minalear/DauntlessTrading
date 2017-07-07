@@ -41,7 +41,7 @@ namespace SpaceTradingGame.Game
                 if (currentNode == nextNode)
                 {
                     IsTraveling = false;
-                    Finished?.Invoke(this, EventArgs.Empty);
+                    Finished?.Invoke(this, new PilotFinishedTravelingEventArgs(Ship, this, Ship.CurrentSystem));
                 }
                 else
                 {
@@ -82,7 +82,7 @@ namespace SpaceTradingGame.Game
             timeToNextNode = dist / Ship.MoveSpeed;
         }
 
-        public delegate void FinishedTravelingEvent(object sender, EventArgs e);
+        public delegate void FinishedTravelingEvent(object sender, PilotFinishedTravelingEventArgs e);
         public event FinishedTravelingEvent Finished;
 
         private List<StarSystem> flightPath;
@@ -90,5 +90,19 @@ namespace SpaceTradingGame.Game
         private Vector2 travelVector;
         private float timeToNextNode;
         private double timer = 0.0;
+    }
+
+    public class PilotFinishedTravelingEventArgs : EventArgs
+    {
+        public Ship Ship { get; set; }
+        public Pilot Pilot { get; set; }
+        public StarSystem Destination { get; set; }
+
+        public PilotFinishedTravelingEventArgs(Ship ship, Pilot pilot, StarSystem system)
+        {
+            Ship = ship;
+            Pilot = pilot;
+            Destination = system;
+        }
     }
 }

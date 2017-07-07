@@ -91,16 +91,16 @@ namespace SpaceTradingGame.Game
                 }
 
                 //Add a number of ships
-                int numShips = RNG.Next(100, 120);
+                int numShips = RNG.Next(20, 25);
                 for (int k = 0; k < numShips; k++)
                 {
                     Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
                     ship.Name = Factories.ShipFactory.GenerateRandomShipName();
 
                     ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
-                    ship.SetCurrentSystem(Systems[0]);
+                    ship.SetCurrentSystem(Systems[0]); //Default to Sol system (for now)
 
-                    faction.OwnedShips.Add(ship); //They all appear at Sol atm
+                    faction.OwnedShips.Add(ship);
                     Ships.Add(ship);
                 }
 
@@ -116,7 +116,7 @@ namespace SpaceTradingGame.Game
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
 
             playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
-            PlayerShip.SetCurrentSystem(Systems[0]);
+            PlayerShip.SetCurrentSystem(Systems[0]); //Set to Sol system
 
             PlayerFaction.OwnedShips.Add(playerShip);
             factions.Add(PlayerFaction);

@@ -16,6 +16,7 @@ namespace SpaceTradingGame.Game
         public string Name { get; set; }
         public Color4 StarColor { get; set; }
         public List<Planetoid> Planetoids { get; set; }
+        public List<Ship> VisitingShips { get; private set; }
 
         public Vector2 Coordinates { get; set; }
         public Point MapCoord { get; set; }
@@ -28,6 +29,7 @@ namespace SpaceTradingGame.Game
             ID = _nextValidID++;
             Name = name;
             Planetoids = new List<Planetoid>();
+            VisitingShips = new List<Ship>();
 
             Coordinates = Vector2.Zero;
             StarColor = colors[RNG.Next(0, colors.Length)];
