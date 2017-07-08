@@ -121,7 +121,7 @@ namespace SpaceTradingGame.Game
             PlayerFaction.OwnedShips.Add(playerShip);
             factions.Add(PlayerFaction);
 
-            //SimulateGame(10.0);
+            SimulateGame(10.0);
         }
         public void SimulateGame(double days)
         {
