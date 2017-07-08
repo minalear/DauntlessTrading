@@ -204,7 +204,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             {
                 Point point = getScreenPosFromCoord(getCoordFromWorldPos(ship.WorldPosition));
 
-                GraphicConsole.SetColor(Color4.Blue, Color4.Black);
+                GraphicConsole.SetColor(ship.Faction.RegionColor, Color4.Black);
                 GraphicConsole.Put('.', point);
             }
         }

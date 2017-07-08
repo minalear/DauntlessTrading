@@ -25,6 +25,8 @@ namespace SpaceTradingGame
             content = new ContentManager(this);
             gameManager = new GameManager();
             interfaceManager = new InterfaceManager(this);
+
+            this.WindowBorder = WindowBorder.Fixed;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
