@@ -198,7 +198,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             else
                 systemDescription.Append("No system market.");
 
-            systemDescriptionBox.Text = systemDescription.ToString(); ;
+            systemDescriptionBox.Text = systemDescription.ToString();
+
+            screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
         }
         private void startTraveling()
         {

@@ -26,6 +26,7 @@ namespace SpaceTradingGame.Game
         {
             dayTimer += days;
 
+            //Factories update daily
             while (dayTimer >= 1.0)
             {
                 Market market = Paret.System.SystemMarket;

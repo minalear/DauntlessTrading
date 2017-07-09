@@ -63,10 +63,8 @@ namespace SpaceTradingGame.Game
                     if (!ship.Pilot.IsPlayer)
                         ship.Pilot.MoveTo(ship.Pilot.GameManager.Systems[RNG.Next(0, ship.Pilot.GameManager.Systems.Count)]);
                 }
-                else
-                {
-                    ship.Pilot.Update(days);
-                }
+
+                ship.Pilot.Update(days);
             }
 
             stockTimer += days;

@@ -30,28 +30,13 @@ namespace SpaceTradingGame.Game
         {
             if (!IsTraveling) return;
 
-            Ship.WorldPosition += Vector2.Multiply(travelVector, (float)days * Ship.MoveSpeed);
-
-            timer += days;
-            if (timer >= timeToNextNode)
+            while (days >= 1.0)
             {
-                Ship.SetCurrentSystem(flightPath[nextNode]);
-
-                //Travel finished
-                if (currentNode == nextNode)
-                {
-                    IsTraveling = false;
-                    Finished?.Invoke(this, new PilotFinishedTravelingEventArgs(Ship, this, Ship.CurrentSystem));
-                }
-                else
-                {
-                    timer = 0.0;
-                    currentNode++;
-                    nextNode = (nextNode + 1 != flightPath.Count) ? nextNode + 1 : nextNode;
-
-                    updateVectors();
-                }
+                updateMovement(1.0);
+                days -= 1.0;
             }
+
+            updateMovement(days);
         }
         public void MoveTo(StarSystem system)
         {
@@ -80,6 +65,31 @@ namespace SpaceTradingGame.Game
 
             float dist = flightPath[currentNode].Coordinates.Distance(flightPath[nextNode].Coordinates);
             timeToNextNode = dist / Ship.MoveSpeed;
+        }
+        private void updateMovement(double mod)
+        {
+            Ship.WorldPosition += Vector2.Multiply(travelVector, Ship.MoveSpeed * (float)mod);
+
+            timer += mod;
+            if (timer >= timeToNextNode)
+            {
+                Ship.SetCurrentSystem(flightPath[nextNode]);
+
+                //Travel finished
+                if (currentNode == nextNode)
+                {
+                    IsTraveling = false;
+                    Finished?.Invoke(this, new PilotFinishedTravelingEventArgs(Ship, this, Ship.CurrentSystem));
+                }
+                else
+                {
+                    timer = 0.0;
+                    currentNode++;
+                    nextNode = (nextNode + 1 != flightPath.Count) ? nextNode + 1 : nextNode;
+
+                    updateVectors();
+                }
+            }
         }
 
         public delegate void FinishedTravelingEvent(object sender, PilotFinishedTravelingEventArgs e);

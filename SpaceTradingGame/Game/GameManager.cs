@@ -20,7 +20,8 @@ namespace SpaceTradingGame.Game
             Factories.ModFactory.Init();
             Factories.ShipFactory.Init();
 
-            galacticDate = new DateTime(2347, 1, 1);
+            //Game simulates 10 days, starting the game 1/1/2347
+            galacticDate = new DateTime(2346, 12, 22);
             Pathfinder = new Pathfinder(this);
 
             systems = new List<StarSystem>();
@@ -127,11 +128,9 @@ namespace SpaceTradingGame.Game
         {
             galacticDate = galacticDate.AddDays(days);
 
-            int _days = (int)OpenTK.MathHelper.Clamp(days, 1.0, days);
             foreach (StarSystem system in Systems)
             {
-                for (int i = 0; i < _days; i++)
-                    system.UpdateStarSystem(days);
+                system.UpdateStarSystem(days);
             }
             foreach (Faction faction in Factions)
             {
