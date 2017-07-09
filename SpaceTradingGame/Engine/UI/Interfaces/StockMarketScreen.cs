@@ -30,7 +30,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             Button buildFactoryButton = new Button(null, "Build Factory", 1, 33);
 
             //Other
-            chart = new StockMarketChart(null, 23, 27, 65, 9);
+            chart = new StockMarketChart(null, 23, 27, 66, 9);
             chart.FillColor = new Color4(0.1f, 0.1f, 0.1f, 1f);
 
             /* UI EVENTS */

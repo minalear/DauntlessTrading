@@ -27,7 +27,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.Draw.Rect(Position.X, Position.Y, Size.X, Size.Y, ' ', true);
 
             GraphicConsole.SetColor(Color4.Transparent, StripeColor);
-            for (int x = Position.X; x < Position.X + Size.X; x += 5)
+            for (int x = Position.X + Size.X - 1; x >= Position.X; x -= 5)
             {
                 GraphicConsole.Draw.Line(x, Position.Y, x, Position.Y + Size.Y - 1, ' ');
             }
@@ -38,25 +38,27 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             int scaleY = max(0, 100) / (Size.Y - 1);
 
             if (scaleY == 0) return; //Prevent divide by zero exception
-
-            GraphicConsole.SetColor(faction.RegionColor, FillColor);
-
-            for (int i = 0; i < faction.StockPrices.Count - 1; i++)
+            
+            int loop = 0;
+            for (int i = faction.StockPrices.Count - 1; i > 0 && loop < Size.X / 5; i--)
             {
-                int x0 = i * scaleX + Position.X;
-                int x1 = (i + 1) * scaleX + Position.X;
+                int x0 = (Position.X + Size.X - 1) - loop * scaleX;
+                int x1 = (Position.X + Size.X - 1) - (loop + 1) * scaleX;
 
                 int y0 = (Position.Y + Size.Y - 1) - faction.StockPrices[i] / scaleY;
-                int y1 = (Position.Y + Size.Y - 1) - faction.StockPrices[i + 1] / scaleY;
+                int y1 = (Position.Y + Size.Y - 1) - faction.StockPrices[i - 1] / scaleY;
 
+                GraphicConsole.SetColor(faction.RegionColor, FillColor);
                 GraphicConsole.Draw.Line(x0, y0, x1, y1, '.');
+
+                GraphicConsole.SetColor(faction.RegionColor, StripeColor);
+                GraphicConsole.Put('*', x0, y0);
+                GraphicConsole.Put('*', x1, y1);
+
+                loop++;
             }
 
-            for (int i = 0; i < faction.StockPrices.Count; i++)
-            {
-                int y = (Position.Y + Size.Y - 1) - faction.StockPrices[i] / scaleY;
-                GraphicConsole.Put('*', i * scaleX + Position.X, y);
-            }
+            GraphicConsole.ClearColor();
 
             base.DrawStep();
         }
