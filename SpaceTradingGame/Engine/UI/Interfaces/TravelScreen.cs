@@ -31,6 +31,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             systemButton = new Button(null, "System", 76, 27);
             travelButton = new Button(null, "Travel", 76, 30);
+            ambushButton = new Button(null, "Ambush", 76, 33);
             cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
             stockButton = new Button(null, "Stock", GraphicConsole.BufferWidth - 7, 30);
             
@@ -44,6 +45,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             slowerButton = new Button(null, "-", 62, 1, 1, 1);
 
             //UI Events
+            #region Map Panning Events
             up.Click += (sender, e) =>
             {
                 starMap.PanMap(0f, 100f);
@@ -64,7 +66,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 starMap.PanMap(-100f, 0f);
                 InterfaceManager.DrawStep();
             };
-
+            #endregion
+            #region Button Events
+            systemButton.Click += (sender, e) =>
+            {
+                if (!GameManager.PlayerShip.Pilot.IsTraveling)
+                    InterfaceManager.ChangeInterface("System");
+            };
             travelButton.Click += (sender, e) =>
             {
                 if (starMap.HasSystemSelected && !GameManager.PlayerShip.Pilot.IsTraveling)
@@ -72,10 +80,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     startTraveling();
                 }
             };
-            systemButton.Click += (sender, e) =>
+            ambushButton.Click += (sender, e) =>
             {
                 if (!GameManager.PlayerShip.Pilot.IsTraveling)
-                    InterfaceManager.ChangeInterface("System");
+                    InterfaceManager.ChangeInterface("Combat");
             };
             cargoButton.Click += (sender, e) =>
             {
@@ -87,6 +95,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 if (!GameManager.PlayerShip.Pilot.IsTraveling)
                     InterfaceManager.ChangeInterface("Stock");
             };
+            #endregion
 
             starMap.Selected += (sender, e) =>
             {
@@ -97,6 +106,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 InterfaceManager.DrawStep();
             };
 
+            #region Clock Events
             clock.TimerLapse += (sender, e) =>
             {
                 screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
@@ -121,6 +131,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 clock.TickRate += 0.5;
             };
+            #endregion
 
             #region ControlRegister
             RegisterControl(screenTitle);
@@ -135,6 +146,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(fasterButton);
             RegisterControl(slowerButton);
             RegisterControl(travelButton);
+            RegisterControl(ambushButton);
             RegisterControl(systemButton);
             RegisterControl(cargoButton);
             RegisterControl(stockButton);
@@ -220,7 +232,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private TextBox systemDescriptionBox;
         private Button up, down, left, right;
         private Button playButton, fasterButton, slowerButton;
-        private Button travelButton, systemButton, cargoButton, stockButton;
+        private Button travelButton, systemButton, cargoButton, stockButton, ambushButton;
         private StarMap starMap;
         private Clock clock;
     }
