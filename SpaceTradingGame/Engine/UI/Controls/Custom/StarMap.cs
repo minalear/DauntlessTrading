@@ -36,7 +36,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
 
-            double travelRadius = Interface.GameManager.PlayerShip.BaseJumpRadius;
+            double travelRadius = Interface.GameManager.PlayerShip.JumpRadius;
             int r = (int)(travelRadius / GraphicConsole.BufferWidth);
 
             Point playerPos = getScreenPosFromCoord(getCoordFromWorldPos(Interface.GameManager.PlayerShip.WorldPosition));

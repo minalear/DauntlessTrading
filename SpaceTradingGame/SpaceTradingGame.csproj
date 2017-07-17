@@ -88,6 +88,7 @@
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
     <Compile Include="Game\Blueprint.cs" />
+    <Compile Include="Game\CombatSimulator.cs" />
     <Compile Include="Game\Faction.cs" />
     <Compile Include="Game\Factories\FactionFactory.cs" />
     <Compile Include="Game\Factories\ModFactory.cs" />

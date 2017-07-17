@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK;
 using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
@@ -23,6 +24,7 @@ namespace SpaceTradingGame.Game
             //Game simulates 10 days, starting the game 1/1/2347
             galacticDate = new DateTime(2346, 12, 22);
             Pathfinder = new Pathfinder(this);
+            CombatSimulator = new CombatSimulator(this);
 
             systems = new List<StarSystem>();
             factions = new List<Faction>();
@@ -92,7 +94,7 @@ namespace SpaceTradingGame.Game
                 }
 
                 //Add a number of ships
-                int numShips = RNG.Next(20, 25);
+                int numShips = RNG.Next(35, 50);
                 for (int k = 0; k < numShips; k++)
                 {
                     Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
@@ -101,7 +103,7 @@ namespace SpaceTradingGame.Game
                     ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
                     ship.SetCurrentSystem(Systems[0]); //Default to Sol system (for now)
 
-                    faction.OwnedShips.Add(ship);
+                    faction.RegisterShip(ship);
                     Ships.Add(ship);
                 }
 
@@ -137,6 +139,18 @@ namespace SpaceTradingGame.Game
                 faction.UpdateFaction(days);
             }
         }
+        public List<Ship> GetShipsInJumpRadius(Ship ship)
+        {
+            List<Ship> shipsInRange = new List<Ship>();
+
+            foreach (Ship target in Ships)
+            {
+                if (target.ID != ship.ID && target.WorldPosition.Distance(ship.WorldPosition) <= ship.JumpRadius)
+                    shipsInRange.Add(target);
+            }
+
+            return shipsInRange;
+        }
 
         public List<StarSystem> Systems { get { return this.systems; } }
         public List<Faction> Factions { get { return this.factions; } }
@@ -145,6 +159,7 @@ namespace SpaceTradingGame.Game
         public DateTime GalacticDate { get { return galacticDate; } set { galacticDate = value; } }
         public Faction PlayerFaction { get; private set; }
         public Pathfinder Pathfinder { get; private set; }
+        public CombatSimulator CombatSimulator { get; private set; }
         public StarSystem CurrentSystem
         {
             get { return PlayerShip.CurrentSystem; }

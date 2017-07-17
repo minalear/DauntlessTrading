@@ -6,6 +6,8 @@ namespace SpaceTradingGame.Game
 {
     public class Ship : Engine.UI.Controls.ListItem, ICloneable
     {
+        private static int _nextValidID = 0;
+
         private string shipName;
         private string shipModel;
         private int firePower;
@@ -19,6 +21,8 @@ namespace SpaceTradingGame.Game
 
         public Ship()
         {
+            ID = _nextValidID++;
+
             this.shipName = "Name";
             this.shipModel = "Maverick Class I";
 
@@ -32,6 +36,8 @@ namespace SpaceTradingGame.Game
         }
         public Ship(string name, string model)
         {
+            ID = _nextValidID++;
+
             this.shipName = name;
             this.shipModel = model;
 
@@ -130,12 +136,13 @@ namespace SpaceTradingGame.Game
             return newShip;
         }
 
+        public int ID { get; private set; }
         public string Name { get { return shipName; } set { shipName = value; } }
         public string Model { get { return shipModel; } set { shipModel = value; } }
         public int FirePower { get { return this.firePower; } set { this.firePower = value; } }
         public int DefenseRating { get { return this.defenseRating; } set { this.defenseRating = value; } }
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
-        public double BaseJumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
+        public double JumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public float MoveSpeed { get; set; }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }

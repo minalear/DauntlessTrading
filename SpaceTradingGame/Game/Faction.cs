@@ -78,6 +78,7 @@ namespace SpaceTradingGame.Game
         {
             ship.Faction = this;
             ship.Pilot.Finished += PilotFinishedJourney;
+            OwnedShips.Add(ship);
         }
         public void CalculateStockPrice()
         {
@@ -96,7 +97,7 @@ namespace SpaceTradingGame.Game
 
         private void PilotFinishedJourney(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+
         }
 
         public override string ToString()

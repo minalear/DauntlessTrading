@@ -20,7 +20,7 @@ namespace SpaceTradingGame.Game
             path.Add(start);
 
             //If our destination is within jump distance, return the path with just start/finish
-            if (start.Coordinates.Distance(finish.Coordinates) <= ship.BaseJumpRadius)
+            if (start.Coordinates.Distance(finish.Coordinates) <= ship.JumpRadius)
             {
                 path.Add(finish);
                 return path;
@@ -46,7 +46,7 @@ namespace SpaceTradingGame.Game
                     //The test system is the destination
                     if (testSystem.ID == finish.ID)
                     {
-                        if (currentSystem.Coordinates.Distance(testSystem.Coordinates) < ship.BaseJumpRadius)
+                        if (currentSystem.Coordinates.Distance(testSystem.Coordinates) < ship.JumpRadius)
                         {
                             path.Add(testSystem);
                             return path;
@@ -66,7 +66,7 @@ namespace SpaceTradingGame.Game
                         value += (int)(dot * 100.0);
                     }
                     
-                    value += (distToTest <= ship.BaseJumpRadius) ? 25.0 : -40.0;
+                    value += (distToTest <= ship.JumpRadius) ? 25.0 : -40.0;
                     value += (distToTest < distToFinish) ? 20.0 : 0.0;
                     
                     //Modify value based on distance
