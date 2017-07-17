@@ -1,0 +1,12 @@
+diff a/SpaceTradingGame/SpaceTradingGame.csproj b/SpaceTradingGame/SpaceTradingGame.csproj	(rejected hunks)
+@@ -33,6 +33,10 @@
+     <StartupObject />
+   </PropertyGroup>
+   <ItemGroup>
++    <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
++      <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
++      <Private>True</Private>
++    </Reference>
+     <Reference Include="Newtonsoft.Json">
+       <HintPath>..\Dependencies\Newtonsoft.Json.dll</HintPath>
+     </Reference>
