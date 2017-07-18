@@ -24,6 +24,10 @@ namespace SpaceTradingGame.Game
             Factories.ProductFactory.Init();
             Factories.ModFactory.Init();
             Factories.ShipFactory.Init();
+
+            systems = new List<StarSystem>();
+            factions = new List<Faction>();
+            Ships = new List<Ship>();
             
             Pathfinder = new Pathfinder(this);
             CombatSimulator = new CombatSimulator(this);
@@ -56,9 +60,7 @@ namespace SpaceTradingGame.Game
             //Game simulates 10 days, starting the game 1/1/2347
             galacticDate = new DateTime(2346, 12, 22);
 
-            systems = new List<StarSystem>();
-            factions = new List<Faction>();
-            Ships = new List<Ship>();
+            cleanUpGalaxy();
 
             //Sol System
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
@@ -159,8 +161,6 @@ namespace SpaceTradingGame.Game
             game.InterfaceManager.ChangeInterface("Start");
         }
 
-        
-
         public List<Ship> GetShipsInJumpRadius(Ship ship)
         {
             List<Ship> shipsInRange = new List<Ship>();
@@ -177,6 +177,33 @@ namespace SpaceTradingGame.Game
         {
             Ships.Remove(ship);
             ship.Faction.OwnedShips.Remove(ship);
+        }
+
+        private void cleanUpGalaxy()
+        {
+            foreach (Ship ship in Ships)
+            {
+                ship.Inventory.ClearInventory();
+                ship.Nodes.Clear();
+            }
+            Ships.Clear();
+
+            foreach (Faction faction in Factions)
+            {
+                faction.OwnedFactories.Clear();
+                faction.OwnedMarkets.Clear();
+                faction.OwnedShips.Clear();
+                faction.OwnedStations.Clear();
+            }
+
+            factions.Clear();
+
+            foreach (StarSystem system in Systems)
+            {
+                system.Planetoids.Clear();
+            }
+
+            Systems.Clear();
         }
 
         public List<StarSystem> Systems { get { return this.systems; } }

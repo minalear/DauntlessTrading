@@ -20,7 +20,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
                 GameManager.CombatSimulator.SetCombatants(GameManager.PlayerShip, (Ship)shipList.GetSelection());
                 CombatGroup victor = GameManager.CombatSimulator.SimulateCombat();
-
+                updateDisplayInformation();
 
                 descriptionBox.Text = string.Format("{0} won!", victor.Ships[0].Name);
             };
