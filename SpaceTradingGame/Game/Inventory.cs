@@ -16,6 +16,10 @@ namespace SpaceTradingGame.Game
                 credits = (value < 0) ? 0 : value;
             }
         }
+        public int TotalWeight
+        {
+            get { return totalWeight; }
+        }
 
         public Inventory()
         {
@@ -41,6 +45,8 @@ namespace SpaceTradingGame.Game
                 };
                 inventorySlots.Add(item, slot);
             }
+
+            totalWeight += inventorySlots[item].TotalWeight;
         }
         public void RemoveItem(Item item, int amount)
         {
@@ -67,6 +73,12 @@ namespace SpaceTradingGame.Game
             if (!HasItem(item)) return 0;
 
             return inventorySlots[item].Quantity;
+        }
+        public int GetTotalWeight(Item item)
+        {
+            if (!HasItem(item)) return 0;
+
+            return inventorySlots[item].TotalWeight;
         }
         public List<InventorySlot> GetInventoryList()
         {
@@ -106,12 +118,42 @@ namespace SpaceTradingGame.Game
         }
 
         private int credits;
+        private int totalWeight;
         private Dictionary<Item, InventorySlot> inventorySlots;
     }
 
     public class InventorySlot
     {
-        public Item InventoryItem { get; set; }
-        public int Quantity { get; set; }
+        public Item InventoryItem
+        {
+            get { return inventoryItem; }
+            set { SetInventoryItem(value); }
+        }
+        public int Quantity
+        {
+            get { return quantity; }
+            set { SetQuantity(value); }
+        }
+        public int TotalWeight { get; private set; }
+
+        public void SetInventoryItem(Item item)
+        {
+            inventoryItem = item;
+            CalculateWeight();
+        }
+        public void SetQuantity(int amount)
+        {
+            quantity = amount;
+            CalculateWeight();
+        }
+
+        public void CalculateWeight()
+        {
+            TotalWeight = inventoryItem.Weight * quantity;
+        }
+
+        private Item inventoryItem;
+        private int quantity;
+        private int totalWeight;
     }
 }

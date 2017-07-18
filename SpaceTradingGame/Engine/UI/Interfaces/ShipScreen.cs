@@ -45,8 +45,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             #region Control Events
             scrollingList.Selected += (sender, index) =>
             {
-                Item item = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem;
-                descriptionBox.Text = string.Format("-{0}-\n{1}", item.Name, item.Description);
+                InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
+                Item item = selection.InventorySlot.InventoryItem;
+
+                descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}", 
+                    item.Name, 
+                    item.Weight,
+                    selection.InventorySlot.TotalWeight, 
+                    item.Description);
                 InterfaceManager.DrawStep();
             };
             scrollingList.Deselected += (sender) =>
@@ -160,7 +166,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
             shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);
-            shipCargoTitle.Text = string.Format("  Cargo: {0}", GameManager.PlayerShip.CargoCapacity);
+            shipCargoTitle.Text = string.Format("  Cargo: {0}/{1}", GameManager.PlayerShip.Inventory.TotalWeight, GameManager.PlayerShip.CargoCapacity);
             shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.JumpRadius);
         }
 
