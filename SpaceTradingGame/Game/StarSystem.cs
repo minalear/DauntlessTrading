@@ -9,13 +9,12 @@ namespace SpaceTradingGame.Game
 {
     public class StarSystem : Engine.UI.Controls.ListItem, IComparable
     {
-        private static int _nextValidID = 0;
-
         public int ID { get; set; }
         public double WeightedValue { get; set; }
         public string Name { get; set; }
         public Color4 StarColor { get; set; }
         public List<Planetoid> Planetoids { get; set; }
+        public List<Ship> VisitingShips { get; private set; }
 
         public Vector2 Coordinates { get; set; }
         public Point MapCoord { get; set; }
@@ -28,6 +27,7 @@ namespace SpaceTradingGame.Game
             ID = _nextValidID++;
             Name = name;
             Planetoids = new List<Planetoid>();
+            VisitingShips = new List<Ship>();
 
             Coordinates = Vector2.Zero;
             StarColor = colors[RNG.Next(0, colors.Length)];
@@ -35,10 +35,10 @@ namespace SpaceTradingGame.Game
             this.ListText = Name;
         }
 
-        public void UpdateStarSystem()
+        public void UpdateStarSystem(double days)
         {
             foreach (Planetoid planet in Planetoids)
-                planet.UpdatePlanetoid();
+                planet.UpdatePlanetoid(days);
         }
         public void BuildMarket(Faction owner)
         {
@@ -67,6 +67,12 @@ namespace SpaceTradingGame.Game
             return string.Format("{0} - {1}", Name, WeightedValue);
         }
 
+        private static int _nextValidID = 0;
         private static Color4[] colors = { Color4.Red, Color4.Orange, Color4.Yellow, Color4.Cyan, Color4.Blue, Color4.White };
+
+        public static void ResetIDCounter()
+        {
+            _nextValidID = 0;
+        }
     }
 }

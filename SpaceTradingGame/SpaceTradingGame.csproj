@@ -65,6 +65,7 @@
     <Compile Include="Engine\UI\Controls\Control.cs" />
     <Compile Include="Engine\UI\Controls\Custom\Clock.cs" />
     <Compile Include="Engine\UI\Controls\Custom\ShipLayout.cs" />
+    <Compile Include="Engine\UI\Controls\Custom\StockMarketChart.cs" />
     <Compile Include="Engine\UI\Controls\InputBox.cs" />
     <Compile Include="Engine\UI\Controls\Custom\StarMap.cs" />
     <Compile Include="Engine\UI\Controls\Popup.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Engine\UI\Interface.cs" />
     <Compile Include="Engine\UI\InterfaceManager.cs" />
     <Compile Include="Engine\UI\Interfaces\BuildScreen.cs" />
+    <Compile Include="Engine\UI\Interfaces\CombatScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\NewGameScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\ShipScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Engine\UI\Interfaces\TravelScreen.cs" />
     <Compile Include="Engine\Utilities.cs" />
     <Compile Include="Game\Blueprint.cs" />
+    <Compile Include="Game\CombatSimulator.cs" />
     <Compile Include="Game\Faction.cs" />
     <Compile Include="Game\Factories\FactionFactory.cs" />
     <Compile Include="Game\Factories\ModFactory.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="Game\Item.cs" />
     <Compile Include="Game\Market.cs" />
     <Compile Include="Game\Pathfinder.cs" />
+    <Compile Include="Game\Pilot.cs" />
     <Compile Include="Game\Planetoid.cs" />
     <Compile Include="Game\Product.cs" />
     <Compile Include="Game\Ship.cs" />
@@ -109,7 +113,6 @@
     <Compile Include="TradingGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\charset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

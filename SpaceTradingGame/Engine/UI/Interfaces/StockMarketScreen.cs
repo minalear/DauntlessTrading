@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
+using SpaceTradingGame.Engine.UI.Controls.Custom;
 using SpaceTradingGame.Game;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
@@ -28,10 +29,18 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             Button buildStationButton = new Button(null, "Build Station", 1, 30);
             Button buildFactoryButton = new Button(null, "Build Factory", 1, 33);
 
+            //Other
+            chart = new StockMarketChart(null, 23, 27, 66, 9);
+            chart.FillColor = new Color4(0.1f, 0.1f, 0.1f, 1f);
+
             /* UI EVENTS */
             factionList.Selected += (sender, e) =>
             {
-                descriptionBox.Text = getFactionDescription((Faction)factionList.GetSelection());
+                Faction faction = (Faction)factionList.GetSelection();
+
+                descriptionBox.Text = getFactionDescription(faction);
+                chart.SetFaction(faction);
+
                 InterfaceManager.DrawStep();
             };
 
@@ -62,6 +71,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(buildMarketButton);
             RegisterControl(buildStationButton);
             RegisterControl(buildFactoryButton);
+            RegisterControl(chart);
         }
 
         public override void OnEnable()
@@ -90,10 +100,19 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 description.AppendFormat("Owns a {0} ship named {1}.\n", ship.Model, ship.Name);
             }
 
+            description.Append("\n");
+
+            description.AppendLine("Stock Price History");
+            foreach (int price in faction.StockPrices)
+            {
+                description.AppendLine(price.ToString());
+            }
+
             return description.ToString();
         }
 
         private ScrollingList factionList;
         private TextBox descriptionBox;
+        private StockMarketChart chart;
     }
 }

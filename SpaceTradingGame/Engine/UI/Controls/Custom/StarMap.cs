@@ -12,12 +12,10 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
     {
         public StarMap()
         {
-            systemList = new List<StarSystem>();
             path = new List<StarSystem>();
 
             HasSystemSelected = false;
             DrawPlayerPosition = false;
-            PlayerPosition = Point.Empty;
         }
 
         public override void DrawStep()
@@ -38,15 +36,16 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             GraphicConsole.SetCursor(x + 1, y - 1);
             GraphicConsole.ClearColor();
 
-            double travelRadius = Interface.GameManager.PlayerShip.BaseJumpRadius;
+            double travelRadius = Interface.GameManager.PlayerShip.JumpRadius;
             int r = (int)(travelRadius / GraphicConsole.BufferWidth);
 
-            Point center = getScreenPosFromCoord(PlayerPosition);
+            Point playerPos = getScreenPosFromCoord(getCoordFromWorldPos(Interface.GameManager.PlayerShip.WorldPosition));
             GraphicConsole.SetColor(Color4.Gray, Color4.Black);
-            GraphicConsole.Draw.Circle(center.X, center.Y, r, '·');
+            GraphicConsole.Draw.Circle(playerPos.X, playerPos.Y, r, '·');
 
             if (drawSelectedSystem)
                 drawPaths();
+            drawShips();
             drawSystems();
             drawFactions();
 
@@ -58,7 +57,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             if (DrawPlayerPosition)
             {
                 GraphicConsole.SetColor(Color4.Red, Color4.Black);
-                GraphicConsole.Put('@', getScreenPosFromCoord(PlayerPosition));
+                GraphicConsole.Put('@', playerPos);
             }
 
             GraphicConsole.ClearColor();
@@ -67,21 +66,18 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
         public void SetCurrentSystem(StarSystem system)
         {
-            Interface.GameManager.CurrentSystem = system;
             currentSystem = system;
             drawSelectedSystem = false;
             HasSystemSelected = false;
 
             InterfaceManager.DrawStep();
         }
-        public void SetSystemList(List<StarSystem> list)
+        public void UpdateSystemList(List<StarSystem> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
                 list[i].MapCoord = getCoordFromWorldPos(list[i].Coordinates);
             }
-            
-            systemList = list;
         }
         public void PanMap(float x, float y)
         {
@@ -92,13 +88,9 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         {
             this.path = path;
         }
-        public StarSystem[] GetTravelPath()
+        public void ClearPath()
         {
-            return path.ToArray();
-        }
-        public void SetPlayerPosition(Vector2 worldPosition)
-        {
-            PlayerPosition = getCoordFromWorldPos(worldPosition);
+            path.Clear();
         }
 
         public override void MouseUp(MouseButtonEventArgs e)
@@ -112,12 +104,12 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 mousePos.Y - (int)(mapOffset.Y / GraphicConsole.BufferWidth));
 
             bool systemFound = false;
-            for (int i = 0; i < systemList.Count; i++)
+            foreach (StarSystem system in Interface.GameManager.Systems)
             {
-                if (systemList[i].MapCoord.X == selectedPoint.X && 
-                    systemList[i].MapCoord.Y == selectedPoint.Y)
+                if (system.MapCoord.X == selectedPoint.X &&
+                    system.MapCoord.Y == selectedPoint.Y)
                 {
-                    selectedSystem = systemList[i];
+                    selectedSystem = system;
                     systemFound = true;
 
                     break;
@@ -164,7 +156,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         private void drawSystems()
         {
             //Draw every system
-            foreach (StarSystem point in systemList)
+            foreach (StarSystem point in Interface.GameManager.Systems)
             {
                 Point relativePos = point.MapCoord;
                 relativePos.X += (int)(mapOffset.X / GraphicConsole.BufferWidth);
@@ -206,6 +198,16 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
             }
             GraphicConsole.ClearColor();
         }
+        private void drawShips()
+        {
+            foreach (Ship ship in Interface.GameManager.Ships)
+            {
+                Point point = getScreenPosFromCoord(getCoordFromWorldPos(ship.WorldPosition));
+
+                GraphicConsole.SetColor(ship.Faction.RegionColor, Color4.Black);
+                GraphicConsole.Put('.', point);
+            }
+        }
 
         private Point getScreenPosFromCoord(Point coord)
         {
@@ -220,9 +222,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
                 (int)(pos.X / this.Size.X),
                 (int)(pos.Y / this.size.X));
         }
-
-        private List<StarSystem> systemList;
-        private List<StarSystem> path, newPath;
+        
+        private List<StarSystem> path;
         private StarSystem selectedSystem, currentSystem;
         private bool drawSelectedSystem = false;
         private Vector2 mapOffset = new Vector2(3700, 1650);
@@ -234,7 +235,6 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
 
         public bool HasSystemSelected { get; set; }
         public bool DrawPlayerPosition { get; set; }
-        public Point PlayerPosition { get; set; }
 
         public delegate void SystemSelected(object sender, StarSystem system);
         public SystemSelected Selected;

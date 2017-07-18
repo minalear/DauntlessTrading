@@ -1,34 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK;
 using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
     public class GameManager
     {
+        private TradingGame game;
+
         private List<StarSystem> systems;
         private List<Faction> factions;
 
-        private StarSystem currentSystem;
-
         private DateTime galacticDate;
 
-        private string playerName;
         private Ship playerShip;
 
-        public GameManager()
+        public GameManager(TradingGame game)
         {
+            this.game = game;
+
             //Init Factories
             Factories.ProductFactory.Init();
             Factories.ModFactory.Init();
             Factories.ShipFactory.Init();
 
-            galacticDate = new DateTime(2347, 1, 1);
-            Pathfinder = new Pathfinder(this);
-
             systems = new List<StarSystem>();
             factions = new List<Faction>();
             Ships = new List<Ship>();
+            
+            Pathfinder = new Pathfinder(this);
+            CombatSimulator = new CombatSimulator(this);
+        }
+
+        public void SetupGame(string playerName, string companyName, Ship ship)
+        {
+            //Reset variables between new games
+            Factories.FactionFactory.Reset();
+            StarSystem.ResetIDCounter();
+            Ship.ResetIDCounter();
+
+            GenerateGalaxy();
+
+            this.playerShip = ship;
+
+            PlayerFaction = new Faction(companyName, true);
+            PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
+
+            playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
+            PlayerShip.SetCurrentSystem(Systems[0]); //Set to Sol system
+
+            PlayerFaction.OwnedShips.Add(playerShip);
+            factions.Add(PlayerFaction);
+
+            SimulateGame(10.0);
+        }
+        public void GenerateGalaxy()
+        {
+            //Game simulates 10 days, starting the game 1/1/2347
+            galacticDate = new DateTime(2346, 12, 22);
+
+            cleanUpGalaxy();
 
             //Sol System
             StarSystem solSystem = new StarSystem("Sol") { Coordinates = OpenTK.Vector2.Zero };
@@ -56,8 +88,6 @@ namespace SpaceTradingGame.Game
 
             systems.Add(solSystem);
             systems.AddRange(Factories.GalaxyFactory.GenerateGalaxy(250, 500));
-
-            CurrentSystem = solSystem;
 
             //Generate Factions
             int numFactions = RNG.Next(5, 10);
@@ -96,50 +126,97 @@ namespace SpaceTradingGame.Game
                 }
 
                 //Add a number of ships
-                int numShips = RNG.Next(4, 8);
+                int numShips = RNG.Next(35, 50);
                 for (int k = 0; k < numShips; k++)
                 {
                     Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
                     ship.Name = Factories.ShipFactory.GenerateRandomShipName();
-                    faction.OwnedShips.Add(ship); //They all appear at Sol atm
+
+                    ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
+                    ship.SetCurrentSystem(Systems[0]); //Default to Sol system (for now)
+
+                    faction.RegisterShip(ship);
+                    Ships.Add(ship);
                 }
 
                 factions.Add(faction);
             }
         }
 
-        public void SetupGame(string playerName, string companyName, Ship ship)
-        {
-            this.playerName = playerName;
-            this.playerShip = ship;
-
-            PlayerFaction = new Faction(companyName, true);
-            PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
-            PlayerFaction.OwnedShips.Add(playerShip);
-            factions.Add(PlayerFaction);
-
-            SimulateGame(10.0);
-        }
         public void SimulateGame(double days)
         {
             galacticDate = galacticDate.AddDays(days);
 
-            int _days = (int)OpenTK.MathHelper.Clamp(days, 1.0, days);
             foreach (StarSystem system in Systems)
             {
-                for (int i = 0; i < _days; i++)
-                    system.UpdateStarSystem();
+                system.UpdateStarSystem(days);
             }
+            foreach (Faction faction in Factions)
+            {
+                faction.UpdateFaction(days);
+            }
+        }
+        public void LoseGame()
+        {
+            game.InterfaceManager.ChangeInterface("Start");
+        }
+
+        public List<Ship> GetShipsInJumpRadius(Ship ship)
+        {
+            List<Ship> shipsInRange = new List<Ship>();
+
+            foreach (Ship target in Ships)
+            {
+                if (target.ID != ship.ID && target.WorldPosition.Distance(ship.WorldPosition) <= ship.JumpRadius)
+                    shipsInRange.Add(target);
+            }
+
+            return shipsInRange;
+        }
+        public void Destroy(Ship ship)
+        {
+            Ships.Remove(ship);
+            ship.Faction.OwnedShips.Remove(ship);
+        }
+
+        private void cleanUpGalaxy()
+        {
+            foreach (Ship ship in Ships)
+            {
+                ship.Inventory.ClearInventory();
+                ship.Nodes.Clear();
+            }
+            Ships.Clear();
+
+            foreach (Faction faction in Factions)
+            {
+                faction.OwnedFactories.Clear();
+                faction.OwnedMarkets.Clear();
+                faction.OwnedShips.Clear();
+                faction.OwnedStations.Clear();
+            }
+
+            factions.Clear();
+
+            foreach (StarSystem system in Systems)
+            {
+                system.Planetoids.Clear();
+            }
+
+            Systems.Clear();
         }
 
         public List<StarSystem> Systems { get { return this.systems; } }
         public List<Faction> Factions { get { return this.factions; } }
         public List<Ship> Ships { get; private set; }
-        public StarSystem CurrentSystem { get { return this.currentSystem; } set { this.currentSystem = value; } }
-        public string PlayerName { get { return this.playerName; } set { this.playerName = value; } }
         public Ship PlayerShip { get { return this.playerShip; } set { this.playerShip = value; } }
         public DateTime GalacticDate { get { return galacticDate; } set { galacticDate = value; } }
         public Faction PlayerFaction { get; private set; }
         public Pathfinder Pathfinder { get; private set; }
+        public CombatSimulator CombatSimulator { get; private set; }
+        public StarSystem CurrentSystem
+        {
+            get { return PlayerShip.CurrentSystem; }
+        }
     }
 }

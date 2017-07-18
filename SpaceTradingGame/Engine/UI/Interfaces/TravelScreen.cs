@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
@@ -30,10 +31,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             systemButton = new Button(null, "System", 76, 27);
             travelButton = new Button(null, "Travel", 76, 30);
+            ambushButton = new Button(null, "Ambush", 76, 33);
             cargoButton = new Button(null, "Cargo", GraphicConsole.BufferWidth - 7, 27);
             stockButton = new Button(null, "Stock", GraphicConsole.BufferWidth - 7, 30);
-
-            travelManager = new TravelManager(GameManager, starMap);
+            
             screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
 
             clock = new Clock(null, 10, 5);
@@ -44,6 +45,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             slowerButton = new Button(null, "-", 62, 1, 1, 1);
 
             //UI Events
+            #region Map Panning Events
             up.Click += (sender, e) =>
             {
                 starMap.PanMap(0f, 100f);
@@ -64,48 +66,54 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 starMap.PanMap(-100f, 0f);
                 InterfaceManager.DrawStep();
             };
-
-            travelButton.Click += (sender, e) =>
-            {
-                if (starMap.HasSystemSelected && !travelManager.IsTraveling)
-                {
-                    StartTraveling();
-                }
-            };
+            #endregion
+            #region Button Events
             systemButton.Click += (sender, e) =>
             {
-                if (!travelManager.IsTraveling)
+                if (!GameManager.PlayerShip.Pilot.IsTraveling)
                     InterfaceManager.ChangeInterface("System");
+            };
+            travelButton.Click += (sender, e) =>
+            {
+                if (starMap.HasSystemSelected && !GameManager.PlayerShip.Pilot.IsTraveling)
+                {
+                    startTraveling();
+                }
+            };
+            ambushButton.Click += (sender, e) =>
+            {
+                if (!GameManager.PlayerShip.Pilot.IsTraveling)
+                    InterfaceManager.ChangeInterface("Combat");
             };
             cargoButton.Click += (sender, e) =>
             {
-                if (!travelManager.IsTraveling)
+                if (!GameManager.PlayerShip.Pilot.IsTraveling)
                     InterfaceManager.ChangeInterface("Ship");
             };
             stockButton.Click += (sender, e) =>
             {
-                if (!travelManager.IsTraveling)
+                if (!GameManager.PlayerShip.Pilot.IsTraveling)
                     InterfaceManager.ChangeInterface("Stock");
             };
+            #endregion
 
             starMap.Selected += (sender, e) =>
             {
-                starMap.SetPath(GameManager.Pathfinder.FindPath(GameManager.CurrentSystem, e, GameManager.PlayerShip));
+                highlitedPath = GameManager.Pathfinder.FindPath(GameManager.CurrentSystem, e, GameManager.PlayerShip);
+                starMap.SetPath(highlitedPath);
+
                 updateScreenInformation();
                 InterfaceManager.DrawStep();
             };
 
+            #region Clock Events
             clock.TimerLapse += (sender, e) =>
             {
-                GameManager.SimulateGame(1.0);
                 screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
             };
             clock.TimerTick += (sender, e) =>
             {
-                if (travelManager.IsTraveling)
-                {
-                    travelManager.SimulateTravel(0.1);
-                }
+                GameManager.SimulateGame(0.1);
             };
 
             playButton.Click += (sender, e) =>
@@ -123,6 +131,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 clock.TickRate += 0.5;
             };
+            #endregion
 
             #region ControlRegister
             RegisterControl(screenTitle);
@@ -137,6 +146,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(fasterButton);
             RegisterControl(slowerButton);
             RegisterControl(travelButton);
+            RegisterControl(ambushButton);
             RegisterControl(systemButton);
             RegisterControl(cargoButton);
             RegisterControl(stockButton);
@@ -146,12 +156,20 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         public override void OnEnable()
         {
-            starMap.SetSystemList(GameManager.Systems);
+            starMap.UpdateSystemList(GameManager.Systems);
             starMap.SetCurrentSystem(GameManager.CurrentSystem);
 
             updateScreenInformation();
 
+            GameManager.PlayerShip.Pilot.Finished += flightPathFinished;
+
             base.OnEnable();
+        }
+        public override void OnDisable()
+        {
+            GameManager.PlayerShip.Pilot.Finished -= flightPathFinished;
+
+            base.OnDisable();
         }
         public override void Game_KeyUp(object sender, KeyboardKeyEventArgs e)
         {
@@ -167,11 +185,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             InterfaceManager.DrawStep();
 
             base.Game_KeyUp(sender, e);
-        }
-
-        public void StartTraveling()
-        {
-            travelManager.SetTravelPath(starMap.GetTravelPath());
         }
 
         private void updateScreenInformation()
@@ -197,96 +210,30 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             else
                 systemDescription.Append("No system market.");
 
-            systemDescriptionBox.Text = systemDescription.ToString(); ;
+            systemDescriptionBox.Text = systemDescription.ToString();
+
+            screenTitle.Text = GameManager.GalacticDate.ToShortDateString();
+        }
+        private void startTraveling()
+        {
+            GameManager.PlayerShip.Pilot.MoveAlongPath(highlitedPath);
+            starMap.DrawPlayerPosition = true;
+        }
+        private void flightPathFinished(object sender, EventArgs e)
+        {
+            starMap.DrawPlayerPosition = false;
+            starMap.ClearPath();
+            highlitedPath.Clear();
         }
 
-        private TravelManager travelManager;
+        private List<StarSystem> highlitedPath;
 
         private Title screenTitle, systemTitle;
         private TextBox systemDescriptionBox;
         private Button up, down, left, right;
         private Button playButton, fasterButton, slowerButton;
-        private Button travelButton, systemButton, cargoButton, stockButton;
+        private Button travelButton, systemButton, cargoButton, stockButton, ambushButton;
         private StarMap starMap;
         private Clock clock;
-    }
-
-    public class TravelManager
-    {
-        private GameManager gameManager;
-
-        private StarMap starMap;
-        private StarSystem[] travelPath;
-        
-        private int currentNode, nextNode;
-        private Vector2 travelVector;
-
-        private float timeToNextNode;
-        private double timer;
-
-        public float MoveSpeed = 450.0f;
-        public bool IsTraveling = false;
-
-        public TravelManager(GameManager manager, StarMap map)
-        {
-            gameManager = manager;
-            starMap = map;
-        }
-
-        public void SetTravelPath(StarSystem[] systemPath)
-        {
-            travelPath = systemPath;
-            gameManager.PlayerShip.WorldPosition = systemPath[0].Coordinates;
-
-            currentNode = 0;
-            nextNode = 1;
-
-            updateVectors();
-
-            starMap.DrawPlayerPosition = true;
-            IsTraveling = true;
-        }
-
-        public void SimulateTravel(double days)
-        {
-            UpdatePlayerPosition((float)days);
-
-            timer += days;
-            if (timer >= timeToNextNode)
-            {
-                //Travel finished
-                if (currentNode == nextNode)
-                {
-                    starMap.SetCurrentSystem(travelPath[travelPath.Length - 1]);
-                    starMap.DrawPlayerPosition = false;
-                    IsTraveling = false;
-
-                    starMap.Interface.InterfaceManager.DrawStep();
-                }
-                else
-                {
-                    timer = 0.0;
-                    currentNode++;
-                    nextNode = (nextNode + 1 != travelPath.Length) ? nextNode + 1 : nextNode;
-                    gameManager.PlayerShip.WorldPosition = travelPath[currentNode].Coordinates;
-
-                    updateVectors();
-                }
-            }
-        }
-        public void UpdatePlayerPosition(float elapsed)
-        {
-            gameManager.PlayerShip.WorldPosition += Vector2.Multiply(travelVector, MoveSpeed * elapsed);
-            starMap.SetPlayerPosition(gameManager.PlayerShip.WorldPosition);
-        }
-
-        private void updateVectors()
-        {
-            travelVector = travelPath[nextNode].Coordinates - travelPath[currentNode].Coordinates;
-            if (travelVector.Length > 0) travelVector.Normalize();
-
-            float distance = travelPath[currentNode].Coordinates.Distance(travelPath[nextNode].Coordinates);
-            timeToNextNode = distance / MoveSpeed;
-        }
     }
 }

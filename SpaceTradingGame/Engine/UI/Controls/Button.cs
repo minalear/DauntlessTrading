@@ -104,7 +104,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
         }
         public override void KeyUp(KeyboardKeyEventArgs e)
         {
-            if (this.KeyShortcut == e.Key)
+            if (this.KeyShortcut != Key.Unknown && this.KeyShortcut == e.Key)
                 Press();
 
             base.KeyUp(e);

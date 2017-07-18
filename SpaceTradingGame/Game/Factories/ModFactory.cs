@@ -10,6 +10,8 @@ namespace SpaceTradingGame.Game.Factories
             MaverickCockpitI.Name = "Maverick Cockpit";
             MaverickCockpitI.Grade = 1;
             MaverickCockpitI.BaseValue = 100;
+            MaverickCockpitI.FirePowerMod = 5;
+            MaverickCockpitI.DefenseMod = 5;
             MaverickCockpitI.Description = "Cockpit modification developed by the Maverick Corporation.";
 
             EuripidesWarpCore = new ShipMod(ShipMod.ShipModTypes.WarpCore);

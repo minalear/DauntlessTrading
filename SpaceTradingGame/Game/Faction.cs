@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK.Graphics;
+using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
@@ -17,18 +18,9 @@ namespace SpaceTradingGame.Game
         public List<Station> OwnedStations { get; private set; }
         public List<Factory> OwnedFactories { get; private set; }
 
-        public Faction(string name)
-        {
-            Name = name;
-            PlayerOwned = false;
+        public List<int> StockPrices { get; private set; }
 
-            OwnedShips = new List<Ship>();
-            OwnedMarkets = new List<Market>();
-            OwnedStations = new List<Station>();
-            OwnedFactories = new List<Factory>();
-
-            ListText = Name;
-        }
+        public Faction(string name) : this(name, false) { }
         public Faction(string name, bool playerOwned)
         {
             Name = name;
@@ -38,6 +30,7 @@ namespace SpaceTradingGame.Game
             OwnedMarkets = new List<Market>();
             OwnedStations = new List<Station>();
             OwnedFactories = new List<Factory>();
+            StockPrices = new List<int>();
 
             ListText = Name;
         }
@@ -61,7 +54,48 @@ namespace SpaceTradingGame.Game
             subsidiary.OwnedShips.Clear();
             subsidiary.OwnedFactories.Clear();
         }
-        public void UpdateFaction()
+        public void UpdateFaction(double days)
+        {
+            foreach (Ship ship in OwnedShips)
+            {
+                if (!ship.Pilot.IsTraveling)
+                {
+                    if (!ship.Pilot.IsPlayer)
+                        ship.Pilot.MoveTo(ship.Pilot.GameManager.Systems[RNG.Next(0, ship.Pilot.GameManager.Systems.Count)]);
+                }
+
+                ship.Pilot.Update(days);
+            }
+
+            stockTimer += days;
+            while (stockTimer >= 1.0)
+            {
+                stockTimer -= 1.0;
+                CalculateStockPrice();
+            }
+        }
+        public void RegisterShip(Ship ship)
+        {
+            ship.Faction = this;
+            ship.Pilot.Finished += PilotFinishedJourney;
+            OwnedShips.Add(ship);
+        }
+        public void CalculateStockPrice()
+        {
+            variance *= RNG.NextDouble(0.9, 1.1);
+
+            int price =
+                OwnedShips.Count +
+                OwnedMarkets.Count * 10 +
+                OwnedStations.Count * 5 +
+                OwnedFactories.Count * 5;
+
+            price *= (int)(price * variance) + RNG.Next(-5000, 5000);
+            price = OpenTK.MathHelper.Clamp(price, 1, price);
+            StockPrices.Add(price);
+        }
+
+        private void PilotFinishedJourney(object sender, EventArgs e)
         {
 
         }
@@ -70,5 +104,8 @@ namespace SpaceTradingGame.Game
         {
             return this.Name;
         }
+
+        private double stockTimer = 0.0;
+        private double variance = 1.0;
     }
 }

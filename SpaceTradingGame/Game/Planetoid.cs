@@ -42,19 +42,19 @@ namespace SpaceTradingGame.Game
             ListText = Name;
         }
 
-        public void UpdatePlanetoid()
+        public void UpdatePlanetoid(double days)
         {
             foreach (Station station in Stations)
             {
-                station.UpdateSpaceStation();
+                station.UpdateSpaceStation(days);
             }
             foreach (Factory factory in Factories)
             {
-                factory.UpdateFactory();
+                factory.UpdateFactory(days);
             }
             foreach (Planetoid moon in Moons)
             {
-                moon.UpdatePlanetoid();
+                moon.UpdatePlanetoid(days);
             }
         }
         public void AddMaterialDeposit(MaterialDeposit deposit)

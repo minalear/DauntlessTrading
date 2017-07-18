@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
 
@@ -8,51 +10,48 @@ namespace SpaceTradingGame.Engine
     {
         public static string WordWrap(string unformattedString, int width)
         {
-            string returnString = "";
+            StringBuilder returnString = new StringBuilder();
             unformattedString = ApplyFormatting(unformattedString);
 
             string[] groups = unformattedString.Split('\n');
 
             for (int group = 0; group < groups.Length; group++)
             {
-                string[] words = groups[group].Split(' ');
-
-                string line = "";
-                int wordLength = 0;
+                string[] words = splitWordGroupsPreserveFormatting(groups[group], ' ', true);
+                
+                int wordLength = 0, lineLength = 0;
 
                 for (int word = 0; word < words.Length; word++)
                 {
                     wordLength = words[word].Length;
                     if (wordLength != 0 && (words[word][0] == '<' || words[word][wordLength - 1] == '>')) //Tag
                     {
-                        wordLength = 0;
+                        wordLength = removeTags(words[word]).Length;
                     }
 
-                    if (line.Length + words[word].Length <= width)
+                    if (lineLength + wordLength <= width)
                     {
-                        returnString += words[word] + " ";
-                        line += words[word] + " ";
+                        returnString.Append(words[word] + " ");
+                        lineLength += wordLength + 1;
                     }
                     else
                     {
-                        returnString += "\n" + words[word] + " ";
-                        line = words[word] + " ";
+                        returnString.Append("\n" + words[word] + " ");
+                        lineLength = wordLength + 1;
                     }
                 }
 
-                returnString += "\n";
+                returnString.Append("\n");
             }
 
-            return returnString;
+            return returnString.ToString();
         }
-
         public static string StripFormatting(string text)
         {
             text = text.Replace("\n", string.Empty);
 
             return text;
         }
-
         public static string CenterTextPadding(string unformattedString, int width, char padToken)
         {
             if (unformattedString.Length < width)
@@ -71,7 +70,6 @@ namespace SpaceTradingGame.Engine
 
             return unformattedString;
         }
-
         public static string ApplyFormatting(string text)
         {
             //Strip C# Formatting
@@ -84,7 +82,6 @@ namespace SpaceTradingGame.Engine
 
             return text;
         }
-
         public static Color4 GetColor(string colorName)
         {
             colorName = colorName.ToLower();
@@ -114,7 +111,68 @@ namespace SpaceTradingGame.Engine
 
             return Color4.White;
         }
+        
+        private static string[] splitWordGroupsPreserveFormatting(string unformattedString, char token, bool preserveFormatting)
+        {
+            if (!preserveFormatting)
+                return unformattedString.Split(token);
+
+            List<string> splitWords = new List<string>();
+
+            StringBuilder buffer = new StringBuilder();
+            bool ignoreToken = false;
+
+            for (int i = 0; i < unformattedString.Length; i++)
+            {
+                if (unformattedString[i] == token && !ignoreToken)
+                {
+                    splitWords.Add(buffer.ToString());
+                    buffer.Clear();
+                }
+                else if (unformattedString[i] == '<')
+                {
+                    ignoreToken = true;
+                    buffer.Append(unformattedString[i]);
+                }
+                else if (unformattedString[i] == '>' && ignoreToken)
+                {
+                    ignoreToken = false;
+                    buffer.Append(unformattedString[i]);
+                }
+                else
+                {
+                    buffer.Append(unformattedString[i]);
+                }
+            }
+
+            if (buffer.Length != 0)
+                splitWords.Add(buffer.ToString());
+
+            return splitWords.ToArray();
+        }
+        private static string removeTags(string str)
+        {
+            StringBuilder sb = new StringBuilder(str);
+
+            bool isRemoving = false;
+            for (int i = 0; i < sb.Length; i++)
+            {
+                if (sb[i] == '<')
+                    isRemoving = true;
+                else if (sb[i] == '>')
+                {
+                    isRemoving = false;
+                    sb.Remove(i--, 1);
+                }
+
+                if (isRemoving)
+                    sb.Remove(i--, 1);
+            }
+
+            return sb.ToString();
+        }
     }
+
     public static class Extensions
     {
         public static float Truncate(this float f, int digits)

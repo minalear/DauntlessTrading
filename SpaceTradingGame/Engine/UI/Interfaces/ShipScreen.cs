@@ -161,7 +161,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
             shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);
             shipCargoTitle.Text = string.Format("  Cargo: {0}", GameManager.PlayerShip.CargoCapacity);
-            shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.BaseJumpRadius);
+            shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.JumpRadius);
         }
 
         private Title shipDesignationTitle, shipModelTitle;
