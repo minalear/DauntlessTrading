@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace SpaceTradingGame.Game.Factories
 {
@@ -6,6 +8,8 @@ namespace SpaceTradingGame.Game.Factories
     {
         public static void Init()
         {
+            ShipMod mod = LoadModFromJsonFile("Content/Modules/basic_cockpit.json");
+
             MaverickCockpitI = new ShipMod(ShipMod.ShipModTypes.Cockpit);
             MaverickCockpitI.Name = "Maverick Cockpit";
             MaverickCockpitI.Grade = 1;
@@ -39,6 +43,20 @@ namespace SpaceTradingGame.Game.Factories
             ModList = new ShipMod[] {
                 MaverickCockpitI, EuripidesWarpCore, BasicCockpit, BasicCargoBay, BasicWarpCore
             };
+        }
+
+        public static ShipMod LoadModFromJsonFile(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException(string.Format("File {0} not found.", path));
+
+            using (StreamReader reader = File.OpenText(path))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                ShipMod mod = (ShipMod)serializer.Deserialize(reader, typeof(ShipMod));
+            }
+
+            return new ShipMod(ShipMod.ShipModTypes.Cockpit);
         }
 
         public static ShipMod MaverickCockpitI;

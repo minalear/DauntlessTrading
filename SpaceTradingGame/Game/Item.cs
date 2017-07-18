@@ -122,7 +122,7 @@ namespace SpaceTradingGame.Game
         {
             Name = "Plutonium",
             Description = "Used for warp fuel.",
-            BaseValue = 1400,
+            BaseValue = 14000,
             Weight = 500,
             Rarity = 10
         };

@@ -3,16 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SpaceTradingGame.Game
 {
     public class ShipMod : Item
     {
+        [JsonProperty(PropertyName = "grade")]
         public int Grade { get; set; }
+
+        [JsonProperty(PropertyName = "attack")]
         public int FirePowerMod { get; set; }
+
+        [JsonProperty(PropertyName = "cargo")]
         public int CargoMod { get; set; }
+
+        [JsonProperty(PropertyName = "defense")]
         public int DefenseMod { get; set; }
+
+        [JsonProperty(PropertyName = "jump")]
         public double JumpMod { get; set; }
+
+        [JsonProperty(PropertyName = "type")]
         public ShipModTypes ModType { get; set; }
 
         public ShipMod(ShipModTypes type)
