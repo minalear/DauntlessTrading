@@ -10,6 +10,10 @@ namespace SpaceTradingGame.Game.Factories
         //Auto increments to set unique faction colors
         private static int _colorPointer = 0;
 
+        public static void Reset()
+        {
+            _colorPointer = 0;
+        }
         public static Faction GenerateRandomFaction()
         {
             StringBuilder name = new StringBuilder();

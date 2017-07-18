@@ -21,10 +21,21 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 GameManager.CombatSimulator.SetCombatants(GameManager.PlayerShip, (Ship)shipList.GetSelection());
                 CombatGroup victor = GameManager.CombatSimulator.SimulateCombat();
 
+
                 descriptionBox.Text = string.Format("{0} won!", victor.Ships[0].Name);
             };
 
             scanButton = new Button(null, "Scan", 1, 7);
+            scanButton.Click += (sender, e) =>
+            {
+                if (!shipList.HasSelection) return;
+
+                GameManager.CombatSimulator.SetCombatants(GameManager.PlayerShip, (Ship)shipList.GetSelection());
+                double oddsToWin = GameManager.CombatSimulator.GetCombatOdds();
+
+                descriptionBox.Text = string.Format("{0}% chance to win.", oddsToWin * 100.0);
+                updateDisplayInformation();
+            };
 
             shipList = new ScrollingList(null, GraphicConsole.BufferWidth - 41, 1, 40, 20);
             shipList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
@@ -40,13 +51,15 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             RegisterControl(backButton);
             RegisterControl(attackButton);
+            RegisterControl(scanButton);
             RegisterControl(shipList);
             RegisterControl(descriptionBox);
         }
 
         public override void OnEnable()
         {
-            shipList.SetList(GameManager.GetShipsInJumpRadius(GameManager.PlayerShip));
+            updateDisplayInformation();
+            descriptionBox.Text = string.Empty;
 
             base.OnEnable();
         }
@@ -54,6 +67,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private string getShipDescription(Ship ship)
         {
             return string.Format("{0} - {1}\n{2} - {3}", ship.Name, ship.Model, ship.Pilot.Name, ship.Faction.Name);
+        }
+        private void updateDisplayInformation()
+        {
+            shipList.SetList(GameManager.GetShipsInJumpRadius(GameManager.PlayerShip));
         }
 
         private Button backButton, attackButton, scanButton;

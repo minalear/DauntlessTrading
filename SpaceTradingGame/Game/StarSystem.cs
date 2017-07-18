@@ -9,8 +9,6 @@ namespace SpaceTradingGame.Game
 {
     public class StarSystem : Engine.UI.Controls.ListItem, IComparable
     {
-        private static int _nextValidID = 0;
-
         public int ID { get; set; }
         public double WeightedValue { get; set; }
         public string Name { get; set; }
@@ -69,6 +67,12 @@ namespace SpaceTradingGame.Game
             return string.Format("{0} - {1}", Name, WeightedValue);
         }
 
+        private static int _nextValidID = 0;
         private static Color4[] colors = { Color4.Red, Color4.Orange, Color4.Yellow, Color4.Cyan, Color4.Blue, Color4.White };
+
+        public static void ResetIDCounter()
+        {
+            _nextValidID = 0;
+        }
     }
 }

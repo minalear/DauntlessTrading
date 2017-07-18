@@ -97,6 +97,13 @@ namespace SpaceTradingGame.Game
 
             return modList;
         }
+        public void AddInventoryList(List<InventorySlot> items)
+        {
+            foreach (InventorySlot slot in items)
+            {
+                AddItem(slot.InventoryItem, slot.Quantity);
+            }
+        }
 
         private int credits;
         private Dictionary<Item, InventorySlot> inventorySlots;

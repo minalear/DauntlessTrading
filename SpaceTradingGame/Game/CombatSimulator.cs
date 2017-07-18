@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using SpaceTradingGame.Engine;
 
 namespace SpaceTradingGame.Game
 {
     public class CombatSimulator
     {
+        public CombatGroup GroupOne { get { return groupOne; } }
+        public CombatGroup GroupTwo { get { return groupTwo; } }
+
         public CombatSimulator(GameManager manager)
         {
             gameManager = manager;
@@ -20,7 +24,7 @@ namespace SpaceTradingGame.Game
             groupOne = new CombatGroup(one);
             groupTwo = new CombatGroup(two);
         }
-
+        
         public CombatGroup SimulateCombat()
         {
             if (groupOne == null || groupTwo == null)
@@ -29,13 +33,47 @@ namespace SpaceTradingGame.Game
             double varOne = RNG.NextDouble(0.9, 1.1);
             double varTwo = RNG.NextDouble(0.9, 1.1);
 
-            double groupOneValue = groupOne.GetCombatValue();
-            double groupTwoValue = groupTwo.GetCombatValue();
+            double groupOneValue = groupOne.CombatValue;
+            double groupTwoValue = groupTwo.CombatValue;
 
             groupOneValue *= varOne;
             groupTwoValue *= varTwo;
 
-            return (groupOneValue > groupTwoValue) ? groupOne : groupTwo;
+            CombatGroup winner = (groupOneValue > groupTwoValue) ? groupOne : groupTwo;
+            CombatGroup  loser = (groupOneValue < groupTwoValue) ? groupOne : groupTwo;
+
+            if (loser.IsPlayerGroup)
+                gameManager.LoseGame();
+
+            Inventory loot = getLoot(loser);
+            foreach (Ship ship in loser.Ships)
+            {
+                gameManager.Destroy(ship);
+            }
+
+            groupOne = null;
+            groupTwo = null;
+
+            return winner;
+        }
+        public double GetCombatOdds()
+        {
+            if (groupOne == null || groupTwo == null)
+                throw new ArgumentNullException("You must set CombatGroups before calculating odds.");
+
+            double total = groupOne.CombatValue + groupTwo.CombatValue;
+            return (groupOne.CombatValue / total).Truncate(2);
+        }
+
+        private Inventory getLoot(CombatGroup group)
+        {
+            Inventory loot = new Inventory();
+            foreach (Ship ship in group.Ships)
+            {
+                loot.AddInventoryList(ship.Inventory.GetInventoryList());
+            }
+
+            return loot;
         }
 
         private CombatGroup groupOne, groupTwo;
@@ -46,13 +84,15 @@ namespace SpaceTradingGame.Game
     {
         public Ship[] Ships { get; private set; }
         public bool IsPlayerGroup { get; private set; }
+        public double CombatValue { get; private set; }
 
         public CombatGroup(params Ship[] ships)
         {
             Ships = ships;
+            CombatValue = CalculateCombatValue();
         }
 
-        public double GetCombatValue()
+        public double CalculateCombatValue()
         {
             double totalValue = 0.0;
             foreach (Ship ship in Ships)
@@ -60,6 +100,8 @@ namespace SpaceTradingGame.Game
                 totalValue += ship.DefenseRating * DEFENSE_VALUE;
                 totalValue += ship.FirePower * DAMAGE_VALUE;
                 totalValue += ship.JumpRadius * JUMP_RADIUS_VALUE;
+
+                if (ship.Pilot.IsPlayer) IsPlayerGroup = true;
             }
 
             return totalValue;

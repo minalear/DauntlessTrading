@@ -6,8 +6,6 @@ namespace SpaceTradingGame.Game
 {
     public class Ship : Engine.UI.Controls.ListItem, ICloneable
     {
-        private static int _nextValidID = 0;
-
         private string shipName;
         private string shipModel;
         private int firePower;
@@ -150,5 +148,11 @@ namespace SpaceTradingGame.Game
         public Faction Faction { get; set; }
         public Vector2 WorldPosition { get; set; }
         public StarSystem CurrentSystem { get; private set; }
+
+        private static int _nextValidID = 0;
+        public static void ResetIDCounter()
+        {
+            _nextValidID = 0;
+        }
     }
 }

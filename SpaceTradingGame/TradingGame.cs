@@ -23,7 +23,7 @@ namespace SpaceTradingGame
             gameTime = new GameTime();
 
             content = new ContentManager(this);
-            gameManager = new GameManager();
+            gameManager = new GameManager(this);
             interfaceManager = new InterfaceManager(this);
 
             this.WindowBorder = WindowBorder.Fixed;
@@ -45,5 +45,6 @@ namespace SpaceTradingGame
 
         public ContentManager Content { get { return content; } }
         public GameManager GameManager { get { return gameManager; } }
+        public InterfaceManager InterfaceManager { get { return interfaceManager; } }
     }
 }

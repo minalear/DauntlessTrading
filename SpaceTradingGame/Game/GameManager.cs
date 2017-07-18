@@ -7,6 +7,8 @@ namespace SpaceTradingGame.Game
 {
     public class GameManager
     {
+        private TradingGame game;
+
         private List<StarSystem> systems;
         private List<Faction> factions;
 
@@ -14,17 +16,45 @@ namespace SpaceTradingGame.Game
 
         private Ship playerShip;
 
-        public GameManager()
+        public GameManager(TradingGame game)
         {
+            this.game = game;
+
             //Init Factories
             Factories.ProductFactory.Init();
             Factories.ModFactory.Init();
             Factories.ShipFactory.Init();
-
-            //Game simulates 10 days, starting the game 1/1/2347
-            galacticDate = new DateTime(2346, 12, 22);
+            
             Pathfinder = new Pathfinder(this);
             CombatSimulator = new CombatSimulator(this);
+        }
+
+        public void SetupGame(string playerName, string companyName, Ship ship)
+        {
+            //Reset variables between new games
+            Factories.FactionFactory.Reset();
+            StarSystem.ResetIDCounter();
+            Ship.ResetIDCounter();
+
+            GenerateGalaxy();
+
+            this.playerShip = ship;
+
+            PlayerFaction = new Faction(companyName, true);
+            PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
+
+            playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
+            PlayerShip.SetCurrentSystem(Systems[0]); //Set to Sol system
+
+            PlayerFaction.OwnedShips.Add(playerShip);
+            factions.Add(PlayerFaction);
+
+            SimulateGame(10.0);
+        }
+        public void GenerateGalaxy()
+        {
+            //Game simulates 10 days, starting the game 1/1/2347
+            galacticDate = new DateTime(2346, 12, 22);
 
             systems = new List<StarSystem>();
             factions = new List<Faction>();
@@ -111,21 +141,6 @@ namespace SpaceTradingGame.Game
             }
         }
 
-        public void SetupGame(string playerName, string companyName, Ship ship)
-        {
-            this.playerShip = ship;
-
-            PlayerFaction = new Faction(companyName, true);
-            PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
-
-            playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
-            PlayerShip.SetCurrentSystem(Systems[0]); //Set to Sol system
-
-            PlayerFaction.OwnedShips.Add(playerShip);
-            factions.Add(PlayerFaction);
-
-            SimulateGame(10.0);
-        }
         public void SimulateGame(double days)
         {
             galacticDate = galacticDate.AddDays(days);
@@ -139,6 +154,13 @@ namespace SpaceTradingGame.Game
                 faction.UpdateFaction(days);
             }
         }
+        public void LoseGame()
+        {
+            game.InterfaceManager.ChangeInterface("Start");
+        }
+
+        
+
         public List<Ship> GetShipsInJumpRadius(Ship ship)
         {
             List<Ship> shipsInRange = new List<Ship>();
@@ -150,6 +172,11 @@ namespace SpaceTradingGame.Game
             }
 
             return shipsInRange;
+        }
+        public void Destroy(Ship ship)
+        {
+            Ships.Remove(ship);
+            ship.Faction.OwnedShips.Remove(ship);
         }
 
         public List<StarSystem> Systems { get { return this.systems; } }
