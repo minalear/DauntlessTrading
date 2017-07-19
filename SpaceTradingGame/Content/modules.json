@@ -1,23 +1,50 @@
-﻿[
-    
-    {
-        "name": "Cockpit",
-        "type": "Cockpit",
-        "grade": 1,
-        "attack": 0,
-        "defense": 5,
-        "cargo": 10,
-        "jump": 100,
-        "description": "A basic cockpit."
-    },
-    {
-        "name": "Warp Core",
-        "type": "WarpCore",
-        "grade": 1,
-        "attack": 0,
-        "defense": 2,
-        "cargo": 0,
-        "jump": 500,
-        "description": "A basic warp core."
-    }
-]
+﻿[{
+	"name": "Cockpit",
+	"type": "Cockpit",
+	"grade": 1,
+	"attack": 0,
+	"defense": 5,
+	"cargo": 0,
+	"jump": 100,
+	"description": "A basic cockpit."
+},
+{
+	"name": "Warp Core",
+	"type": "WarpCore",
+	"grade": 1,
+	"attack": 0,
+	"defense": 0,
+	"cargo": 0,
+	"jump": 500,
+	"description": "A basic warp core."
+},
+{
+	"name": "Cargo Bay",
+	"type": "CargoBay",
+	"grade": 1,
+	"attack": 0,
+	"defense": 5,
+	"cargo": 500,
+	"jump": 0,
+	"description": "A basic warp core."
+},
+{
+	"name": "Maverick Cockpit",
+	"type": "Cockpit",
+	"grade": 2,
+	"attack": 5,
+	"defense": 5,
+	"cargo": 0,
+	"jump": 100,
+	"description": "A modification based on the original Cockpit design that boasts basic lasers."
+},
+{
+	"name": "Euripides Warp Engine",
+	"type": "WarpCore",
+	"grade": 2,
+	"attack": 0,
+	"defense": 5,
+	"cargo": 0,
+	"jump": 1000,
+	"description": "An advanced warp core design by the Euripides Corporation."
+}]

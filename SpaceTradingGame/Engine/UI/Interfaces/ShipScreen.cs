@@ -86,11 +86,11 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
                 else
                     GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.InventoryItem, true);
-
-                updateDisplayInfo();
+                
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
                 inventoryTitle.Text = "== Inventory ==";
 
+                updateDisplayInfo();
                 InterfaceManager.DrawStep();
             };
             filterReset.Click += (sender, e) =>
@@ -163,6 +163,20 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private void updateDisplayInfo()
         {
             shipLayout.UpdateButtons();
+
+            if (scrollingList.HasSelection)
+            {
+                InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
+                Item item = selection.InventorySlot.InventoryItem;
+
+                descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}",
+                    item.Name,
+                    item.Weight,
+                    selection.InventorySlot.TotalWeight,
+                    item.Description);
+            }
+            else
+                descriptionBox.Text = string.Empty;
 
             shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
             shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);

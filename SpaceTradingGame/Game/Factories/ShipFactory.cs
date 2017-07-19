@@ -37,17 +37,17 @@ namespace SpaceTradingGame.Game.Factories
             Ship Exodia = new Ship("Blueprint", "Exodia Class");
 
             //Equip Modifications
-            MaverickMkI.EquipModification(ModFactory.BasicCockpit, false);
-            MaverickMkI.EquipModification(ModFactory.BasicCargoBay, false);
-            MaverickMkI.EquipModification(ModFactory.BasicWarpCore, false);
+            MaverickMkI.EquipModification(ModFactory.ModList[0], false);
+            MaverickMkI.EquipModification(ModFactory.ModList[1], false);
+            MaverickMkI.EquipModification(ModFactory.ModList[2], false);
 
-            MaverickMkII.EquipModification(ModFactory.BasicCockpit, false);
-            MaverickMkII.EquipModification(ModFactory.BasicCargoBay, false);
-            MaverickMkII.EquipModification(ModFactory.BasicWarpCore, false);
+            MaverickMkII.EquipModification(ModFactory.ModList[0], false);
+            MaverickMkII.EquipModification(ModFactory.ModList[1], false);
+            MaverickMkII.EquipModification(ModFactory.ModList[2], false);
 
-            Dauntless.EquipModification(ModFactory.BasicCockpit, false);
-            Dauntless.EquipModification(ModFactory.BasicCargoBay, false);
-            Dauntless.EquipModification(ModFactory.BasicWarpCore, false);
+            Dauntless.EquipModification(ModFactory.ModList[0], false);
+            Dauntless.EquipModification(ModFactory.ModList[1], false);
+            Dauntless.EquipModification(ModFactory.ModList[2], false);
 
             ShipBlueprints = new Ship[] { MaverickMkI, MaverickMkII, DelpheneI, DelpheneII, Dauntless, Exodia };
             for (int i = 0; i < ShipBlueprints.Length; i++)
