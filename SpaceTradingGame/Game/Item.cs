@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace SpaceTradingGame.Game
 {
@@ -10,11 +6,22 @@ namespace SpaceTradingGame.Game
     {
         protected string baseDescription;
 
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+
+        [JsonProperty(PropertyName = "description")]
         public string Description { get { return GetDescription(); } set { baseDescription = value; } }
+
+        [JsonProperty(PropertyName = "value")]
         public int BaseValue { get; set; }
+
+        [JsonProperty(PropertyName = "rarity")]
         public double Rarity { get; set; }
+
+        [JsonProperty(PropertyName = "weight")]
         public int Weight { get; set; }
+
+        [JsonProperty(PropertyName = "basetype")]
         public ItemTypes ItemType { get; set; }
 
         public override string ToString()
