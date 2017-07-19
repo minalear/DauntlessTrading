@@ -46,16 +46,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             startGameButton.Click += (sender, e) =>
             {
                 if (!isValidInputs()) return;
-
-                Ship ship = (Ship)shipSelectionList.GetSelection();
-                ship.Name = shipNameInput.Text.Trim();
-                ship.Inventory.AddItem(Item.Gold, 27);
-                ship.Inventory.AddItem(Item.StarshipFuel, 100);
-                ship.Inventory.AddItem(Game.Factories.ModFactory.MaverickCockpitI, 1);
-                ship.Inventory.AddItem(Game.Factories.ModFactory.EuripidesWarpCore, 1);
-                ship.Inventory.Credits = 50000;
-
-                GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);
+                GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), shipNameInput.Text.Trim(), (Ship)shipSelectionList.GetSelection());
 
                 InterfaceManager.ChangeInterface("Travel");
             };

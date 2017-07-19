@@ -123,11 +123,7 @@ namespace SpaceTradingGame.Game
             Ship newShip = new Ship(Name, Model);
             foreach (ShipNode node in Nodes)
             {
-                ShipNode newNode = (ShipNode)node.Clone();
-                newNode.Empty = false;
-                newNode.Modification = node.Modification;
-
-                newShip.Nodes.Add(newNode);
+                newShip.Nodes.Add((ShipNode)node.Clone());
             }
 
             newShip.UpdateShipStats();

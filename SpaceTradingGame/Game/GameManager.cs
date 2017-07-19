@@ -33,7 +33,7 @@ namespace SpaceTradingGame.Game
             CombatSimulator = new CombatSimulator(this);
         }
 
-        public void SetupGame(string playerName, string companyName, Ship ship)
+        public void SetupGame(string playerName, string companyName, string shipName, Ship shipBlueprint)
         {
             //Reset variables between new games
             Factories.FactionFactory.Reset();
@@ -41,6 +41,14 @@ namespace SpaceTradingGame.Game
             Ship.ResetIDCounter();
 
             GenerateGalaxy();
+
+            Ship ship = Factories.ShipFactory.ConstructNewShip(shipBlueprint.Model);
+            ship.Name = shipName;
+            ship.Inventory.AddItem(Item.Gold, 27);
+            ship.Inventory.AddItem(Item.StarshipFuel, 100);
+            ship.Inventory.AddItem(Factories.ModFactory.MaverickCockpitI, 1);
+            ship.Inventory.AddItem(Factories.ModFactory.EuripidesWarpCore, 1);
+            ship.Inventory.Credits = 50000;
 
             this.playerShip = ship;
 
