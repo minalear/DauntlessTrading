@@ -128,7 +128,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Modules\basic_cockpit.json">
+    <Content Include="Content\modules.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

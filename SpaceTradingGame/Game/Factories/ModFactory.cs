@@ -9,7 +9,7 @@ namespace SpaceTradingGame.Game.Factories
     {
         public static void Init()
         {
-            List<ShipMod> mods = JsonConvert.DeserializeObject<List<ShipMod>>(File.ReadAllText("Content/Modules/basic_cockpit.json"));
+            List<ShipMod> mods = JsonConvert.DeserializeObject<List<ShipMod>>(File.ReadAllText("Content/modules.json"));
 
             MaverickCockpitI = new ShipMod(ShipMod.ShipModTypes.Cockpit);
             MaverickCockpitI.Name = "Maverick Cockpit";
