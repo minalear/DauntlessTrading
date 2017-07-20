@@ -39,10 +39,12 @@ namespace SpaceTradingGame.Game
 
             groupOneValue *= varOne;
             groupTwoValue *= varTwo;
+            
+            double rng = RNG.NextDouble(-groupOneValue, groupTwoValue);
 
             //Determine winner/loser
-            CombatGroup winner = (groupOneValue > groupTwoValue) ? groupOne : groupTwo;
-            CombatGroup  loser = (groupOneValue < groupTwoValue) ? groupOne : groupTwo;
+            CombatGroup winner = (rng <= 0) ? groupOne : groupTwo;
+            CombatGroup  loser = (rng  > 0) ? groupOne : groupTwo;
 
             //If the player lost, send them to the end screen
             if (loser.IsPlayerGroup)
@@ -52,10 +54,11 @@ namespace SpaceTradingGame.Game
             Inventory loot = getLoot(loser);
             winner.Ships[0].Inventory.AddInventoryList(loot.GetInventoryList());
 
-            //Destroy the losers
+            //Add loser ships to winner's faction
             foreach (Ship ship in loser.Ships)
             {
-                gameManager.Destroy(ship);
+                ship.Faction.UnregisterShip(ship);
+                winner.Ships[0].Faction.RegisterShip(ship);
             }
 
             groupOne = null;
@@ -79,12 +82,15 @@ namespace SpaceTradingGame.Game
             {
                 //Add the ship's inventory to the loot list
                 loot.AddInventoryList(ship.Inventory.GetInventoryList());
+                ship.Inventory.ClearInventory();
 
                 //Add the modules of each ship to the loot list
                 foreach (ShipNode node in ship.Nodes)
                 {
                     if (node.Empty) continue;
                     loot.AddItem(node.Module, 1);
+                    node.Empty = true;
+                    node.Module = null;
                 }
             }
 

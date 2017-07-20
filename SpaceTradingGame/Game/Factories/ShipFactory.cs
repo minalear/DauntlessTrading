@@ -33,6 +33,7 @@ namespace SpaceTradingGame.Game.Factories
                 ship.EquipModule(ModFactory.ModList[2], false);
 
                 ship.UpdateShipStats();
+                ship.Value = ship.Nodes.Count * 1000;
 
                 ShipBlueprints.Add(ship);
                 if (blueprint.Basic)

@@ -20,10 +20,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             backButton = new Button(null, "Back", 0, GraphicConsole.BufferHeight - 3);
             backButton.Click += (sender, e) => InterfaceManager.ChangeInterface("Travel");
 
-            equipButton = new Button(null, "Equip", 23, GraphicConsole.BufferHeight - 3);
+            equipButton = new Button(null, "Equip", 14, GraphicConsole.BufferHeight - 3);
+            unequipButton = new Button(null, "Unequip", 21, GraphicConsole.BufferHeight - 3);
 
             shipLayout = new ShipLayout(null, 28, 19);
             shipLayout.Position = new System.Drawing.Point(1, GraphicConsole.BufferHeight - shipLayout.Size.Y - 3);
+
+            previousShip = new Button(null, "◄", 1, shipLayout.Position.Y - 3);
+            nextShip = new Button(null, "►", shipLayout.Size.X - 2, shipLayout.Position.Y - 3);
 
             scrollingList = new ScrollingList(null, 30, 2, GraphicConsole.BufferWidth - 31, 21);
             scrollingList.FillColor = new Color4(50, 50, 50, 255);
@@ -41,18 +45,32 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             filterReset = new Button(null, "Rst", 30, 1, 3, 1);
             materialFilter = new Button(null, "Min", 34, 1, 3, 1);
             modFilter = new Button(null, "Mod", 38, 1, 3, 1);
+            shipFilter = new Button(null, "Ship", 42, 1, 4, 1);
 
             #region Control Events
             scrollingList.Selected += (sender, index) =>
             {
-                InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
-                Item item = selection.InventorySlot.Item;
+                //Selection can be an inventory item or a ship, check
+                Type typeOfSelection = scrollingList.GetSelection().GetType();
+                if (typeOfSelection == typeof(Ship))
+                {
+                    Ship ship = (Ship)scrollingList.GetSelection();
+                    descriptionBox.Text = ship.Description;
+                    shipLayout.SetShip(ship);
 
-                descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}", 
-                    item.Name, 
-                    item.Weight,
-                    selection.InventorySlot.TotalWeight, 
-                    item.Description);
+                    updateDisplayInfo();
+                }
+                else
+                {
+                    InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
+                    Item item = selection.InventorySlot.Item;
+
+                    descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}",
+                        item.Name,
+                        item.Weight,
+                        selection.InventorySlot.TotalWeight,
+                        item.Description);
+                }
                 InterfaceManager.DrawStep();
             };
             scrollingList.Deselected += (sender) =>
@@ -79,16 +97,37 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             equipButton.Click += (sender, e) =>
             {
                 if (!scrollingList.HasSelection) return;
-                InventorySlot selectedItem = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot;
-                if (selectedItem.Item.ItemType != ItemTypes.ShipMod) return;
 
-                if (shipLayout.HasNodeSelected)
-                    GameManager.PlayerShip.EquipModule(shipLayout.SelectedNode, (ShipMod)selectedItem.Item, true);
+                ListItem selectedItem = scrollingList.GetSelection();
+
+                if (selectedItem.GetType() == typeof(Ship))
+                {
+                    Ship ship = (Ship)selectedItem;
+                    GameManager.ChangePlayerShip(ship);
+
+                    filterReset.Press(); //Trigger inventory reset
+                }
                 else
-                    GameManager.PlayerShip.EquipModule((ShipMod)selectedItem.Item, true);
-                
-                setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
-                inventoryTitle.Text = "== Inventory ==";
+                {
+                    InventorySlot slot = ((InventoryListItem)selectedItem).InventorySlot;
+                    if (slot.Item.ItemType != ItemTypes.ShipMod) return;
+
+                    if (shipLayout.HasNodeSelected)
+                        GameManager.PlayerShip.EquipModule(shipLayout.SelectedNode, (ShipMod)slot.Item, true);
+                    else
+                        GameManager.PlayerShip.EquipModule((ShipMod)slot.Item, true);
+
+                    setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
+                    inventoryTitle.Text = "== Inventory ==";
+                }
+
+                updateDisplayInfo();
+                InterfaceManager.DrawStep();
+            };
+            unequipButton.Click += (sender, e) =>
+            {
+                if (!shipLayout.HasNodeSelected) return;
+                GameManager.PlayerShip.UnequipModule(shipLayout.SelectedNode, true);
 
                 updateDisplayInfo();
                 InterfaceManager.DrawStep();
@@ -97,16 +136,33 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
                 inventoryTitle.Text = "== Inventory ==";
+                scrollingList.ClearSelection();
+                shipLayout.SetShip(GameManager.PlayerShip);
+                updateDisplayInfo();
             };
             materialFilter.Click += (sender, e) =>
             {
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.RawMaterial));
                 inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.RawMaterial);
+                scrollingList.ClearSelection();
+                shipLayout.SetShip(GameManager.PlayerShip);
+                updateDisplayInfo();
             };
             modFilter.Click += (sender, e) =>
             {
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList(ItemTypes.ShipMod));
                 inventoryTitle.Text = string.Format("== Inventory - Filter: {0} ==", ItemTypes.ShipMod);
+                scrollingList.ClearSelection();
+                shipLayout.SetShip(GameManager.PlayerShip);
+                updateDisplayInfo();
+            };
+            shipFilter.Click += (sender, e) =>
+            {
+                scrollingList.SetList(GameManager.PlayerFaction.OwnedShips);
+                inventoryTitle.Text = string.Format("== Owned Ships ==");
+                scrollingList.ClearSelection();
+                shipLayout.SetShip(GameManager.PlayerShip);
+                updateDisplayInfo();
             };
             #endregion
 
@@ -122,9 +178,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             //Buttons
             RegisterControl(backButton);
             RegisterControl(equipButton);
+            RegisterControl(unequipButton);
+            //RegisterControl(previousShip);
+            //RegisterControl(nextShip);
             RegisterControl(filterReset);
             RegisterControl(materialFilter);
             RegisterControl(modFilter);
+            RegisterControl(shipFilter);
 
             //Other
             RegisterControl(scrollingList);
@@ -166,28 +226,35 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
             if (scrollingList.HasSelection)
             {
-                InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
-                Item item = selection.InventorySlot.Item;
+                if (scrollingList.GetSelection().GetType() != typeof(Ship))
+                {
+                    InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
+                    Item item = selection.InventorySlot.Item;
 
-                descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}",
-                    item.Name,
-                    item.Weight,
-                    selection.InventorySlot.TotalWeight,
-                    item.Description);
+                    descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}",
+                        item.Name,
+                        item.Weight,
+                        selection.InventorySlot.TotalWeight,
+                        item.Description);
+                }
             }
             else
                 descriptionBox.Text = string.Empty;
 
-            shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
-            shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);
-            shipCargoTitle.Text = string.Format("  Cargo: {0}/{1}", GameManager.PlayerShip.Inventory.TotalWeight, GameManager.PlayerShip.CargoCapacity);
-            shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.JumpRadius);
+            shipDesignationTitle.Text = shipLayout.Ship.Name;
+            shipModelTitle.Text = shipLayout.Ship.Model;
+
+            shipAttackTitle.Text = string.Format(" Attack: {0}", shipLayout.Ship.FirePower);
+            shipDefenseTitle.Text = string.Format("Defense: {0}", shipLayout.Ship.DefenseRating);
+            shipCargoTitle.Text = string.Format("  Cargo: {0}/{1}", shipLayout.Ship.Inventory.TotalWeight, shipLayout.Ship.CargoCapacity);
+            shipJumpTitle.Text = string.Format("   Jump: {0}", shipLayout.Ship.JumpRadius);
         }
 
         private Title shipDesignationTitle, shipModelTitle;
         private Title shipAttackTitle, shipDefenseTitle, shipCargoTitle, shipJumpTitle;
-        private Button backButton, equipButton;
-        private Button filterReset, materialFilter, modFilter;
+        private Button backButton, equipButton, unequipButton;
+        private Button filterReset, materialFilter, modFilter, shipFilter;
+        private Button previousShip, nextShip;
         private ScrollingList scrollingList;
         private TextBox descriptionBox;
         private ShipLayout shipLayout;

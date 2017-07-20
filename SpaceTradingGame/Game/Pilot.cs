@@ -10,17 +10,16 @@ namespace SpaceTradingGame.Game
         public GameManager GameManager { get; private set; }
 
         public string Name { get; private set; }
-        public Faction Faction { get; private set; }
-        public Ship Ship { get; private set; }
+        public Faction Faction { get { return Ship.Faction; } }
+        public Ship Ship { get; set; }
         public bool IsPlayer { get; private set; }
         public bool IsTraveling { get; private set; }
 
-        public Pilot(GameManager manager, string name, Faction faction, Ship ship, bool isPlayer = false)
+        public Pilot(GameManager manager, string name, Ship ship, bool isPlayer = false)
         {
             GameManager = manager;
 
             Name = name;
-            Faction = faction;
             Ship = ship;
             IsPlayer = isPlayer;
             IsTraveling = false;

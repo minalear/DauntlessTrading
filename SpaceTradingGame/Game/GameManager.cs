@@ -51,10 +51,10 @@ namespace SpaceTradingGame.Game
             PlayerFaction = new Faction(this, companyName, true);
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
 
-            playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
+            playerShip.SetPilot(new Pilot(this, playerName, playerShip, true));
             PlayerShip.SetCurrentSystem(Systems[0]); //Set to Sol system
 
-            PlayerFaction.OwnedShips.Add(playerShip);
+            PlayerFaction.RegisterShip(ship);
             factions.Add(PlayerFaction);
 
             SimulateGame(10.0);
@@ -136,7 +136,7 @@ namespace SpaceTradingGame.Game
                     Ship ship = Factories.ShipFactory.ConstructRandomShip();
                     ship.Name = Factories.ShipFactory.GenerateRandomShipName();
 
-                    ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
+                    ship.SetPilot(new Pilot(this, "Mark Webber", ship, false));
                     ship.SetCurrentSystem(Systems[0]); //Default to Sol system (for now)
 
                     faction.RegisterShip(ship);
@@ -167,6 +167,33 @@ namespace SpaceTradingGame.Game
         public void ExitGame()
         {
             game.Exit();
+        }
+
+        public void ChangePlayerShip(Ship newShip)
+        {
+            //Unequip everything from the current ship
+            foreach (ShipNode node in playerShip.Nodes)
+            {
+                playerShip.UnequipModule(node, true);
+            }
+
+            //Transfer inventory
+            Inventory newShipInventory = new Inventory();
+            newShipInventory.AddInventoryList(playerShip.Inventory.GetInventoryList());
+            playerShip.Inventory.ClearInventory();
+            playerShip.Inventory.AddInventoryList(newShip.Inventory.GetInventoryList());
+            newShip.Inventory.AddInventoryList(newShipInventory.GetInventoryList());
+
+            //Swap Pilots
+            Pilot newPilot = newShip.Pilot;
+            newShip.SetPilot(playerShip.Pilot);
+            playerShip.SetPilot(newPilot);
+
+            //Set coordinates
+            newShip.SetCurrentSystem(playerShip.CurrentSystem);
+            newShip.WorldPosition = playerShip.WorldPosition;
+
+            playerShip = newShip;
         }
 
         public List<Ship> GetShipsInJumpRadius(Ship ship)

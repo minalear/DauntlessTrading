@@ -75,7 +75,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             };
             travelButton.Click += (sender, e) =>
             {
-                if (starMap.HasSystemSelected && !GameManager.PlayerShip.Pilot.IsTraveling)
+                if (starMap.HasSystemSelected && !GameManager.PlayerShip.Pilot.IsTraveling && GameManager.PlayerShip.CanFly())
                 {
                     startTraveling();
                 }

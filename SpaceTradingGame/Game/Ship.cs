@@ -94,6 +94,30 @@ namespace SpaceTradingGame.Game
                 UpdateShipStats();
             }
         }
+        public void UnequipModule(ShipNode node, bool addToInventory)
+        {
+            if (node.Empty) return;
+            if (addToInventory) shipInventory.AddItem(node.Module, 1);
+            node.Empty = true;
+            node.Module = null;
+
+            UpdateShipStats();
+        }
+        public bool HasModule(ShipMod.ShipModTypes type)
+        {
+            foreach (ShipNode node in nodes)
+            {
+                if (node.ModType == type && !node.Empty)
+                    return true;
+            }
+
+            return false;
+        }
+        public bool CanFly()
+        {
+            return (HasModule(ShipMod.ShipModTypes.Cockpit) && HasModule(ShipMod.ShipModTypes.WarpCore));
+        }
+
         public void UpdateShipStats()
         {
             firePower = 0;
@@ -125,6 +149,8 @@ namespace SpaceTradingGame.Game
         {
             Pilot = pilot;
             Faction = pilot.Faction;
+
+            pilot.Ship = this;
         }
 
         public override string ToString()
@@ -142,6 +168,9 @@ namespace SpaceTradingGame.Game
             }
 
             newShip.UpdateShipStats();
+            newShip.Value = Value;
+            newShip.Description = Description;
+
             return newShip;
         }
 
@@ -156,6 +185,7 @@ namespace SpaceTradingGame.Game
         public string Description { get; set; }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
+        public int Value { get; set; }
         public Pilot Pilot { get; private set; }
         public Faction Faction { get; set; }
         public Vector2 WorldPosition { get; set; }
