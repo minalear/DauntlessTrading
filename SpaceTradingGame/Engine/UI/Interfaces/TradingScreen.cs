@@ -121,8 +121,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         public override void OnEnable()
         {
-            computerMarket = GameManager.CurrentSystem.SystemMarket;
-            computerInventory = GameManager.CurrentSystem.SystemMarket.MarketInventory;
+            computerMarket = GameManager.CurrentSystem.Market;
+            computerInventory = GameManager.CurrentSystem.Market.MarketInventory;
             updateScreenInformation();
             updateLists();
 

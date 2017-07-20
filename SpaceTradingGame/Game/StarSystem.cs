@@ -19,7 +19,7 @@ namespace SpaceTradingGame.Game
         public Vector2 Coordinates { get; set; }
         public Point MapCoord { get; set; }
 
-        public Market SystemMarket { get; set; }
+        public Market Market { get; set; }
         public bool HasMarket { get; set; }
 
         public StarSystem(string name)
@@ -43,7 +43,7 @@ namespace SpaceTradingGame.Game
         public void BuildMarket(Faction owner)
         {
             HasMarket = true;
-            SystemMarket = new Market(this, owner);
+            Market = new Market(this, owner);
         }
 
         public override bool Equals(object obj)

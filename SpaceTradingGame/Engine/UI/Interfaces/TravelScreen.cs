@@ -206,7 +206,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             systemDescription.Append("-\n");
 
             if (infoSystem.HasMarket)
-                systemDescription.AppendFormat("System market owned by {0}.", infoSystem.SystemMarket.Owner.Name);
+                systemDescription.AppendFormat("System market owned by {0}.", infoSystem.Market.Owner.Name);
             else
                 systemDescription.Append("No system market.");
 
