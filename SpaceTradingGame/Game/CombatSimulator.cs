@@ -30,6 +30,7 @@ namespace SpaceTradingGame.Game
             if (groupOne == null || groupTwo == null)
                 throw new ArgumentNullException("You must set CombatGroups before simulating combat.");
 
+            //Variance to add variability to combat
             double varOne = RNG.NextDouble(0.9, 1.1);
             double varTwo = RNG.NextDouble(0.9, 1.1);
 
@@ -39,13 +40,19 @@ namespace SpaceTradingGame.Game
             groupOneValue *= varOne;
             groupTwoValue *= varTwo;
 
+            //Determine winner/loser
             CombatGroup winner = (groupOneValue > groupTwoValue) ? groupOne : groupTwo;
             CombatGroup  loser = (groupOneValue < groupTwoValue) ? groupOne : groupTwo;
 
+            //If the player lost, send them to the end screen
             if (loser.IsPlayerGroup)
                 gameManager.LoseGame();
 
+            //Calculate and reward loot
             Inventory loot = getLoot(loser);
+            winner.Ships[0].Inventory.AddInventoryList(loot.GetInventoryList());
+
+            //Destroy the losers
             foreach (Ship ship in loser.Ships)
             {
                 gameManager.Destroy(ship);
@@ -70,7 +77,15 @@ namespace SpaceTradingGame.Game
             Inventory loot = new Inventory();
             foreach (Ship ship in group.Ships)
             {
+                //Add the ship's inventory to the loot list
                 loot.AddInventoryList(ship.Inventory.GetInventoryList());
+
+                //Add the modules of each ship to the loot list
+                foreach (ShipNode node in ship.Nodes)
+                {
+                    if (node.Empty) continue;
+                    loot.AddItem(node.Module, 1);
+                }
             }
 
             return loot;

@@ -6,7 +6,7 @@ namespace SpaceTradingGame.Game
     public class ShipNode : ICloneable
     {
         public Point Location { get { return location; } set { location = value; } }
-        public ShipMod Modification { get; set; }
+        public ShipMod Module { get; set; }
         public ShipMod.ShipModTypes ModType { get; set; }
         public int X { get { return location.X; } set { location.X = value; } }
         public int Y { get { return Location.Y; } set { location.Y = value; } }
@@ -22,18 +22,18 @@ namespace SpaceTradingGame.Game
             : this(x, y, mod.ModType)
         {
             Empty = false;
-            Modification = mod;
+            Module = mod;
         }
 
         public object Clone()
         {
             if (Empty) return new ShipNode(X, Y, ModType);
-            return new ShipNode(X, Y, Modification);
+            return new ShipNode(X, Y, Module);
         }
         public override string ToString()
         {
             if (Empty) return "Empty";
-            return string.Format("{0} - {1}", ModType, Modification.Name);
+            return string.Format("{0} - {1}", ModType, Module.Name);
         }
 
         private Point location;

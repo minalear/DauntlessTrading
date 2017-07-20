@@ -28,9 +28,9 @@ namespace SpaceTradingGame.Game.Factories
                 }
 
                 //Equip basic modules #0 - 2
-                ship.EquipModification(ModFactory.ModList[0], false);
-                ship.EquipModification(ModFactory.ModList[1], false);
-                ship.EquipModification(ModFactory.ModList[2], false);
+                ship.EquipModule(ModFactory.ModList[0], false);
+                ship.EquipModule(ModFactory.ModList[1], false);
+                ship.EquipModule(ModFactory.ModList[2], false);
 
                 ship.UpdateShipStats();
 
@@ -65,7 +65,7 @@ namespace SpaceTradingGame.Game.Factories
                 {
                     //Equip random module woo!
                     node.Empty = false;
-                    node.Modification = ModFactory.ModList[RNG.Next(0, ModFactory.ModList.Count)];
+                    node.Module = ModFactory.ModList[RNG.Next(0, ModFactory.ModList.Count)];
                 }
                 else
                 {
@@ -74,7 +74,7 @@ namespace SpaceTradingGame.Game.Factories
                         if (mod.ModType == node.ModType)
                         {
                             node.Empty = false;
-                            node.Modification = mod;
+                            node.Module = mod;
                         }
                     }
                 }

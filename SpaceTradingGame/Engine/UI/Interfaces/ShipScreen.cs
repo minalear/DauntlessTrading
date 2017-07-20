@@ -69,7 +69,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Display equipped Mod's description
                 if (!node.Empty)
                 {
-                    descriptionBox.Text = string.Format("-{0}-\n{1}", node.Modification.Name, node.Modification.Description);
+                    descriptionBox.Text = string.Format("-{0}-\n{1}", node.Module.Name, node.Module.Description);
                 }
                 else
                 {
@@ -83,9 +83,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 if (selectedItem.Item.ItemType != ItemTypes.ShipMod) return;
 
                 if (shipLayout.HasNodeSelected)
-                    GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.Item, true);
+                    GameManager.PlayerShip.EquipModule(shipLayout.SelectedNode, (ShipMod)selectedItem.Item, true);
                 else
-                    GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.Item, true);
+                    GameManager.PlayerShip.EquipModule((ShipMod)selectedItem.Item, true);
                 
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
                 inventoryTitle.Text = "== Inventory ==";

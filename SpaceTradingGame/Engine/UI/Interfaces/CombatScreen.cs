@@ -39,7 +39,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 foreach (ShipNode node in GameManager.CombatSimulator.GroupTwo.Ships[0].Nodes)
                 {
                     if (node.Empty) continue;
-                    text += string.Format("{0} - {1}\n", node.ModType, node.Modification.Name);
+                    text += string.Format("{0} - {1}\n", node.ModType, node.Module.Name);
                 }
 
                 text += "-\n";

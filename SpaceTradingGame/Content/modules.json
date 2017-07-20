@@ -86,7 +86,7 @@
 	"defense": 5,
 	"cargo": 0,
 	"jump": 100,
-	"description": "A modification based on the original Cockpit design that boasts basic lasers."
+	"description": "A module based on the original Cockpit design that boasts basic lasers."
 },
 {
 	"name": "Euripides Warp Engine",
