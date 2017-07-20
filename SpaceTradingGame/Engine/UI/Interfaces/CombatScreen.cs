@@ -33,7 +33,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 GameManager.CombatSimulator.SetCombatants(GameManager.PlayerShip, (Ship)shipList.GetSelection());
                 double oddsToWin = GameManager.CombatSimulator.GetCombatOdds();
 
-                descriptionBox.Text = string.Format("{0}% chance to win.", oddsToWin * 100.0);
+                string text = string.Format("{0}% chance to win.\n-\n", oddsToWin * 100.0);
+                foreach (ShipNode node in GameManager.CombatSimulator.GroupTwo.Ships[0].Nodes)
+                {
+                    if (node.Empty) continue;
+                    text += string.Format("{0} - {1}\n", node.ModType, node.Modification.Name);
+                }
+
+                descriptionBox.Text = text;
                 updateDisplayInformation();
             };
 

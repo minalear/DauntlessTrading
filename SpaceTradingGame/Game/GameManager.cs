@@ -137,7 +137,7 @@ namespace SpaceTradingGame.Game
                 int numShips = RNG.Next(35, 50);
                 for (int k = 0; k < numShips; k++)
                 {
-                    Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
+                    Ship ship = Factories.ShipFactory.ConstructRandomShip();
                     ship.Name = Factories.ShipFactory.GenerateRandomShipName();
 
                     ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
@@ -166,7 +166,11 @@ namespace SpaceTradingGame.Game
         }
         public void LoseGame()
         {
-            game.InterfaceManager.ChangeInterface("Start");
+            game.InterfaceManager.ChangeInterface("Final");
+        }
+        public void ExitGame()
+        {
+            game.Exit();
         }
 
         public List<Ship> GetShipsInJumpRadius(Ship ship)

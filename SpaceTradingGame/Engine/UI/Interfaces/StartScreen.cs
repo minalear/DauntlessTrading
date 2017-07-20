@@ -47,40 +47,38 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private void generateRandomStars()
         {
-            stars = new List<Point>();
+            stars = new List<StarPoint>();
             
             for (int i = 0; i < 80; i++)
             {
-                stars.Add(new Point(
+                stars.Add(new StarPoint(
                     RNG.Next(0, GraphicConsole.BufferWidth),
                     RNG.Next(0, GraphicConsole.BufferHeight)));
             }
+            updateStars();
         }
         private void updateStars()
         {
-            //For moving the stars down
+            //For changing star colors
             for (int i = 0; i < stars.Count; i++)
             {
-                stars[i] = new Point(stars[i].X, stars[i].Y + 1);
-                if (stars[i].Y >= GraphicConsole.BufferHeight)
-                    stars[i] = new Point(stars[i].X, 0);
+                //Color variance in the stars
+                int rng = RNG.Next(0, 100);
+                if (rng <= 5)
+                    stars[i].Color = BLUE;
+                else if (rng <= 15)
+                    stars[i].Color = RED;
+                else if (rng <= 30)
+                    stars[i].Color = GRAY;
+                else
+                    stars[i].Color = DARK_GRAY;
             }
         }
         public override void DrawStep()
         {
             for (int i = 0; i < stars.Count; i++)
             {
-                //Color variance in the stars
-                int rng = RNG.Next(0, 100);
-                if (rng <= 5)
-                    GraphicConsole.SetColor(BLUE, Color4.Black);
-                else if (rng <= 15)
-                    GraphicConsole.SetColor(RED, Color4.Black);
-                else if (rng <= 30)
-                    GraphicConsole.SetColor(GRAY, Color4.Black);
-                else
-                    GraphicConsole.SetColor(DARK_GRAY, Color4.Black);
-
+                GraphicConsole.SetColor(stars[i].Color, Color4.Black);
                 GraphicConsole.Put('.', stars[i].X, stars[i].Y);
             }
             GraphicConsole.ClearColor();
@@ -94,6 +92,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             if (timer >= 0.85)
             {
                 timer = 0.0;
+                updateStars();
                 InterfaceManager.DrawStep();
             }
 
@@ -104,11 +103,25 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         private Title mainTitle, subTitle, infoTitle;
         private Button newGameButton, loadGameButton, optionsButton, exitButton;
-        private List<Point> stars;
+        private List<StarPoint> stars;
 
         private Color4 DARK_GRAY = new Color4(25, 25, 25, 255);
         private Color4 RED = new Color4(75, 50, 50, 255);
         private Color4 BLUE = new Color4(75, 95, 95, 255);
         private Color4 GRAY = new Color4(50, 50, 50, 255);
+
+        public class StarPoint
+        {
+            public int X;
+            public int Y;
+            public Color4 Color;
+
+            public StarPoint(int x, int y)
+            {
+                X = x;
+                Y = y;
+                Color = Color4.White;
+            }
+        }
     }
 }

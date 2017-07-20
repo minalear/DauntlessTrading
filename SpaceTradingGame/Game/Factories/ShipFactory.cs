@@ -51,6 +51,38 @@ namespace SpaceTradingGame.Game.Factories
 
             throw new ArgumentException(string.Format("Invalid model type: {0}.", model));
         }
+        public static Ship ConstructRandomShip()
+        {
+            string randomModel = ShipBlueprints[RNG.Next(0, ShipBlueprints.Count)].Model;
+            Ship ship = ConstructNewShip(randomModel);
+
+            //Equip basic modules for each node
+            foreach (ShipNode node in ship.Nodes)
+            {
+                if (!node.Empty) continue;
+
+                if (node.ModType == ShipMod.ShipModTypes.Any)
+                {
+                    //Equip random module woo!
+                    node.Empty = false;
+                    node.Modification = ModFactory.ModList[RNG.Next(0, ModFactory.ModList.Count)];
+                }
+                else
+                {
+                    foreach (ShipMod mod in ModFactory.ModList)
+                    {
+                        if (mod.ModType == node.ModType)
+                        {
+                            node.Empty = false;
+                            node.Modification = mod;
+                        }
+                    }
+                }
+            }
+
+            ship.UpdateShipStats();
+            return ship;
+        }
         public static string GenerateRandomShipName()
         {
             StringBuilder name = new StringBuilder();

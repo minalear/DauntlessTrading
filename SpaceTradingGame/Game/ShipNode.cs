@@ -30,6 +30,11 @@ namespace SpaceTradingGame.Game
             if (Empty) return new ShipNode(X, Y, ModType);
             return new ShipNode(X, Y, Modification);
         }
+        public override string ToString()
+        {
+            if (Empty) return "Empty";
+            return string.Format("{0} - {1}", ModType, Modification.Name);
+        }
 
         private Point location;
     }
