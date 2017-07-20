@@ -48,17 +48,32 @@ namespace SpaceTradingGame.Game
             this.ListText = shipModel;
         }
 
-        public void EquipModification(ShipMod mod, bool removeFromInventory)
+        public void EquipModule(ShipMod mod, bool removeFromInventory)
         {
+            //Attempt to equip module to a node with the same type
             for (int i = 0; i < nodes.Count; i++)
             {
                 if (nodes[i].ModType == mod.ModType)
                 {
                     if (removeFromInventory) shipInventory.RemoveItem(mod, 1);
-                    if (!nodes[i].Empty) shipInventory.AddItem(nodes[i].Modification, 1);
+                    if (!nodes[i].Empty) shipInventory.AddItem(nodes[i].Module, 1);
 
                     nodes[i].Empty = false;
-                    nodes[i].Modification = mod;
+                    nodes[i].Module = mod;
+
+                    UpdateShipStats();
+
+                    return;
+                }
+            }
+
+            //Failed to find the specified node, now try to equip to the first empty node with type any
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i].ModType == ShipMod.ShipModTypes.Any && nodes[i].Empty)
+                {
+                    nodes[i].Empty = false;
+                    nodes[i].Module = mod;
 
                     UpdateShipStats();
 
@@ -66,15 +81,15 @@ namespace SpaceTradingGame.Game
                 }
             }
         }
-        public void EquipModification(ShipNode node, ShipMod mod, bool removeFromInventory)
+        public void EquipModule(ShipNode node, ShipMod mod, bool removeFromInventory)
         {
             if (node.ModType == mod.ModType || node.ModType == ShipMod.ShipModTypes.Any)
             {
                 if (removeFromInventory) shipInventory.RemoveItem(mod, 1);
-                if (!node.Empty) shipInventory.AddItem(node.Modification, 1);
+                if (!node.Empty) shipInventory.AddItem(node.Module, 1);
 
                 node.Empty = false;
-                node.Modification = mod;
+                node.Module = mod;
 
                 UpdateShipStats();
             }
@@ -90,10 +105,10 @@ namespace SpaceTradingGame.Game
             {
                 if (!node.Empty)
                 {
-                    firePower += node.Modification.FirePowerMod;
-                    defenseRating += node.Modification.DefenseMod;
-                    cargoCapacity += node.Modification.CargoMod;
-                    baseJumpRadius += node.Modification.JumpMod;
+                    firePower += node.Module.FirePowerMod;
+                    defenseRating += node.Module.DefenseMod;
+                    cargoCapacity += node.Module.CargoMod;
+                    baseJumpRadius += node.Module.JumpMod;
                 }
             }
         }
@@ -123,11 +138,7 @@ namespace SpaceTradingGame.Game
             Ship newShip = new Ship(Name, Model);
             foreach (ShipNode node in Nodes)
             {
-                ShipNode newNode = (ShipNode)node.Clone();
-                newNode.Empty = false;
-                newNode.Modification = node.Modification;
-
-                newShip.Nodes.Add(newNode);
+                newShip.Nodes.Add((ShipNode)node.Clone());
             }
 
             newShip.UpdateShipStats();
@@ -142,6 +153,7 @@ namespace SpaceTradingGame.Game
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
         public double JumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public float MoveSpeed { get; set; }
+        public string Description { get; set; }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
         public Pilot Pilot { get; private set; }

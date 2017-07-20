@@ -16,6 +16,10 @@ namespace SpaceTradingGame.Game
                 credits = (value < 0) ? 0 : value;
             }
         }
+        public int TotalWeight
+        {
+            get { return totalWeight; }
+        }
 
         public Inventory()
         {
@@ -32,15 +36,17 @@ namespace SpaceTradingGame.Game
             {
                 inventorySlots[item].Quantity += amount;
             }
-            else
+            else if (amount > 0)
             {
                 InventorySlot slot = new InventorySlot()
                 {
-                    InventoryItem = item,
+                    Item = item,
                     Quantity = amount
                 };
                 inventorySlots.Add(item, slot);
             }
+
+            totalWeight += item.Weight * amount;
         }
         public void RemoveItem(Item item, int amount)
         {
@@ -68,6 +74,12 @@ namespace SpaceTradingGame.Game
 
             return inventorySlots[item].Quantity;
         }
+        public int GetTotalWeight(Item item)
+        {
+            if (!HasItem(item)) return 0;
+
+            return inventorySlots[item].TotalWeight;
+        }
         public List<InventorySlot> GetInventoryList()
         {
             return inventorySlots.Values.ToList();
@@ -77,7 +89,7 @@ namespace SpaceTradingGame.Game
             List<InventorySlot> filteredList = new List<InventorySlot>();
             foreach (KeyValuePair<Item, InventorySlot> slot in inventorySlots)
             {
-                if (slot.Value.InventoryItem.ItemType == itemType)
+                if (slot.Value.Item.ItemType == itemType)
                     filteredList.Add(slot.Value);
             }
 
@@ -91,7 +103,7 @@ namespace SpaceTradingGame.Game
             //Remove any mod that doesn't match the type
             for (int i = 0; i < modList.Count; i++)
             {
-                if ((modList[i].InventoryItem as ShipMod).ModType != modType)
+                if ((modList[i].Item as ShipMod).ModType != modType)
                     modList.RemoveAt(i--);
             }
 
@@ -101,17 +113,51 @@ namespace SpaceTradingGame.Game
         {
             foreach (InventorySlot slot in items)
             {
-                AddItem(slot.InventoryItem, slot.Quantity);
+                AddItem(slot.Item, slot.Quantity);
             }
         }
 
         private int credits;
+        private int totalWeight;
         private Dictionary<Item, InventorySlot> inventorySlots;
     }
 
     public class InventorySlot
     {
-        public Item InventoryItem { get; set; }
-        public int Quantity { get; set; }
+        public Item Item
+        {
+            get { return inventoryItem; }
+            set { SetInventoryItem(value); }
+        }
+        public int Quantity
+        {
+            get { return quantity; }
+            set { SetQuantity(value); }
+        }
+        public int TotalWeight { get; private set; }
+
+        public void SetInventoryItem(Item item)
+        {
+            inventoryItem = item;
+            CalculateWeight();
+        }
+        public void SetQuantity(int amount)
+        {
+            quantity = amount;
+            CalculateWeight();
+        }
+
+        public void CalculateWeight()
+        {
+            TotalWeight = inventoryItem.Weight * quantity;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - #{1}", inventoryItem.Name, quantity);
+        }
+
+        private Item inventoryItem;
+        private int quantity;
     }
 }

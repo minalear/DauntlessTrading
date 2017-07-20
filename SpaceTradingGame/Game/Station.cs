@@ -34,10 +34,10 @@ namespace SpaceTradingGame.Game
                 //Limit production based on existing resources at the market
                 double softCap = (int)(deposit.Material.Rarity * 100.0);
                 double stockMod = -(1.0 / softCap) * 
-                    (Parent.System.SystemMarket.MarketInventory.GetQuantity(deposit.Material) + amount) + 1.0;
+                    (Parent.System.Market.MarketInventory.GetQuantity(deposit.Material) + amount) + 1.0;
                 amount = amount * stockMod;
 
-                Parent.System.SystemMarket.MarketInventory.AddItem(deposit.Material, (int)amount);
+                Parent.System.Market.MarketInventory.AddItem(deposit.Material, (int)amount);
             }
         }
         public void LevelUp()

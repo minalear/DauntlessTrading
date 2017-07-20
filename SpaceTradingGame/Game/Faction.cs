@@ -7,6 +7,7 @@ namespace SpaceTradingGame.Game
 {
     public class Faction : Engine.UI.Controls.ListItem
     {
+        public GameManager GameManager { get; private set; }
         public string Name { get; private set; }
         public bool PlayerOwned { get; private set; }
 
@@ -20,9 +21,10 @@ namespace SpaceTradingGame.Game
 
         public List<int> StockPrices { get; private set; }
 
-        public Faction(string name) : this(name, false) { }
-        public Faction(string name, bool playerOwned)
+        public Faction(GameManager gameManager, string name) : this(gameManager, name, false) { }
+        public Faction(GameManager gameManager, string name, bool playerOwned)
         {
+            GameManager = gameManager;
             Name = name;
             PlayerOwned = playerOwned;
 
@@ -61,7 +63,18 @@ namespace SpaceTradingGame.Game
                 if (!ship.Pilot.IsTraveling)
                 {
                     if (!ship.Pilot.IsPlayer)
-                        ship.Pilot.MoveTo(ship.Pilot.GameManager.Systems[RNG.Next(0, ship.Pilot.GameManager.Systems.Count)]);
+                    {
+                        //Move ship to random market (via random faction => random owned market)
+                        Faction randomFaction = GameManager.Factions[RNG.Next(0, GameManager.Factions.Count)];
+                        if (randomFaction.OwnedMarkets.Count <= 0)
+                        {
+                            //In case there are no markets anywhere, ships will park until one opens up
+                            continue;
+                        }
+                        Market randomMarket = randomFaction.OwnedMarkets[RNG.Next(0, randomFaction.OwnedMarkets.Count)];
+
+                        ship.Pilot.MoveTo(randomMarket.System);
+                    }
                 }
 
                 ship.Pilot.Update(days);
@@ -97,7 +110,43 @@ namespace SpaceTradingGame.Game
 
         private void PilotFinishedJourney(object sender, EventArgs e)
         {
+            Pilot pilot = (Pilot)sender;
+            if (pilot.Ship.CurrentSystem.HasMarket)
+            {
+                Market market = pilot.Ship.CurrentSystem.Market;
 
+                //Sell randomly held resources
+                List<InventorySlot> inventory = pilot.Ship.Inventory.GetInventoryList();
+                int numSales = RNG.Next(0, inventory.Count);
+                for (int i = 0; i < numSales && inventory.Count > 0; i++)
+                {
+                    InventorySlot slot = inventory[RNG.Next(0, inventory.Count)];
+                    int quantity = RNG.Next(1, slot.Quantity);
+
+                    //Check if the market can afford the purchase
+                    if (market.CalculateBuyPrice(slot.Item, quantity) <= market.MarketInventory.Credits)
+                    {
+                        market.MarketBuy(slot.Item, quantity);
+                        pilot.Ship.Inventory.RemoveItem(slot.Item, quantity);
+
+                        inventory = pilot.Ship.Inventory.GetInventoryList(); //List doesn't update automatically
+                    }
+                }
+
+                //Buy random resources
+                List<InventorySlot> marketList = market.MarketInventory.GetInventoryList();
+                int numPurchases = RNG.Next(3, 6);
+                for (int i = 0; i < numPurchases && marketList.Count > 0; i++)
+                {
+                    InventorySlot slot = marketList[RNG.Next(0, marketList.Count)];
+                    int quantity = RNG.Next(1, slot.Quantity);
+
+                    pilot.Ship.Inventory.AddItem(slot.Item, quantity);
+                    market.MarketSell(slot.Item, quantity); //Factions have infinite money for the moment
+
+                    marketList = market.MarketInventory.GetInventoryList(); //List doesn't update automatically
+                }
+            }
         }
 
         public override string ToString()

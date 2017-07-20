@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace SpaceTradingGame.Game
 {
@@ -10,11 +6,22 @@ namespace SpaceTradingGame.Game
     {
         protected string baseDescription;
 
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+
+        [JsonProperty(PropertyName = "description")]
         public string Description { get { return GetDescription(); } set { baseDescription = value; } }
+
+        [JsonProperty(PropertyName = "value")]
         public int BaseValue { get; set; }
+
+        [JsonProperty(PropertyName = "rarity")]
         public double Rarity { get; set; }
-        public double Weight { get; set; }
+
+        [JsonProperty(PropertyName = "weight")]
+        public int Weight { get; set; }
+
+        [JsonProperty(PropertyName = "basetype")]
         public ItemTypes ItemType { get; set; }
 
         public override string ToString()
@@ -43,7 +50,7 @@ namespace SpaceTradingGame.Game
             Name = "Hydrogen",
             Description = "Used for synthesizing various products.",
             BaseValue = 10,
-            Weight = 1.0,
+            Weight = 1,
             Rarity = 100.0
         };
         public static Item Gold = new Item()
@@ -51,7 +58,7 @@ namespace SpaceTradingGame.Game
             Name = "Gold",
             Description = "Used for backing credits.",
             BaseValue = 1400,
-            Weight = 70.0,
+            Weight = 70,
             Rarity = 65
         };
         public static Item Copper = new Item()
@@ -59,7 +66,7 @@ namespace SpaceTradingGame.Game
             Name = "Copper",
             Description = "Used for creating computer components.",
             BaseValue = 130,
-            Weight = 10.0,
+            Weight = 10,
             Rarity = 80
         };
         public static Item Helium = new Item()
@@ -67,7 +74,7 @@ namespace SpaceTradingGame.Game
             Name = "Helium",
             Description = "Used for ion-based weaponry.",
             BaseValue = 100,
-            Weight = 6.0,
+            Weight = 6,
             Rarity = 95
         };
         public static Item Oxygen = new Item()
@@ -75,7 +82,7 @@ namespace SpaceTradingGame.Game
             Name = "Oxygen",
             Description = "Used for life support systems and fuel mixtures.",
             BaseValue = 100,
-            Weight = 5.0,
+            Weight = 5,
             Rarity = 80
         };
         public static Item Iron = new Item()
@@ -83,7 +90,7 @@ namespace SpaceTradingGame.Game
             Name = "Iron",
             Description = "Used for ship construction.",
             BaseValue = 80,
-            Weight = 12.0,
+            Weight = 12,
             Rarity = 70
         };
         public static Item Carbon = new Item()
@@ -91,7 +98,7 @@ namespace SpaceTradingGame.Game
             Name = "Carbon",
             Description = "HUMANS ARE MADE OUT OF THIS SHIT... and water.",
             BaseValue = 50,
-            Weight = 8.0,
+            Weight = 8,
             Rarity = 75
         };
         public static Item Cesium = new Item()
@@ -99,7 +106,7 @@ namespace SpaceTradingGame.Game
             Name = "Cesium",
             Description = "Used for warp drive syncing systems.",
             BaseValue = 1150,
-            Weight = 85.0,
+            Weight = 85,
             Rarity = 40
         };
         public static Item Silver = new Item()
@@ -107,7 +114,7 @@ namespace SpaceTradingGame.Game
             Name = "Silver",
             Description = "Used for quantum computing and warp drive systems.",
             BaseValue = 700,
-            Weight = 45.0,
+            Weight = 45,
             Rarity = 65
         };
         public static Item Platinum = new Item()
@@ -115,15 +122,15 @@ namespace SpaceTradingGame.Game
             Name = "Platinum",
             Description = "Used for warp drive cases.",
             BaseValue = 2120,
-            Weight = 69.0,
+            Weight = 69,
             Rarity = 35
         };
         public static Item Plutonium = new Item()
         {
             Name = "Plutonium",
             Description = "Used for warp fuel.",
-            BaseValue = 1400,
-            Weight = 500.0,
+            BaseValue = 14000,
+            Weight = 500,
             Rarity = 10
         };
 
@@ -135,7 +142,7 @@ namespace SpaceTradingGame.Game
             Name = "Fuel",
             Description = "Universal fuel source for all modern starships.",
             BaseValue = 1000,
-            Weight = 10.0,
+            Weight = 10,
             Rarity = 1.0
         };
         #endregion

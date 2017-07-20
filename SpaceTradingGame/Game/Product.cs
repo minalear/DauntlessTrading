@@ -18,24 +18,28 @@ namespace SpaceTradingGame.Game
             this.UnitsProducted = 1;
         }
 
-        public void CalculateValue()
+        public void CalculateStats()
         {
             int valueTotal = 0;
+            int weightTotal = 0;
+
             double totalRarity = 0.0;
 
             foreach (RequirementInfo req in Requirements)
             {
                 valueTotal += req.Item.BaseValue * req.Quantity;
                 totalRarity += req.Item.Rarity / 100.0;
+                weightTotal += req.Item.Weight;
             }
 
             Rarity = totalRarity * 100.0;
             BaseValue = (int)(valueTotal * 0.65) / UnitsProducted;
+            Weight = weightTotal;
         }
         public void AddRequirement(Item item, int quantity)
         {
             Requirements.Add(new RequirementInfo(item, quantity));
-            CalculateValue();
+            CalculateStats();
         }
         public bool CanProduce(Inventory inventory, bool checkQuantity)
         {

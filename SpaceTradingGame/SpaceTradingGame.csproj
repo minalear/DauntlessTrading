@@ -79,6 +79,7 @@
     <Compile Include="Engine\UI\InterfaceManager.cs" />
     <Compile Include="Engine\UI\Interfaces\BuildScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\CombatScreen.cs" />
+    <Compile Include="Engine\UI\Interfaces\FinalScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\NewGameScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\ShipScreen.cs" />
     <Compile Include="Engine\UI\Interfaces\StartScreen.cs" />
@@ -124,6 +125,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\vertexShader.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\modules.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\ships.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -117,7 +117,7 @@ namespace SpaceTradingGame.Engine.UI.Controls
             {
                 if (e.Delta != 0)
                 {
-                    this.scrollValue -= e.Delta / (this.objectList.Count / 2);
+                    this.scrollValue -= (e.Delta < 0) ? -1 : 1;
 
                     if (this.scrollValue < 0f)
                         this.scrollValue = 0f;

@@ -29,7 +29,7 @@ namespace SpaceTradingGame.Game
             //Factories update daily
             while (dayTimer >= 1.0)
             {
-                Market market = Paret.System.SystemMarket;
+                Market market = Paret.System.Market;
 
                 if (!Paret.System.HasMarket) return;
                 if (!MainProduction.CanProduce(market.MarketInventory, true)) return;

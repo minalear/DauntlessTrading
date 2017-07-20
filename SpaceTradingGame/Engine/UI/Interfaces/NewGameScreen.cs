@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using OpenTK.Graphics;
+﻿using OpenTK.Graphics;
 using SpaceTradingGame.Game;
 using SpaceTradingGame.Engine.UI.Controls;
+using SpaceTradingGame.Engine.UI.Controls.Custom;
 
 namespace SpaceTradingGame.Engine.UI.Interfaces
 {
@@ -12,50 +11,48 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             : base(manager)
         {
             Title characterCreation = new Title(null, "Ship Registration", GraphicConsole.BufferWidth / 2, 1, Title.TextAlignModes.Center);
-            Title playerName = new Title(null, "Name: ", 6, 2, Title.TextAlignModes.Left);
-            Title shipName = new Title(null, "Ship Name: ", 1, 4, Title.TextAlignModes.Left);
-            Title companyName = new Title(null, "Comp Name: ", 1, 6, Title.TextAlignModes.Left);
-            Title shipType = new Title(null, "Ship Type: ", 1, 8, Title.TextAlignModes.Left);
-            Title shipDescription = new Title(null, "Description: ", 24, 8, Title.TextAlignModes.Left);
+            Title playerName = new Title(null, "Name: ", 7, 2, Title.TextAlignModes.Left);
+            Title shipName = new Title(null, "Ship Name: ", 2, 4, Title.TextAlignModes.Left);
+            Title companyName = new Title(null, "Comp Name: ", 2, 6, Title.TextAlignModes.Left);
+            Title shipType = new Title(null, "Ship Type: ", 2, 8, Title.TextAlignModes.Left);
+            Title shipDescription = new Title(null, "Description: ", 25, 8, Title.TextAlignModes.Left);
+            Title shipLayoutTitle = new Title(null, "Layout: ", 64, 8, Title.TextAlignModes.Left);
 
-            playerNameInput = new InputBox(null, 12, 2, 20);
+            playerNameInput = new InputBox(null, 13, 2, 20);
             playerNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
             playerNameInput.Text = "James Comey";
 
-            shipNameInput = new InputBox(null, 12, 4, 20);
+            shipNameInput = new InputBox(null, 13, 4, 20);
             shipNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
             shipNameInput.Text = "Heart of the Horizon";
 
-            companyNameInput = new InputBox(null, 12, 6, 20);
+            companyNameInput = new InputBox(null, 13, 6, 20);
             companyNameInput.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
             companyNameInput.Text = "Comey Shipping Inc";
 
-            shipSelectionList = new ScrollingList(null, 1, 9, 22, 19);
+            shipSelectionList = new ScrollingList(null, 2, 9, 22, 19);
             shipSelectionList.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
-            shipSelectionList.SetList(Game.Factories.ShipFactory.ShipBlueprints);
+            shipSelectionList.SetList(Game.Factories.ShipFactory.BasicShips);
             shipSelectionList.Selected += (sender, e) =>
             {
-                shipDescriptionBox.Text = ((Ship)shipSelectionList.GetSelection()).ToString();
+                Ship selectedShip = (Ship)shipSelectionList.GetSelection();
+                
+                shipDescriptionBox.Text = string.Format("== {0} ==\n{1}\n-\nFire: {2}\nDfns: {3}\nCargo: {4}\nJump: {5}",
+                    selectedShip.Model, selectedShip.Description, selectedShip.FirePower, selectedShip.DefenseRating,
+                    selectedShip.CargoCapacity, selectedShip.JumpRadius);
+                shipLayout.SetShip((Ship)shipSelectionList.GetSelection());
+
                 InterfaceManager.DrawStep();
             };
 
-            shipDescriptionBox = new TextBox(null, 24, 9, 35, 19);
+            shipDescriptionBox = new TextBox(null, 25, 9, 38, 19);
             shipDescriptionBox.FillColor = new Color4(0.2f, 0.2f, 0.2f, 1f);
 
             startGameButton = new Button(null, "Start", GraphicConsole.BufferWidth - 8, GraphicConsole.BufferHeight - 4);
             startGameButton.Click += (sender, e) =>
             {
                 if (!isValidInputs()) return;
-
-                Ship ship = (Ship)shipSelectionList.GetSelection();
-                ship.Name = shipNameInput.Text.Trim();
-                ship.Inventory.AddItem(Item.Gold, 27);
-                ship.Inventory.AddItem(Item.StarshipFuel, 100);
-                ship.Inventory.AddItem(Game.Factories.ModFactory.MaverickCockpitI, 1);
-                ship.Inventory.AddItem(Game.Factories.ModFactory.EuripidesWarpCore, 1);
-                ship.Inventory.Credits = 50000;
-
-                GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), ship);
+                GameManager.SetupGame(playerNameInput.Text.Trim(), companyNameInput.Text.Trim(), shipNameInput.Text.Trim(), (Ship)shipSelectionList.GetSelection());
 
                 InterfaceManager.ChangeInterface("Travel");
             };
@@ -65,6 +62,9 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 InterfaceManager.ChangeInterface("Start");
             };
+
+            shipLayout = new ShipLayout(null, 34, 19);
+            shipLayout.Position = new System.Drawing.Point(64, 9);
 
             RegisterControl(characterCreation);
             RegisterControl(playerName);
@@ -77,8 +77,10 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             RegisterControl(companyNameInput);
             RegisterControl(shipSelectionList);
             RegisterControl(shipDescription);
+            RegisterControl(shipLayoutTitle);
             RegisterControl(startGameButton);
             RegisterControl(backButton);
+            RegisterControl(shipLayout);
         }
 
         public override void OnEnable()
@@ -125,5 +127,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         private ScrollingList shipSelectionList;
         private TextBox shipDescriptionBox;
         private Button startGameButton, backButton;
+        private ShipLayout shipLayout;
     }
 }

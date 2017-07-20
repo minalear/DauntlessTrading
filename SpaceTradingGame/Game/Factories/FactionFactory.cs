@@ -14,7 +14,7 @@ namespace SpaceTradingGame.Game.Factories
         {
             _colorPointer = 0;
         }
-        public static Faction GenerateRandomFaction()
+        public static Faction GenerateRandomFaction(GameManager gameManager)
         {
             StringBuilder name = new StringBuilder();
             name.Append(Names[RNG.Next(0, Names.Length)]);
@@ -30,7 +30,7 @@ namespace SpaceTradingGame.Game.Factories
                 name.Append(Titles[RNG.Next(0, Titles.Length)]);
             }
 
-            return new Faction(name.ToString()) { Capital = RNG.Next(75000, 400000), RegionColor = FactionColors[_colorPointer++] };
+            return new Faction(gameManager, name.ToString()) { Capital = RNG.Next(75000, 400000), RegionColor = FactionColors[_colorPointer++] };
         }
 
         private static string[] Names = {

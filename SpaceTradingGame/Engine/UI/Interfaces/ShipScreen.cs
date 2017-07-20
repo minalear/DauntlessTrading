@@ -45,8 +45,14 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             #region Control Events
             scrollingList.Selected += (sender, index) =>
             {
-                Item item = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot.InventoryItem;
-                descriptionBox.Text = string.Format("-{0}-\n{1}", item.Name, item.Description);
+                InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
+                Item item = selection.InventorySlot.Item;
+
+                descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}", 
+                    item.Name, 
+                    item.Weight,
+                    selection.InventorySlot.TotalWeight, 
+                    item.Description);
                 InterfaceManager.DrawStep();
             };
             scrollingList.Deselected += (sender) =>
@@ -63,7 +69,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 //Display equipped Mod's description
                 if (!node.Empty)
                 {
-                    descriptionBox.Text = string.Format("-{0}-\n{1}", node.Modification.Name, node.Modification.Description);
+                    descriptionBox.Text = string.Format("-{0}-\n{1}", node.Module.Name, node.Module.Description);
                 }
                 else
                 {
@@ -74,17 +80,17 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 if (!scrollingList.HasSelection) return;
                 InventorySlot selectedItem = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot;
-                if (selectedItem.InventoryItem.ItemType != ItemTypes.ShipMod) return;
+                if (selectedItem.Item.ItemType != ItemTypes.ShipMod) return;
 
                 if (shipLayout.HasNodeSelected)
-                    GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
+                    GameManager.PlayerShip.EquipModule(shipLayout.SelectedNode, (ShipMod)selectedItem.Item, true);
                 else
-                    GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.InventoryItem, true);
-
-                updateDisplayInfo();
+                    GameManager.PlayerShip.EquipModule((ShipMod)selectedItem.Item, true);
+                
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
                 inventoryTitle.Text = "== Inventory ==";
 
+                updateDisplayInfo();
                 InterfaceManager.DrawStep();
             };
             filterReset.Click += (sender, e) =>
@@ -158,9 +164,23 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         {
             shipLayout.UpdateButtons();
 
+            if (scrollingList.HasSelection)
+            {
+                InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
+                Item item = selection.InventorySlot.Item;
+
+                descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}",
+                    item.Name,
+                    item.Weight,
+                    selection.InventorySlot.TotalWeight,
+                    item.Description);
+            }
+            else
+                descriptionBox.Text = string.Empty;
+
             shipAttackTitle.Text = string.Format(" Attack: {0}", GameManager.PlayerShip.FirePower);
             shipDefenseTitle.Text = string.Format("Defense: {0}", GameManager.PlayerShip.DefenseRating);
-            shipCargoTitle.Text = string.Format("  Cargo: {0}", GameManager.PlayerShip.CargoCapacity);
+            shipCargoTitle.Text = string.Format("  Cargo: {0}/{1}", GameManager.PlayerShip.Inventory.TotalWeight, GameManager.PlayerShip.CargoCapacity);
             shipJumpTitle.Text = string.Format("   Jump: {0}", GameManager.PlayerShip.JumpRadius);
         }
 
@@ -179,7 +199,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             public InventoryListItem(InventorySlot slot)
             {
                 this.InventorySlot = slot;
-                this.ListText = string.Format("{0} - {1}", slot.InventoryItem.Name, slot.Quantity);
+                this.ListText = string.Format("{0} - {1}", slot.Item.Name, slot.Quantity);
             }
         }
     }

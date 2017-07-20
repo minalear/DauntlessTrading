@@ -121,8 +121,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
         public override void OnEnable()
         {
-            computerMarket = GameManager.CurrentSystem.SystemMarket;
-            computerInventory = GameManager.CurrentSystem.SystemMarket.MarketInventory;
+            computerMarket = GameManager.CurrentSystem.Market;
+            computerInventory = GameManager.CurrentSystem.Market.MarketInventory;
             updateScreenInformation();
             updateLists();
 
@@ -288,7 +288,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     differenceValueTitle.Text = "Good deal!";
                     makeTrade();
                     GameManager.PlayerShip.Inventory.Credits -= diff;
-                    computerInventory.Credits += diff;
                 }
                 else
                 {
@@ -304,7 +303,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     makeTrade();
                     
                     GameManager.PlayerShip.Inventory.Credits += diff;
-                    computerInventory.Credits -= diff;
                 }
                 else
                 {
@@ -405,13 +403,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             List<InventorySlot> inventory = computerInventory.GetInventoryList();
             foreach (InventorySlot slot in inventory)
             {
-                availableItemsList.AddItem(new TradingListItem(slot.InventoryItem, slot.Quantity));
+                availableItemsList.AddItem(new TradingListItem(slot.Item, slot.Quantity));
             }
 
             List<InventorySlot> pcInventory = GameManager.PlayerShip.Inventory.GetInventoryList();
             foreach (InventorySlot slot in pcInventory)
             {
-                inventoryList.AddItem(new TradingListItem(slot.InventoryItem, slot.Quantity));
+                inventoryList.AddItem(new TradingListItem(slot.Item, slot.Quantity));
             }
         }
 
@@ -432,6 +430,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public class TradingListItem : ListItem
         {
             public static int BufferWidth = 25;
+            public static int MaxTitleWidth = 11;
+
             public Item Item;
             public int Quantity;
             public int PriceTotal;
@@ -447,13 +447,28 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             public void UpdateDisplayInformation()
             {
                 //MaterialName     Price      xQuantity
-                string name = Item.Name;
+                string name = string.Empty;
+                if (Item.Name.Length <= MaxTitleWidth)
+                {
+                    name = Item.Name;
+                    for (int i = 0; i < MaxTitleWidth - Item.Name.Length; i++)
+                        name += " ";
+                }
+                else
+                {
+                    //MaxTitleWidth - 3 for "..."
+                    for (int i = 0; i < MaxTitleWidth - 3; i++)
+                    {
+                        name += Item.Name[i];
+                    }
+                    name += "...";
+                }
+
                 string price = PriceTotal.ToString();
                 string quantity = "x" + Quantity.ToString();
-
-                int bufferLeft = BufferWidth - (name.Length + price.Length + quantity.Length);
-                int frontSpace = (bufferLeft % 2 == 0) ? bufferLeft / 2 : bufferLeft / 2 + 1;
-                int backSpace = bufferLeft / 2;
+                
+                int frontSpace = 2;
+                int backSpace = BufferWidth - (MaxTitleWidth + frontSpace) - (quantity.Length + 1);
 
                 string formattedText = name + new string(' ', frontSpace) + price + new string(' ', backSpace) + quantity;
                 this.ListText = formattedText;

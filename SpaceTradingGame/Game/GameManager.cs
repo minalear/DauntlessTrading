@@ -33,7 +33,7 @@ namespace SpaceTradingGame.Game
             CombatSimulator = new CombatSimulator(this);
         }
 
-        public void SetupGame(string playerName, string companyName, Ship ship)
+        public void SetupGame(string playerName, string companyName, string shipName, Ship shipBlueprint)
         {
             //Reset variables between new games
             Factories.FactionFactory.Reset();
@@ -42,9 +42,13 @@ namespace SpaceTradingGame.Game
 
             GenerateGalaxy();
 
+            Ship ship = Factories.ShipFactory.ConstructNewShip(shipBlueprint.Model);
+            ship.Name = shipName;
+            ship.Inventory.Credits = 500;
+
             this.playerShip = ship;
 
-            PlayerFaction = new Faction(companyName, true);
+            PlayerFaction = new Faction(this, companyName, true);
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
 
             playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
@@ -93,7 +97,7 @@ namespace SpaceTradingGame.Game
             int numFactions = RNG.Next(5, 10);
             for (int i = 0; i < numFactions; i++)
             {
-                Faction faction = Factories.FactionFactory.GenerateRandomFaction();
+                Faction faction = Factories.FactionFactory.GenerateRandomFaction(this);
 
                 //Build markets, stations, and factories.  Add ships.
                 int numSystems = RNG.Next(3, 6);
@@ -119,7 +123,7 @@ namespace SpaceTradingGame.Game
                         }
                         else
                         {
-                            Blueprint blueprint = new Blueprint(Factories.ModFactory.ModList[RNG.Next(0, Factories.ModFactory.ModList.Length)]);
+                            Blueprint blueprint = new Blueprint(Factories.ModFactory.ModList[RNG.Next(0, Factories.ModFactory.ModList.Count)]);
                             planet.BuildFactory(faction, blueprint);
                         }
                     }
@@ -129,7 +133,7 @@ namespace SpaceTradingGame.Game
                 int numShips = RNG.Next(35, 50);
                 for (int k = 0; k < numShips; k++)
                 {
-                    Ship ship = Factories.ShipFactory.ConstructNewShip("Maverick Mk I");
+                    Ship ship = Factories.ShipFactory.ConstructRandomShip();
                     ship.Name = Factories.ShipFactory.GenerateRandomShipName();
 
                     ship.SetPilot(new Pilot(this, "Mark Webber", faction, ship, false));
@@ -158,7 +162,11 @@ namespace SpaceTradingGame.Game
         }
         public void LoseGame()
         {
-            game.InterfaceManager.ChangeInterface("Start");
+            game.InterfaceManager.ChangeInterface("Final");
+        }
+        public void ExitGame()
+        {
+            game.Exit();
         }
 
         public List<Ship> GetShipsInJumpRadius(Ship ship)

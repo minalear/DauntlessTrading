@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Text;
+using System.Collections.Generic;
 using SpaceTradingGame.Engine;
+using Newtonsoft.Json;
 
 namespace SpaceTradingGame.Game.Factories
 {
@@ -8,50 +11,33 @@ namespace SpaceTradingGame.Game.Factories
     {
         public static void Init()
         {
-            //Basic ship setup
-            Ship MaverickMkI = new Ship("Blueprint", "Maverick Mk I");
-            MaverickMkI.Nodes.Add(new ShipNode(1, 0, ShipMod.ShipModTypes.Cockpit));
-            MaverickMkI.Nodes.Add(new ShipNode(0, 2, ShipMod.ShipModTypes.CargoBay));
-            MaverickMkI.Nodes.Add(new ShipNode(2, 2, ShipMod.ShipModTypes.WarpCore));
+            ShipBlueprints = new List<Ship>();
+            BasicShips = new List<Ship>();
 
-            Ship MaverickMkII = new Ship("Blueprint", "Maverick Mk II");
-            MaverickMkII.Nodes.Add(new ShipNode(1, 0, ShipMod.ShipModTypes.Cockpit));
-            MaverickMkII.Nodes.Add(new ShipNode(1, 2, ShipMod.ShipModTypes.Any));
-            MaverickMkII.Nodes.Add(new ShipNode(0, 4, ShipMod.ShipModTypes.CargoBay));
-            MaverickMkII.Nodes.Add(new ShipNode(2, 4, ShipMod.ShipModTypes.WarpCore));
+            List<ShipJson> ships = JsonConvert.DeserializeObject<List<ShipJson>>(File.ReadAllText("Content/ships.json"));
+            foreach (ShipJson blueprint in ships)
+            {
+                Ship ship = new Ship("Blueprint", blueprint.Model);
+                ship.Description = blueprint.Description;
 
-            Ship DelpheneI = new Ship("Blueprint", "Delphene I");
-            Ship DelpheneII = new Ship("Blueprint", "Delphene II");
-            Ship Dauntless = new Ship("Blueprint", "Dauntless Class");
-            Dauntless.Nodes.Add(new ShipNode(2, 0, ShipMod.ShipModTypes.Cockpit));
-            Dauntless.Nodes.Add(new ShipNode(0, 2, ShipMod.ShipModTypes.Weapon));
-            Dauntless.Nodes.Add(new ShipNode(2, 2, ShipMod.ShipModTypes.Any));
-            Dauntless.Nodes.Add(new ShipNode(4, 2, ShipMod.ShipModTypes.Weapon));
-            Dauntless.Nodes.Add(new ShipNode(2, 4, ShipMod.ShipModTypes.CargoBay));
-            Dauntless.Nodes.Add(new ShipNode(0, 6, ShipMod.ShipModTypes.Any));
-            Dauntless.Nodes.Add(new ShipNode(2, 6, ShipMod.ShipModTypes.WarpCore));
-            Dauntless.Nodes.Add(new ShipNode(4, 6, ShipMod.ShipModTypes.Any));
-            Dauntless.Nodes.Add(new ShipNode(0, 8, ShipMod.ShipModTypes.Any));
-            Dauntless.Nodes.Add(new ShipNode(4, 8, ShipMod.ShipModTypes.Any));
+                foreach (NodeJson nodeBlueprint in blueprint.Nodes)
+                {
+                    ShipNode node = new ShipNode(nodeBlueprint.X, nodeBlueprint.Y,
+                        (ShipMod.ShipModTypes)Enum.Parse(typeof(ShipMod.ShipModTypes), nodeBlueprint.Type));
+                    ship.Nodes.Add(node);
+                }
 
-            Ship Exodia = new Ship("Blueprint", "Exodia Class");
+                //Equip basic modules #0 - 2
+                ship.EquipModule(ModFactory.ModList[0], false);
+                ship.EquipModule(ModFactory.ModList[1], false);
+                ship.EquipModule(ModFactory.ModList[2], false);
 
-            //Equip Modifications
-            MaverickMkI.EquipModification(ModFactory.BasicCockpit, false);
-            MaverickMkI.EquipModification(ModFactory.BasicCargoBay, false);
-            MaverickMkI.EquipModification(ModFactory.BasicWarpCore, false);
+                ship.UpdateShipStats();
 
-            MaverickMkII.EquipModification(ModFactory.BasicCockpit, false);
-            MaverickMkII.EquipModification(ModFactory.BasicCargoBay, false);
-            MaverickMkII.EquipModification(ModFactory.BasicWarpCore, false);
-
-            Dauntless.EquipModification(ModFactory.BasicCockpit, false);
-            Dauntless.EquipModification(ModFactory.BasicCargoBay, false);
-            Dauntless.EquipModification(ModFactory.BasicWarpCore, false);
-
-            ShipBlueprints = new Ship[] { MaverickMkI, MaverickMkII, DelpheneI, DelpheneII, Dauntless, Exodia };
-            for (int i = 0; i < ShipBlueprints.Length; i++)
-                ShipBlueprints[i].UpdateShipStats();
+                ShipBlueprints.Add(ship);
+                if (blueprint.Basic)
+                    BasicShips.Add(ship);
+            }
         }
         public static Ship ConstructNewShip(string model)
         {
@@ -64,6 +50,38 @@ namespace SpaceTradingGame.Game.Factories
             }
 
             throw new ArgumentException(string.Format("Invalid model type: {0}.", model));
+        }
+        public static Ship ConstructRandomShip()
+        {
+            string randomModel = ShipBlueprints[RNG.Next(0, ShipBlueprints.Count)].Model;
+            Ship ship = ConstructNewShip(randomModel);
+
+            //Equip basic modules for each node
+            foreach (ShipNode node in ship.Nodes)
+            {
+                if (!node.Empty) continue;
+
+                if (node.ModType == ShipMod.ShipModTypes.Any)
+                {
+                    //Equip random module woo!
+                    node.Empty = false;
+                    node.Module = ModFactory.ModList[RNG.Next(0, ModFactory.ModList.Count)];
+                }
+                else
+                {
+                    foreach (ShipMod mod in ModFactory.ModList)
+                    {
+                        if (mod.ModType == node.ModType)
+                        {
+                            node.Empty = false;
+                            node.Module = mod;
+                        }
+                    }
+                }
+            }
+
+            ship.UpdateShipStats();
+            return ship;
         }
         public static string GenerateRandomShipName()
         {
@@ -91,13 +109,20 @@ namespace SpaceTradingGame.Game.Factories
             "Seraphim", "Raider", "Blacksmith", "Horizon", "Murderer", "Cleric", "Hoard", "Boat"
         };
 
-        public static Ship MaverickMkI;
-        public static Ship MaverickMkII;
-        public static Ship DelpheneI;
-        public static Ship DelpheneII;
-        public static Ship Dauntless;
-        public static Ship Exodia;
+        public static List<Ship> BasicShips, ShipBlueprints;
 
-        public static Ship[] ShipBlueprints;
+        private class ShipJson
+        {
+            public string Model;
+            public NodeJson[] Nodes;
+            public string Description;
+            public bool Basic = false;
+        }
+        private class NodeJson
+        {
+            public int X;
+            public int Y;
+            public string Type;
+        }
     }
 }
