@@ -17,32 +17,36 @@ namespace SpaceTradingGame.Game
             Owner = owner;
             Owner.OwnedMarkets.Add(this);
 
-            MarketInventory.Credits = 10000000;
+            MarketInventory.Credits = 1000;
         }
 
         /// <summary>
         /// Market sells to someone.
         /// </summary>
-        public double MarketSell(Item item, int amount)
+        public int MarketSell(Item item, int amount)
         {
             if (amount > 0 && amount <= MarketInventory.GetQuantity(item))
             {
-                double total = CalculateSellPrice(item, amount);
+                int total = CalculateSellPrice(item, amount);
                 MarketInventory.RemoveItem(item, amount);
+
+                MarketInventory.Credits += total;
 
                 return total;
             }
 
-            return 0.0;
+            return 0;
         }
 
         /// <summary>
         /// Market buys from someone.
         /// </summary>
-        public double MarketBuy(Item item, int amount)
+        public int MarketBuy(Item item, int amount)
         {
-            double total = CalculateBuyPrice(item, amount);
+            int total = CalculateBuyPrice(item, amount);
             MarketInventory.AddItem(item, amount);
+
+            MarketInventory.Credits -= total;
 
             return total;
         }

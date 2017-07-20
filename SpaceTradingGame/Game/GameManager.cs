@@ -52,7 +52,7 @@ namespace SpaceTradingGame.Game
 
             this.playerShip = ship;
 
-            PlayerFaction = new Faction(companyName, true);
+            PlayerFaction = new Faction(this, companyName, true);
             PlayerFaction.RegionColor = new OpenTK.Graphics.Color4(115, 99, 87, 255);
 
             playerShip.SetPilot(new Pilot(this, playerName, PlayerFaction, playerShip, true));
@@ -101,7 +101,7 @@ namespace SpaceTradingGame.Game
             int numFactions = RNG.Next(5, 10);
             for (int i = 0; i < numFactions; i++)
             {
-                Faction faction = Factories.FactionFactory.GenerateRandomFaction();
+                Faction faction = Factories.FactionFactory.GenerateRandomFaction(this);
 
                 //Build markets, stations, and factories.  Add ships.
                 int numSystems = RNG.Next(3, 6);

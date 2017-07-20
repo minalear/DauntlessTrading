@@ -288,7 +288,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     differenceValueTitle.Text = "Good deal!";
                     makeTrade();
                     GameManager.PlayerShip.Inventory.Credits -= diff;
-                    computerInventory.Credits += diff;
                 }
                 else
                 {
@@ -304,7 +303,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                     makeTrade();
                     
                     GameManager.PlayerShip.Inventory.Credits += diff;
-                    computerInventory.Credits -= diff;
                 }
                 else
                 {
