@@ -46,7 +46,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             scrollingList.Selected += (sender, index) =>
             {
                 InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
-                Item item = selection.InventorySlot.InventoryItem;
+                Item item = selection.InventorySlot.Item;
 
                 descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}", 
                     item.Name, 
@@ -80,12 +80,12 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             {
                 if (!scrollingList.HasSelection) return;
                 InventorySlot selectedItem = ((InventoryListItem)scrollingList.GetSelection()).InventorySlot;
-                if (selectedItem.InventoryItem.ItemType != ItemTypes.ShipMod) return;
+                if (selectedItem.Item.ItemType != ItemTypes.ShipMod) return;
 
                 if (shipLayout.HasNodeSelected)
-                    GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.InventoryItem, true);
+                    GameManager.PlayerShip.EquipModification(shipLayout.SelectedNode, (ShipMod)selectedItem.Item, true);
                 else
-                    GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.InventoryItem, true);
+                    GameManager.PlayerShip.EquipModification((ShipMod)selectedItem.Item, true);
                 
                 setItemList(GameManager.PlayerShip.Inventory.GetInventoryList());
                 inventoryTitle.Text = "== Inventory ==";
@@ -167,7 +167,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             if (scrollingList.HasSelection)
             {
                 InventoryListItem selection = (InventoryListItem)scrollingList.GetSelection();
-                Item item = selection.InventorySlot.InventoryItem;
+                Item item = selection.InventorySlot.Item;
 
                 descriptionBox.Text = string.Format("-{0}-\nWeight: {1}/{2}\n\n{3}",
                     item.Name,
@@ -199,7 +199,7 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             public InventoryListItem(InventorySlot slot)
             {
                 this.InventorySlot = slot;
-                this.ListText = string.Format("{0} - {1}", slot.InventoryItem.Name, slot.Quantity);
+                this.ListText = string.Format("{0} - {1}", slot.Item.Name, slot.Quantity);
             }
         }
     }

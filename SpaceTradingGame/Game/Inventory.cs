@@ -36,17 +36,17 @@ namespace SpaceTradingGame.Game
             {
                 inventorySlots[item].Quantity += amount;
             }
-            else
+            else if (amount > 0)
             {
                 InventorySlot slot = new InventorySlot()
                 {
-                    InventoryItem = item,
+                    Item = item,
                     Quantity = amount
                 };
                 inventorySlots.Add(item, slot);
             }
 
-            totalWeight += inventorySlots[item].TotalWeight;
+            totalWeight += item.Weight * amount;
         }
         public void RemoveItem(Item item, int amount)
         {
@@ -89,7 +89,7 @@ namespace SpaceTradingGame.Game
             List<InventorySlot> filteredList = new List<InventorySlot>();
             foreach (KeyValuePair<Item, InventorySlot> slot in inventorySlots)
             {
-                if (slot.Value.InventoryItem.ItemType == itemType)
+                if (slot.Value.Item.ItemType == itemType)
                     filteredList.Add(slot.Value);
             }
 
@@ -103,7 +103,7 @@ namespace SpaceTradingGame.Game
             //Remove any mod that doesn't match the type
             for (int i = 0; i < modList.Count; i++)
             {
-                if ((modList[i].InventoryItem as ShipMod).ModType != modType)
+                if ((modList[i].Item as ShipMod).ModType != modType)
                     modList.RemoveAt(i--);
             }
 
@@ -113,7 +113,7 @@ namespace SpaceTradingGame.Game
         {
             foreach (InventorySlot slot in items)
             {
-                AddItem(slot.InventoryItem, slot.Quantity);
+                AddItem(slot.Item, slot.Quantity);
             }
         }
 
@@ -124,7 +124,7 @@ namespace SpaceTradingGame.Game
 
     public class InventorySlot
     {
-        public Item InventoryItem
+        public Item Item
         {
             get { return inventoryItem; }
             set { SetInventoryItem(value); }
@@ -152,8 +152,12 @@ namespace SpaceTradingGame.Game
             TotalWeight = inventoryItem.Weight * quantity;
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0} - #{1}", inventoryItem.Name, quantity);
+        }
+
         private Item inventoryItem;
         private int quantity;
-        private int totalWeight;
     }
 }

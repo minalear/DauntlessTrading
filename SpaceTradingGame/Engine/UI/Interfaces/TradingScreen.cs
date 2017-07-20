@@ -405,13 +405,13 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             List<InventorySlot> inventory = computerInventory.GetInventoryList();
             foreach (InventorySlot slot in inventory)
             {
-                availableItemsList.AddItem(new TradingListItem(slot.InventoryItem, slot.Quantity));
+                availableItemsList.AddItem(new TradingListItem(slot.Item, slot.Quantity));
             }
 
             List<InventorySlot> pcInventory = GameManager.PlayerShip.Inventory.GetInventoryList();
             foreach (InventorySlot slot in pcInventory)
             {
-                inventoryList.AddItem(new TradingListItem(slot.InventoryItem, slot.Quantity));
+                inventoryList.AddItem(new TradingListItem(slot.Item, slot.Quantity));
             }
         }
 

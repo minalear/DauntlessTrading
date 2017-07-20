@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using OpenTK.Graphics;
 using SpaceTradingGame.Engine.UI.Controls;
 using SpaceTradingGame.Game;
@@ -34,10 +34,21 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 double oddsToWin = GameManager.CombatSimulator.GetCombatOdds();
 
                 string text = string.Format("{0}% chance to win.\n-\n", oddsToWin * 100.0);
+
+                //List the equipped modules
                 foreach (ShipNode node in GameManager.CombatSimulator.GroupTwo.Ships[0].Nodes)
                 {
                     if (node.Empty) continue;
                     text += string.Format("{0} - {1}\n", node.ModType, node.Modification.Name);
+                }
+
+                text += "-\n";
+
+                //List the carried items
+                List<InventorySlot> inventory = GameManager.CombatSimulator.GroupTwo.Ships[0].Inventory.GetInventoryList();
+                foreach (InventorySlot slot in inventory)
+                {
+                    text += string.Format("{0} - #{1}\n", slot.Item.Name, slot.Quantity);
                 }
 
                 descriptionBox.Text = text;
