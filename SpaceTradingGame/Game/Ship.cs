@@ -50,6 +50,7 @@ namespace SpaceTradingGame.Game
 
         public void EquipModification(ShipMod mod, bool removeFromInventory)
         {
+            //Attempt to equip module to a node with the same type
             for (int i = 0; i < nodes.Count; i++)
             {
                 if (nodes[i].ModType == mod.ModType)
@@ -57,6 +58,20 @@ namespace SpaceTradingGame.Game
                     if (removeFromInventory) shipInventory.RemoveItem(mod, 1);
                     if (!nodes[i].Empty) shipInventory.AddItem(nodes[i].Modification, 1);
 
+                    nodes[i].Empty = false;
+                    nodes[i].Modification = mod;
+
+                    UpdateShipStats();
+
+                    return;
+                }
+            }
+
+            //Failed to find the specified node, now try to equip to the first empty node with type any
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i].ModType == ShipMod.ShipModTypes.Any && nodes[i].Empty)
+                {
                     nodes[i].Empty = false;
                     nodes[i].Modification = mod;
 
@@ -138,6 +153,7 @@ namespace SpaceTradingGame.Game
         public int CargoCapacity { get { return cargoCapacity; } set { cargoCapacity = value; } }
         public double JumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public float MoveSpeed { get; set; }
+        public string Description { get; set; }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
         public Pilot Pilot { get; private set; }

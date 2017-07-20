@@ -1,0 +1,114 @@
+[{
+	"model" : "Maverick Mk I",
+	"nodes" : [
+		{ "x" : 1, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "CargoBay" },
+		{ "x" : 2, "y" : 2, "type" : "WarpCore" }
+	],
+	"basic" : true,
+	"description" : "The intro model for the Maverick line of starships."
+},
+{
+	"model" : "Maverick Mk II",
+	"nodes" : [
+		{ "x" : 2, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 3, "type" : "CargoBay" },
+		{ "x" : 2, "y" : 3, "type" : "WarpCore" },
+		{ "x" : 4, "y" : 3, "type" : "Any" }
+	],
+	"description" : "Maverick's iteration on their popular Mk I."
+},
+{
+	"model" : "Maverick Mk III",
+	"nodes" : [
+		{ "x" : 2, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "Weapon" },
+		{ "x" : 2, "y" : 2, "type" : "CargoBay" },
+		{ "x" : 4, "y" : 2, "type" : "Weapon" },
+		{ "x" : 1, "y" : 4, "type" : "WarpCore" },
+		{ "x" : 3, "y" : 4, "type" : "Any" }
+	],
+	"description" : "Taking a step further into their target demographic, Maverick added two weapon hardpoints to their Mk II model."
+},
+{
+	"model" : "Hermes I",
+	"nodes" : [
+		{ "x" : 0, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "CargoBay" },
+		{ "x" : 0, "y" : 4, "type" : "WarpCore" }
+	],
+	"basic" : true,
+	"description" : "The intro model for the Hermes line of starships."
+},
+{
+	"model" : "Hermes II",
+	"nodes" : [
+		{ "x" : 2, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "CargoBay" },
+		{ "x" : 4, "y" : 2, "type" : "Any" },
+		{ "x" : 2, "y" : 4, "type" : "WarpCore" }
+	],
+	"description" : "Hermes created a new shell for their Mk II line to make it more adaptable for their pilot's needs."
+},
+{
+	"model" : "Hermes III",
+	"nodes" : [
+		{ "x" : 2, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "Any" },
+		{ "x" : 2, "y" : 2, "type" : "CargoBay" },
+		{ "x" : 4, "y" : 2, "type" : "Any" },
+		{ "x" : 2, "y" : 4, "type" : "WarpCore" }
+	],
+	"description" : "Optimizing their shell, Hermes added a new module slot for their Mk III line, while keeping the shape."
+},
+{
+	"model" : "Titan",
+	"nodes" : [
+		{ "x" : 2, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "Any" },
+		{ "x" : 2, "y" : 2, "type" : "CargoBay" },
+		{ "x" : 4, "y" : 2, "type" : "Any" },
+		{ "x" : 0, "y" : 4, "type" : "Hull" },
+		{ "x" : 2, "y" : 4, "type" : "CargoBay" },
+		{ "x" : 4, "y" : 4, "type" : "Hull" },
+		{ "x" : 0, "y" : 6, "type" : "CargoBay" },
+		{ "x" : 2, "y" : 6, "type" : "WarpCore" },
+		{ "x" : 4, "y" : 6, "type" : "CargoBay" }
+	],
+	"description" : "Hermes Corporation decided to construct a new, premium line of cargo ships designed for heavy freight.  The Titan was it."
+},
+{
+	"model" : "Dauntless",
+	"nodes" : [
+		{ "x" : 2, "y" : 0, "type" : "Cockpit" },
+		{ "x" : 0, "y" : 2, "type" : "Weapon" },
+		{ "x" : 2, "y" : 2, "type" : "Any" },
+		{ "x" : 4, "y" : 2, "type" : "Weapon" },
+		{ "x" : 2, "y" : 4, "type" : "CargoBay" },
+		{ "x" : 0, "y" : 6, "type" : "Any" },
+		{ "x" : 2, "y" : 6, "type" : "WarpCore" },
+		{ "x" : 4, "y" : 6, "type" : "Any" },
+		{ "x" : 0, "y" : 8, "type" : "Any" },
+		{ "x" : 4, "y" : 8, "type" : "Any" }
+	],
+	"description" : "Dauntless is THE premium ship design.  Being the most flexible of all modern ship designs, the Dauntless is the only ship produced by the Terran Shipping Conglomerate."
+},
+{
+	"model" : "Exodia",
+	"nodes" : [
+		{ "x" : 0, "y" : 0, "type" : "Weapon" },
+		{ "x" : 2, "y" : 0, "type" : "Any" },
+		{ "x" : 6, "y" : 0, "type" : "Any" },
+		{ "x" : 8, "y" : 0, "type" : "Weapon" },
+		{ "x" : 2, "y" : 2, "type" : "Scanner" },
+		{ "x" : 6, "y" : 2, "type" : "ShieldGen" },
+		{ "x" : 4, "y" : 4, "type" : "Cockpit" },
+		{ "x" : 2, "y" : 6, "type" : "CargoBay" },
+		{ "x" : 6, "y" : 6, "type" : "CargoBay" },
+		{ "x" : 0, "y" : 8, "type" : "Hull" },
+		{ "x" : 2, "y" : 8, "type" : "WarpCore" },
+		{ "x" : 6, "y" : 8, "type" : "WarpCore" },
+		{ "x" : 8, "y" : 8, "type" : "Hull" }
+	],
+	"description" : "Neo-Egypt Transport's answer to the Dauntless, the Exodia class ship, while being restrictive to modification, is more powerful (and costly) than the Dauntless."
+}]

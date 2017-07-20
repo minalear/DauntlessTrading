@@ -5,11 +5,11 @@ namespace SpaceTradingGame.Game
 {
     public class ShipNode : ICloneable
     {
-        public Point Location { get; set; }
+        public Point Location { get { return location; } set { location = value; } }
         public ShipMod Modification { get; set; }
         public ShipMod.ShipModTypes ModType { get; set; }
-        public int X { get { return Location.X; } }
-        public int Y { get { return Location.Y; } }
+        public int X { get { return location.X; } set { location.X = value; } }
+        public int Y { get { return Location.Y; } set { location.Y = value; } }
         public bool Empty { get; set; }
 
         public ShipNode(int x, int y, ShipMod.ShipModTypes type)
@@ -30,5 +30,7 @@ namespace SpaceTradingGame.Game
             if (Empty) return new ShipNode(X, Y, ModType);
             return new ShipNode(X, Y, Modification);
         }
+
+        private Point location;
     }
 }
