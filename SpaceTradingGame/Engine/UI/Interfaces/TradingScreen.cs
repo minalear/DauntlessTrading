@@ -432,6 +432,8 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
         public class TradingListItem : ListItem
         {
             public static int BufferWidth = 25;
+            public static int MaxTitleWidth = 11;
+
             public Item Item;
             public int Quantity;
             public int PriceTotal;
@@ -447,13 +449,28 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
             public void UpdateDisplayInformation()
             {
                 //MaterialName     Price      xQuantity
-                string name = Item.Name;
+                string name = string.Empty;
+                if (Item.Name.Length <= MaxTitleWidth)
+                {
+                    name = Item.Name;
+                    for (int i = 0; i < MaxTitleWidth - Item.Name.Length; i++)
+                        name += " ";
+                }
+                else
+                {
+                    //MaxTitleWidth - 3 for "..."
+                    for (int i = 0; i < MaxTitleWidth - 3; i++)
+                    {
+                        name += Item.Name[i];
+                    }
+                    name += "...";
+                }
+
                 string price = PriceTotal.ToString();
                 string quantity = "x" + Quantity.ToString();
-
-                int bufferLeft = BufferWidth - (name.Length + price.Length + quantity.Length);
-                int frontSpace = (bufferLeft % 2 == 0) ? bufferLeft / 2 : bufferLeft / 2 + 1;
-                int backSpace = bufferLeft / 2;
+                
+                int frontSpace = 2;
+                int backSpace = BufferWidth - (MaxTitleWidth + frontSpace) - (quantity.Length + 1);
 
                 string formattedText = name + new string(' ', frontSpace) + price + new string(' ', backSpace) + quantity;
                 this.ListText = formattedText;
