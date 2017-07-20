@@ -117,6 +117,14 @@ namespace SpaceTradingGame.Game
         {
             return (HasModule(ShipMod.ShipModTypes.Cockpit) && HasModule(ShipMod.ShipModTypes.WarpCore));
         }
+        public bool CanBeDetected(Ship scanner)
+        {
+            return (scanner.ScanningPower >= StealthPower);
+        }
+        public bool CanBeScanned(Ship scanner)
+        {
+            return (scanner.ScanningPower >= ScanningDefense);
+        }
 
         public void UpdateShipStats()
         {
@@ -133,6 +141,19 @@ namespace SpaceTradingGame.Game
                     defenseRating += node.Module.DefenseMod;
                     cargoCapacity += node.Module.CargoMod;
                     baseJumpRadius += node.Module.JumpMod;
+
+                    if (node.Module.ModType == ShipMod.ShipModTypes.EmShield)
+                    {
+                        ScanningDefense += node.Module.Grade;
+                    }
+                    else if (node.Module.ModType == ShipMod.ShipModTypes.Scanner)
+                    {
+                        ScanningPower += node.Module.Grade;
+                    }
+                    else if (node.Module.ModType == ShipMod.ShipModTypes.StealthGen)
+                    {
+                        StealthPower += node.Module.Grade;
+                    }
                 }
             }
         }
@@ -183,6 +204,9 @@ namespace SpaceTradingGame.Game
         public double JumpRadius { get { return baseJumpRadius; } set { baseJumpRadius = value; } }
         public float MoveSpeed { get; set; }
         public string Description { get; set; }
+        public int ScanningPower { get; set; }
+        public int ScanningDefense { get; set; }
+        public int StealthPower { get; set; }
         public Inventory Inventory { get { return shipInventory; } set { shipInventory = value; } }
         public List<ShipNode> Nodes { get { return nodes; } set { nodes = value; } }
         public int Value { get; set; }

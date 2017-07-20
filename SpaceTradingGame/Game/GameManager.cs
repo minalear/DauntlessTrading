@@ -202,6 +202,7 @@ namespace SpaceTradingGame.Game
 
             foreach (Ship target in Ships)
             {
+                if (!target.CanBeDetected(ship)) continue;
                 if (target.ID != ship.ID && target.WorldPosition.Distance(ship.WorldPosition) <= ship.JumpRadius)
                     shipsInRange.Add(target);
             }

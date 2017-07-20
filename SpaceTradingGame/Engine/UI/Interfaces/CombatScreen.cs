@@ -35,21 +35,26 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
 
                 string text = string.Format("{0}% chance to win.\n-\n", oddsToWin * 100.0);
 
-                //List the equipped modules
-                foreach (ShipNode node in GameManager.CombatSimulator.GroupTwo.Ships[0].Nodes)
+                if (GameManager.CombatSimulator.GroupTwo.Ships[0].CanBeScanned(GameManager.PlayerShip))
                 {
-                    if (node.Empty) continue;
-                    text += string.Format("{0} - {1}\n", node.ModType, node.Module.Name);
-                }
+                    //List the equipped modules
+                    foreach (ShipNode node in GameManager.CombatSimulator.GroupTwo.Ships[0].Nodes)
+                    {
+                        if (node.Empty) continue;
+                        text += string.Format("{0} - {1}\n", node.ModType, node.Module.Name);
+                    }
 
-                text += "-\n";
+                    text += "-\n";
 
-                //List the carried items
-                List<InventorySlot> inventory = GameManager.CombatSimulator.GroupTwo.Ships[0].Inventory.GetInventoryList();
-                foreach (InventorySlot slot in inventory)
-                {
-                    text += string.Format("{0} - #{1}\n", slot.Item.Name, slot.Quantity);
+                    //List the carried items
+                    List<InventorySlot> inventory = GameManager.CombatSimulator.GroupTwo.Ships[0].Inventory.GetInventoryList();
+                    foreach (InventorySlot slot in inventory)
+                    {
+                        text += string.Format("{0} - #{1}\n", slot.Item.Name, slot.Quantity);
+                    }
                 }
+                else
+                    text += "Cannot be scanned.";
 
                 descriptionBox.Text = text;
             };

@@ -200,7 +200,8 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
         }
         private void drawShips()
         {
-            foreach (Ship ship in Interface.GameManager.Ships)
+            List<Ship> shipsInRange = Interface.GameManager.GetShipsInJumpRadius(Interface.GameManager.PlayerShip);
+            foreach (Ship ship in shipsInRange)
             {
                 Point point = getScreenPosFromCoord(getCoordFromWorldPos(ship.WorldPosition));
 
