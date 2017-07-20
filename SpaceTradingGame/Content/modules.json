@@ -97,14 +97,4 @@
 	"cargo": 0,
 	"jump": 1000,
 	"description": "An advanced warp core design by the Euripides Corporation."
-},
-{
-	"name": "Head of Exodia",
-	"type": "Cockpit",
-	"grade": 8,
-	"attack": 5000,
-	"defense": 5000,
-	"cargo": 100,
-	"jump": 1000,
-	"description": "A module specifically designed for the Exodia class ship, but works with any standard starship shell."
 }]

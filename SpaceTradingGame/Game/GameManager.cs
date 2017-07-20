@@ -46,9 +46,6 @@ namespace SpaceTradingGame.Game
             ship.Name = shipName;
             ship.Inventory.Credits = 500;
 
-            //Add debug items to player's inventory
-            ship.Inventory.AddItem(Factories.ModFactory.ModList[10], 1);
-
             this.playerShip = ship;
 
             PlayerFaction = new Faction(this, companyName, true);
