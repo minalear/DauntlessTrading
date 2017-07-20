@@ -62,7 +62,7 @@ namespace SpaceTradingGame.Game
             {
                 if (!ship.Pilot.IsTraveling)
                 {
-                    if (!ship.Pilot.IsPlayer)
+                    if (!ship.Pilot.IsPlayer && ship.CanFly())
                     {
                         //Move ship to random market (via random faction => random owned market)
                         Faction randomFaction = GameManager.Factions[RNG.Next(0, GameManager.Factions.Count)];
@@ -87,6 +87,12 @@ namespace SpaceTradingGame.Game
                 CalculateStockPrice();
             }
         }
+        public void UnregisterShip(Ship ship)
+        {
+            ship.Faction = null;
+            ship.Pilot.Finished -= PilotFinishedJourney;
+            OwnedShips.Remove(ship);
+        }
         public void RegisterShip(Ship ship)
         {
             ship.Faction = this;
@@ -95,22 +101,28 @@ namespace SpaceTradingGame.Game
         }
         public void CalculateStockPrice()
         {
+            //Calculate base value of all owned assets
+            int baseValue = 0;
+            foreach (Ship ship in OwnedShips)
+                baseValue += ship.Value;
+            baseValue += OwnedShips.Count * 10;
+            baseValue += OwnedMarkets.Count * 5000;
+            baseValue += OwnedStations.Count * 2500;
+            baseValue += OwnedFactories.Count * 2500;
+
+            //Add liquid assets
+            //MONEY
+
+            //Slight variance
             variance *= RNG.NextDouble(0.9, 1.1);
-
-            int price =
-                OwnedShips.Count +
-                OwnedMarkets.Count * 10 +
-                OwnedStations.Count * 5 +
-                OwnedFactories.Count * 5;
-
-            price *= (int)(price * variance) + RNG.Next(-5000, 5000);
-            price = OpenTK.MathHelper.Clamp(price, 1, price);
-            StockPrices.Add(price);
+            StockPrices.Add((int)(baseValue));
         }
 
         private void PilotFinishedJourney(object sender, EventArgs e)
         {
             Pilot pilot = (Pilot)sender;
+            if (pilot.IsPlayer) return;
+
             if (pilot.Ship.CurrentSystem.HasMarket)
             {
                 Market market = pilot.Ship.CurrentSystem.Market;

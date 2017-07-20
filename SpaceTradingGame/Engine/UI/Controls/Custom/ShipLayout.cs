@@ -7,6 +7,7 @@ namespace SpaceTradingGame.Engine.UI.Controls.Custom
     public class ShipLayout : Control
     {
         private Ship ship;
+        public Ship Ship { get { return ship; } set { SetShip(value); } }
 
         public ShipLayout(Control parent, int width, int height) : base(parent)
         {
