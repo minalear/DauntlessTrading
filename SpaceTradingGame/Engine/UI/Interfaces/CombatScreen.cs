@@ -52,7 +52,6 @@ namespace SpaceTradingGame.Engine.UI.Interfaces
                 }
 
                 descriptionBox.Text = text;
-                updateDisplayInformation();
             };
 
             shipList = new ScrollingList(null, GraphicConsole.BufferWidth - 41, 1, 40, 20);

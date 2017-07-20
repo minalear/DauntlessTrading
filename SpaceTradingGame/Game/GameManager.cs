@@ -44,11 +44,7 @@ namespace SpaceTradingGame.Game
 
             Ship ship = Factories.ShipFactory.ConstructNewShip(shipBlueprint.Model);
             ship.Name = shipName;
-            ship.Inventory.AddItem(Item.Gold, 27);
-            ship.Inventory.AddItem(Item.StarshipFuel, 100);
-            ship.Inventory.AddItem(Factories.ModFactory.ModList[3], 1);
-            ship.Inventory.AddItem(Factories.ModFactory.ModList[4], 1);
-            ship.Inventory.Credits = 50000;
+            ship.Inventory.Credits = 500;
 
             this.playerShip = ship;
 
